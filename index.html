@@ -575,47 +575,51 @@ function renderDailyCrew(){
  const day=$("daySelect")?.value||currentDay();
  $("dailyCrewDay").textContent=day;
  const buckets={am:[],pm:[],off:[]};
- const namesSet=new Set(employees.map(normalize));
- const staffingSheets=Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|weekly schedule/i.test(n));
- // Primary source: rows in Daily Staffing for the selected day and AM/PM shift.
+ const canon=n=>employees.find(e=>normalize(e)===normalize(n))||null;
+ const add=(bucket,value)=>splitNames(value).forEach(raw=>{const n=canon(raw);if(n&&!buckets[bucket].some(x=>normalize(x)===normalize(n)))buckets[bucket].push(n)});
+ const staffingSheets=Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|weekly schedule|schedule summary/i.test(n));
+ // Prefer explicit AM/PM crew columns. These are the authoritative team assignments;
+ // hourly position/rotation cells must not be counted as crew membership.
  staffingSheets.forEach(sheetName=>{
   parseSheet(sheetName).forEach(row=>{
    const rowDay=field(row,["Day","Weekday","Day Name"]);
-   if(!rowDay||normalize(rowDay)!==normalize(day))return;
-   const shift=normalize(field(row,["Shift","Shift Type","Crew","Team"]));
-   if(!/^(am|pm|am crew|pm crew|morning|afternoon)$/.test(shift))return;
-   const found=[];
+   if(rowDay&&normalize(rowDay)!==normalize(day))return;
    Object.entries(row).forEach(([key,value])=>{
-    if(/day|weekday|shift|start|end|time|date|break|lunch|crew type|team|status/i.test(normalize(key)))return;
-    splitNames(value).forEach(n=>{if(namesSet.has(normalize(n)))found.push(employees.find(e=>normalize(e)===normalize(n))||n)});
+    const nk=normalize(key);
+    if(/am crew|morning crew|am team|morning team/.test(nk))add("am",value);
+    else if(/pm crew|afternoon crew|pm team|afternoon team/.test(nk))add("pm",value);
+    else if(/day off|off today|days off|off duty/.test(nk))add("off",value);
    });
-   if(shift.startsWith("am")||shift==="morning")buckets.am.push(...found);
-   else buckets.pm.push(...found);
   });
  });
- // Fallback to explicit AM Crew / PM Crew columns if staffing rows use a different shape.
+ // If no explicit crew columns exist, read the shift row but only from staff-list
+ // columns, never from position/rotation assignment columns.
  if(!buckets.am.length&&!buckets.pm.length){
-  Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|schedule summary|weekly schedule/i.test(n)).forEach(sheetName=>{
+  staffingSheets.forEach(sheetName=>{
    parseSheet(sheetName).forEach(row=>{
     const rowDay=field(row,["Day","Weekday","Day Name"]);
-    if(rowDay&&normalize(rowDay)!==normalize(day))return;
+    if(!rowDay||normalize(rowDay)!==normalize(day))return;
+    const shift=normalize(field(row,["Shift","Shift Type","Crew","Team"]));
+    if(!/^(am|pm|am crew|pm crew|morning|afternoon)$/.test(shift))return;
+    const bucket=(shift.startsWith("am")||shift==="morning")?"am":"pm";
     Object.entries(row).forEach(([key,value])=>{
-     const nk=normalize(key),found=crewNamesFromValue(value);
-     if(/am crew|morning crew|am team|morning team/.test(nk))buckets.am.push(...found);
-     else if(/pm crew|afternoon crew|pm team|afternoon team/.test(nk))buckets.pm.push(...found);
-     else if(/day off|off today|days off|off duty/.test(nk))buckets.off.push(...found);
+     const nk=normalize(key);
+     if(/day|weekday|shift|start|end|time|date|break|lunch|status|position|zone|tower|board room|pusher|catcher|rotation|hour/i.test(nk))return;
+     if(/staff|employee|member|person|name|crew list|team list/i.test(nk))add(bucket,value);
     });
    });
   });
  }
- buckets.am=[...new Set(buckets.am)];
- buckets.pm=[...new Set(buckets.pm)].filter(n=>!buckets.am.includes(n));
- if(!buckets.off.length)buckets.off=employees.filter(n=>!buckets.am.includes(n)&&!buckets.pm.includes(n));
+ // A crew is exactly five people. Prevent duplicate names and never overlap AM/PM.
+ buckets.am=buckets.am.slice(0,5);
+ buckets.pm=buckets.pm.filter(n=>!buckets.am.some(a=>normalize(a)===normalize(n))).slice(0,5);
+ // If explicit Day Off data is absent, calculate it from the selected day's crews.
+ if(!buckets.off.length)buckets.off=employees.filter(n=>!buckets.am.some(a=>normalize(a)===normalize(n))&&!buckets.pm.some(p=>normalize(p)===normalize(n)));
+ else buckets.off=buckets.off.filter(n=>!buckets.am.some(a=>normalize(a)===normalize(n))&&!buckets.pm.some(p=>normalize(p)===normalize(n)));
  renderCrewNames("dailyAmCrew",buckets.am);
  renderCrewNames("dailyPmCrew",buckets.pm);
  renderCrewNames("dailyDayOff",buckets.off);
 }
-
 function renderAll(){renderPills();renderDayButtons();renderHourButtons();renderDailyCrew();renderBoard();renderVisualCards();populateEmployees();renderWeek();renderTeam()}
 function switchTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));$("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");if(tab==="week")renderWeek();if(tab==="team")renderTeam()}
 async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
