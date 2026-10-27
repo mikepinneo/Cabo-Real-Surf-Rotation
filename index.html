@@ -47,7 +47,7 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 .wheel-node{position:absolute;width:38%;min-height:54px;border-radius:9px;padding:7px 5px;color:white;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid #ffffff66;box-shadow:0 3px 9px #0005}
 .wheel-node span{font-weight:950;background:#fff;color:#092033;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-size:.8rem}
 .wheel-node b{font-size:.67rem}.wheel-node strong{font-size:.72rem;overflow-wrap:anywhere}
-.wheel-node.n1{background:#095cc7;left:31%;top:0}.wheel-node.n2{background:#095cc7;right:0;top:30%}.wheel-node.n3{background:#e94d15;right:12%;bottom:0}.wheel-node.n4{background:#148b49;left:12%;bottom:0}.wheel-node.n5{background:#148b49;left:0;top:30%}
+.wheel-node.n1{background:#148b49;left:31%;top:0}.wheel-node.n2{background:#095cc7;right:0;top:30%}.wheel-node.n3{background:#e94d15;right:12%;bottom:0}.wheel-node.n4{background:#7622c8;left:12%;bottom:0}.wheel-node.n5{background:#d10d5b;left:0;top:30%}
 .wheel-arrow{position:absolute;color:#fff;font-size:2rem;font-weight:900;line-height:1}.a12{right:20%;top:17%;transform:rotate(12deg)}.a23{right:16%;top:59%;transform:rotate(28deg)}.a34{left:44%;bottom:13%;transform:rotate(-15deg)}.a45{left:16%;top:59%;transform:rotate(-30deg)}.a51{left:21%;top:17%;transform:rotate(-12deg)}
 .schedule-table{overflow:auto;max-height:370px;border-radius:8px}.schedule-table table{min-width:650px;font-size:.83rem}.schedule-table th{background:#0d354a;color:#fff}.schedule-table td{background:#f0f5f8;color:#102637;padding:7px 9px;border-color:#bfd0dc}.schedule-table tr:nth-child(even) td{background:#dceaf1}.schedule-table tr.selected td{background:#c5f0df;font-weight:900}.schedule-table td button{color:#0b5474}
 .next-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.next-cards .assignment-head{padding:5px 3px;gap:3px;min-height:58px;align-items:flex-start}.next-cards .assignment-head>span{width:20px;height:20px;flex-basis:20px;font-size:.7rem}.next-cards .assignment-head b{font-size:.59rem}.next-cards .assignment-head small{font-size:.56rem}.next-cards .assignment-visual{height:58px;font-size:1.6rem}.next-cards .assignment-name{font-size:.7rem;padding:5px 2px}
@@ -298,53 +298,6 @@ header .brand{margin-bottom:8px}
 .party-coverage-cards .assignment-name{background:#fff;color:#092532;font-weight:900}
 @media(max-width:780px){.assignment-cards.party-coverage-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}}
 
-
-/* Keep rotation flow compact: no forced panel height or stretched grid row. */
-.flow-panel.compact-flow-panel{min-height:0!important;height:auto!important;align-self:start;flex:none}
-.board-stack .flow-panel.compact-flow-panel{min-height:0!important;height:auto!important}
-.compact-flow-panel .rotation-wheel{height:82px;min-height:82px;max-height:82px;overflow:hidden}
-.compact-flow-panel .flow-caption{line-height:1.1}
-
-/* Correct mobile-first section order: current, next, compact flow, lunch, full-width schedule. */
-.board-stack{display:flex;flex-direction:column;gap:8px;margin:8px 0}
-.board-stack>.dash-panel,.break-room-panel,.full-schedule-panel{min-width:0;width:100%;box-sizing:border-box}
-.board-stack .assignment-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}
-.board-stack .next-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}
-.compact-flow-panel{padding:7px!important}
-.compact-flow-panel .rotation-wheel{height:100px;min-height:100px;max-width:100%;margin:0 auto}
-.compact-flow-panel .wheel-node{min-height:25px;padding:2px 3px;border-radius:5px}
-.compact-flow-panel .wheel-node span{width:13px;height:13px;font-size:8px}
-.compact-flow-panel .wheel-node b{font-size:7px;line-height:1.05}
-.compact-flow-panel .wheel-arrow{font-size:12px}
-.compact-flow-panel .flow-caption{font-size:9px;margin-top:1px}
-.break-room-panel{margin:7px 0;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
-.break-room-panel .staff-tags{display:flex;flex-wrap:wrap;gap:4px}
-.full-schedule-panel{margin:8px 0}
-.full-schedule-panel .schedule-table{width:100%;max-width:100%;overflow-x:auto}
-@media(max-width:620px){
- .board-stack{gap:6px;margin:6px 0}
- .board-stack .dash-panel{padding:5px;border-radius:9px}
- .board-stack .assignment-cards,.board-stack .next-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;overflow:visible}
- .board-stack .assignment-card{min-width:0;border-radius:4px}
- .board-stack .assignment-head{min-height:27px;padding:2px 1px;gap:1px}
- .board-stack .assignment-head>span{width:12px;height:12px;flex-basis:12px;font-size:7px}
- .board-stack .assignment-head b{font-size:clamp(5px,1.5vw,8px);line-height:1}
- .board-stack .assignment-head small{font-size:clamp(4px,1.25vw,7px);line-height:1;margin-top:1px}
- .board-stack .assignment-visual{height:22px;padding-top:0}
- .board-stack .person-icon{transform:scale(.38);transform-origin:bottom center;height:18px}
- .board-stack .assignment-name{font-size:clamp(6px,1.7vw,9px);padding:2px 0;min-height:14px}
- .board-stack .next-cards .assignment-head{min-height:27px}
- .board-stack .next-cards .assignment-visual{height:22px}
- .board-stack .next-cards .assignment-name{font-size:clamp(6px,1.6vw,9px);padding:2px 0}
- .compact-flow-panel .rotation-wheel{height:76px;min-height:76px;max-height:76px}
- .compact-flow-panel .wheel-node{min-height:22px;padding:2px 1px}
- .compact-flow-panel .wheel-node b{font-size:6px}
- .compact-flow-panel .wheel-arrow{font-size:10px}
- .compact-flow-panel .flow-caption{font-size:8px}
- .full-schedule-panel{padding:6px;margin:6px 0}
- .full-schedule-panel .schedule-table table{min-width:540px}
-}
-
 </style>
 </head>
 <body>
@@ -370,42 +323,40 @@ header .brand{margin-bottom:8px}
       <img id="poolAerialImage" class="aerial-image" src="pool-aerial.png" alt="Aerial site layout showing the surf pool and surrounding staff work areas">
     </div>
   </div>
-  <div class="board-stack">
+  <div class="dashboard-grid">
     <section class="dash-panel current-panel">
       <div class="panel-heading"><h2>CURRENT HOUR</h2><strong id="currentHourLabel">—</strong></div>
       <div class="assignment-cards">
-        <article class="assignment-card blue"><div class="assignment-head"><span>1</span><div><b>SURF COACH</b><small>Zone 1</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardPusher" class="assignment-name">—</div></article>
+        <article class="assignment-card green"><div class="assignment-head"><span>1</span><div><b>SURF COACH</b><small>Zone 1</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardPusher" class="assignment-name">—</div></article>
         <article class="assignment-card blue"><div class="assignment-head"><span>2</span><div><b>SURF COACH</b><small>Zone 5</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardCatcher" class="assignment-name">—</div></article>
         <article class="assignment-card orange"><div class="assignment-head"><span>3</span><div><b>CONTROL TOWER</b><small>Make the waves</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardTower" class="assignment-name">—</div></article>
-        <article class="assignment-card green"><div class="assignment-head"><span>4</span><div><b>BOARD ROOM A</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardA" class="assignment-name">—</div></article>
-        <article class="assignment-card green"><div class="assignment-head"><span>5</span><div><b>BOARD ROOM B</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardB" class="assignment-name">—</div></article>
+        <article class="assignment-card purple"><div class="assignment-head"><span>4</span><div><b>BOARD ROOM A</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardA" class="assignment-name">—</div></article>
+        <article class="assignment-card pink"><div class="assignment-head"><span>5</span><div><b>BOARD ROOM B</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardB" class="assignment-name">—</div></article>
       </div>
     </section>
-    <section class="dash-panel next-panel">
-      <div class="panel-heading"><h2>NEXT HOUR</h2><strong id="nextHourLabel">—</strong></div>
-      <div id="nextHourCards" class="next-cards"></div>
-    </section>
-    <section class="dash-panel flow-panel compact-flow-panel">
+    <section class="dash-panel flow-panel">
       <div class="panel-heading"><h2>ROTATION FLOW</h2><span class="map-note">Hourly rotation</span></div>
       <div class="rotation-wheel">
-        <div class="wheel-node n1"><span>1</span><b>SURF COACH</b><strong id="flowPusher" class="hidden">—</strong></div>
-        <div class="wheel-node n2"><span>2</span><b>SURF COACH</b><strong id="flowCatcher" class="hidden">—</strong></div>
-        <div class="wheel-node n3"><span>3</span><b>CONTROL TOWER</b><strong id="flowTower" class="hidden">—</strong></div>
-        <div class="wheel-node n4"><span>4</span><b>BOARD ROOM A</b><strong id="flowBoardA" class="hidden">—</strong></div>
-        <div class="wheel-node n5"><span>5</span><b>BOARD ROOM B</b><strong id="flowBoardB" class="hidden">—</strong></div>
+        <div class="wheel-node n1"><span>1</span><b>SURF COACH</b><strong id="flowPusher">—</strong></div>
+        <div class="wheel-node n2"><span>2</span><b>SURF COACH</b><strong id="flowCatcher">—</strong></div>
+        <div class="wheel-node n3"><span>3</span><b>CONTROL TOWER</b><strong id="flowTower">—</strong></div>
+        <div class="wheel-node n4"><span>4</span><b>BOARD ROOM A</b><strong id="flowBoardA">—</strong></div>
+        <div class="wheel-node n5"><span>5</span><b>BOARD ROOM B</b><strong id="flowBoardB">—</strong></div>
         <div class="wheel-arrow a12">↘</div><div class="wheel-arrow a23">↙</div><div class="wheel-arrow a34">←</div><div class="wheel-arrow a45">↖</div><div class="wheel-arrow a51">↗</div>
       </div>
       <div class="flow-caption">Everyone rotates each hour in this direction.</div>
     </section>
   </div>
-  <section id="breakRoomPanel" class="dash-panel break-room-panel hidden">
-    <div class="panel-heading"><h2>BREAK ROOM</h2><strong id="breakRoomLabel">—</strong></div>
-    <div id="breakRoomVisible" class="staff-tags"></div>
-  </section>
-  <section class="dash-panel schedule-panel full-schedule-panel">
-    <div class="panel-heading"><h2>HOURLY ROTATION SCHEDULE</h2><span class="map-note">Select a row to view it</span></div>
-    <div id="hourlySchedule" class="schedule-table"></div>
-  </section>
+  <div class="dashboard-grid lower-grid">
+    <section class="dash-panel schedule-panel">
+      <div class="panel-heading"><h2>HOURLY ROTATION SCHEDULE</h2><span class="map-note">Select a row to view it</span></div>
+      <div id="hourlySchedule" class="schedule-table"></div>
+    </section>
+    <section class="dash-panel next-panel">
+      <div class="panel-heading"><h2>NEXT HOUR</h2><strong id="nextHourLabel">—</strong></div>
+      <div id="nextHourCards" class="next-cards"></div>
+    </section>
+  </div>
   <div class="section-title hidden">Position assignments · selected hour</div>
 
   <div class="zone-grid hidden">
@@ -464,7 +415,7 @@ function renderPills(){const host=$("employeePills");host.innerHTML="";STAFF_NAM
 function staffTag(name){const b=document.createElement("button");b.className="staff-tag"+(selectedEmployee===name?" highlight":"");b.textContent=name;b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};return b}
 function fill(id,values){const el=$(id);el.innerHTML="";const names=[...new Set(values.flatMap(splitNames))];if(!names.length){el.innerHTML='<span class="empty">No assignment recorded</span>';return}names.forEach(n=>el.appendChild(staffTag(n)))}
 function setMap(id,names){const el=$(id),vals=[...new Set(names.flatMap(splitNames))];el.textContent=vals.length?vals.join(" · "):"—";el.classList.toggle("highlight",!!selectedEmployee&&vals.includes(selectedEmployee));const flowIds={mapPusher:"flowPusher",mapCatcher:"flowCatcher",mapTower:"flowTower",mapBoardA:"flowBoardA",mapBoardB:"flowBoardB"};if(flowIds[id])$(flowIds[id]).textContent=vals.length?vals.join(" · "):"—";if(flowIds[id])$(flowIds[id]).parentElement.classList.toggle("active",!!selectedEmployee&&vals.includes(selectedEmployee))}
-function renderBoard(){const day=$("daySelect").value,time=$("hourSelect").value,row=findRow(day,time);const selectedStart=hourStart(time);const poolImage=$("poolAerialImage");if(poolImage){const partyImage=[11,13].includes(selectedStart);poolImage.src=partyImage?"pool-party-aerial.png":"pool-aerial.png";poolImage.alt=partyImage?"Five surf coaches positioned in pool Zones 1, 2, 3, 4 and 5 for pool-party coverage":"Standard surf pool staff positions, including Surf Coach Zone 1 and Surf Coach Zone 5";}$("poolTime").textContent=`${day} · ${time||"No rotation selected"}`;const ids=["pusher","catcher","boardA","boardB","tower","breakRoom","extra"];if(!row){ids.forEach(id=>fill(id,[]));$("partyNotice").classList.add("hidden")}else{const p=row.positions;fill("pusher",[p["Pool Pusher (Zone 1)"]]);fill("catcher",[p["Pool Catcher (Zone 5)"]]);fill("tower",[p["Control Tower"]]);fill("boardA",[p["Board Room A"]]);fill("boardB",[p["Board Room B"]]);const extra=[],breaks=[];Object.keys(sheetMap).filter(n=>/pool party|daily coverage|daily staffing|positions|glide setup/i.test(n)).forEach(n=>parseSheet(n).forEach(r=>{const d=field(r,["Day","Weekday"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);if(normalize(d)===normalize(day)&&(!t||hourStart(t)===hourStart(time))){Object.entries(r).forEach(([k,v])=>{if(/break|lunch/i.test(k))breaks.push(...splitNames(v));else if(!/day|hour|time|rotation|session|date/i.test(k))extra.push(...splitNames(v))})}}));const core=new Set(Object.values(p).flatMap(splitNames));fill("extra",extra.filter(n=>!core.has(n)));const breakHour=hourStart(time);if(breakHour===12)breaks.push(...[...($("dailyAmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));if(breakHour===14)breaks.push(...[...($("dailyPmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));fill("breakRoom",breaks);const visibleBreak=$("breakRoomVisible");if(visibleBreak)visibleBreak.innerHTML=$("breakRoom").innerHTML;const breakPanel=$("breakRoomPanel");if(breakPanel){const showBreak=[12,14].includes(breakHour);breakPanel.classList.toggle("hidden",!showBreak);$("breakRoomLabel").textContent=breakHour===12?"AM Crew Lunch":breakHour===14?"PM Crew Lunch":"";}const hasExtra=extra.some(n=>!core.has(n));$("partyNotice").classList.toggle("hidden",!hasExtra);$("partyNotice").textContent=hasExtra?"Additional pool-party or coverage assignments are listed in Other / party coverage.":""}
+function renderBoard(){const day=$("daySelect").value,time=$("hourSelect").value,row=findRow(day,time);const selectedStart=hourStart(time);const poolImage=$("poolAerialImage");if(poolImage){const partyImage=[11,13].includes(selectedStart);poolImage.src=partyImage?"pool-party-aerial.png":"pool-aerial.png";poolImage.alt=partyImage?"Five surf coaches positioned in pool Zones 1, 2, 3, 4 and 5 for pool-party coverage":"Standard surf pool staff positions, including Surf Coach Zone 1 and Surf Coach Zone 5";}$("poolTime").textContent=`${day} · ${time||"No rotation selected"}`;const ids=["pusher","catcher","boardA","boardB","tower","breakRoom","extra"];if(!row){ids.forEach(id=>fill(id,[]));$("partyNotice").classList.add("hidden")}else{const p=row.positions;fill("pusher",[p["Pool Pusher (Zone 1)"]]);fill("catcher",[p["Pool Catcher (Zone 5)"]]);fill("tower",[p["Control Tower"]]);fill("boardA",[p["Board Room A"]]);fill("boardB",[p["Board Room B"]]);const extra=[],breaks=[];Object.keys(sheetMap).filter(n=>/pool party|daily coverage|daily staffing|positions|glide setup/i.test(n)).forEach(n=>parseSheet(n).forEach(r=>{const d=field(r,["Day","Weekday"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);if(normalize(d)===normalize(day)&&(!t||hourStart(t)===hourStart(time))){Object.entries(r).forEach(([k,v])=>{if(/break|lunch/i.test(k))breaks.push(...splitNames(v));else if(!/day|hour|time|rotation|session|date/i.test(k))extra.push(...splitNames(v))})}}));const core=new Set(Object.values(p).flatMap(splitNames));fill("extra",extra.filter(n=>!core.has(n)));const breakHour=hourStart(time);if(breakHour===12)breaks.push(...[...($("dailyAmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));if(breakHour===14)breaks.push(...[...($("dailyPmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));fill("breakRoom",breaks);const hasExtra=extra.some(n=>!core.has(n));$("partyNotice").classList.toggle("hidden",!hasExtra);$("partyNotice").textContent=hasExtra?"Additional pool-party or coverage assignments are listed in Other / party coverage.":""}
 const p=row?.positions||{};
 const h=currentHour(),open=h>=7&&h<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed";$("statusDetail").textContent=`Current status uses actual Cabo local time (${timeText()}), not the selected roster hour. Selected board: ${day} ${time||"—"}.`;
 }
@@ -477,28 +428,70 @@ function renderTeam(){const q=normalize($("teamSearch").value),day=$("teamDay").
 function hourLabel(s){return String(s||"").replace(/\s*-\s*/," – ")}
 function nextRow(day,time){const rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));const i=rows.findIndex(r=>r.time===time||hourStart(r.time)===hourStart(time));return i>=0?rows[i+1]||null:null}
 function assignmentValues(row){const p=row?.positions||{};return [p["Pool Pusher (Zone 1)"],p["Pool Catcher (Zone 5)"],p["Control Tower"],p["Board Room A"],p["Board Room B"]].map(v=>splitNames(v).join(", ")||"—")}
-function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){const colors=["green","blue","orange","purple","pink"];const card=document.createElement("article");card.className="assignment-card "+(color||colors[index%colors.length]);card.innerHTML=`<div class="assignment-head"><span>${index+1}</span><div><b>${title}</b><small>${subtitle}</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div class="assignment-name"></div>`;card.querySelector(".assignment-name").textContent=name||"—";return card}function renderSchedule(){const host=$("hourlySchedule");if(!host)return;const day=$("daySelect").value,rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));if(!rows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}const heads=["TIME","SURF COACH · ZONE 1","SURF COACH · ZONE 5","CONTROL TOWER","BOARD ROOM A","BOARD ROOM B"];const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const tr=document.createElement("tr");if(r.time===$("hourSelect").value)tr.className="selected";const vals=[r.time,...assignmentValues(r)];vals.forEach((v,i)=>{const td=document.createElement("td");if(i===0){const b=document.createElement("button");b.textContent=v;b.onclick=()=>{$("hourSelect").value=r.time;renderBoard()};td.appendChild(b)}else td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
+function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){const colors=["green","blue","orange","purple","pink"];const card=document.createElement("article");card.className="assignment-card "+(color||colors[index%colors.length]);card.innerHTML=`<div class="assignment-head"><span>${index+1}</span><div><b>${title}</b><small>${subtitle}</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div class="assignment-name"></div>`;card.querySelector(".assignment-name").textContent=name||"—";return card}function renderSchedule(){
+ const host=$("hourlySchedule");if(!host)return;
+ const day=$("daySelect").value;
+ const raw=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));
+ const byHour=new Map();raw.forEach(r=>{const h=hourStart(r.time);if(!byHour.has(h))byHour.set(h,r)});
+ const rows=[...byHour.values()].sort((a,b)=>hourStart(a.time)-hourStart(b.time));
+ if(!rows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}
+ const heads=["TIME","SURF COACH · ZONE 1","SURF COACH · ZONE 2","SURF COACH · ZONE 3","SURF COACH · ZONE 4","SURF COACH · ZONE 5","CONTROL TOWER A","CONTROL TOWER B","BOARD ROOM A","BOARD ROOM B","BOARD ROOM C"];
+ const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";
+ const body=document.createElement("tbody");
+ rows.forEach(r=>{
+  const h=hourStart(r.time),special=[11,13].includes(h),cov=special?coverageRowFor(day,r.time):null;
+  const tr=document.createElement("tr");if(h===hourStart($("hourSelect").value))tr.className="selected";
+  const timeLabel=h===11?"11:00 AM–12:00 PM":h===12?"12:00–1:00 PM":h===13?"1:00–2:00 PM":h===14?"2:00–3:00 PM":r.time;
+  const vals=[timeLabel];
+  if(special&&cov){
+   const pool=splitNames(field(cov,["Pool (5)"])),tower=splitNames(field(cov,["Tower (2)"])),board=splitNames(field(cov,["Board Room (3)"]));
+   vals.push(...pool,...tower,...board);
+  }else if(h===12){
+   vals.push("AM TEAM ON LUNCH","PM TEAM COVERS","PM TEAM COVERS","PM TEAM COVERS","PM TEAM COVERS","PM TEAM COVERS","PM TEAM COVERS","PM TEAM COVERS","PM TEAM COVERS","PM TEAM COVERS");
+  }else if(h===14){
+   vals.push("AM TEAM COVERS","AM TEAM COVERS","AM TEAM COVERS","AM TEAM COVERS","AM TEAM COVERS","PM TEAM ON LUNCH","AM TEAM COVERS","AM TEAM COVERS","AM TEAM COVERS","AM TEAM COVERS");
+  }else{
+   const base=assignmentValues(r);vals.push(base[0]||"—","—","—","—",base[1]||"—",base[2]||"—","—",base[3]||"—",base[4]||"—","—");
+  }
+  while(vals.length<heads.length)vals.push("—");
+  vals.slice(0,heads.length).forEach((v,i)=>{const td=document.createElement("td");if(i===0){const b=document.createElement("button");b.textContent=v;b.onclick=()=>{$("hourSelect").value=r.time;renderBoard()};td.appendChild(b)}else td.textContent=v;tr.appendChild(td)});
+  body.appendChild(tr);
+ });
+ table.appendChild(body);host.innerHTML="";host.appendChild(table);
+}
 function coverageRowFor(day,time){
- const sheets=Object.keys(sheetMap).filter(n=>/pool party coverage|daily coverage|daily staffing|positions|glide setup/i.test(n));
- for(const sn of sheets){for(const r of parseSheet(sn)){const d=field(r,["Day","Weekday","Day Name"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);if(d&&normalize(d)!==normalize(day))continue;if(t&&hourStart(t)!==hourStart(time))continue;return r}}
+ const target=hourStart(time);
+ const sheet=Object.keys(sheetMap).find(n=>normalize(n)==="pool party coverage");
+ if(sheet){
+  for(const r of parseSheet(sheet)){
+   const d=field(r,["Day","Weekday","Day Name"]),t=field(r,["Pool Party Hour","Hour","Time","Time Slot","Rotation"]);
+   if(!d||normalize(d)!==normalize(day))continue;
+   if(t&&hourStart(t)!==target)continue;
+   return r;
+  }
+ }
  return null;
 }
 function cardAssignments(row,day,time){
  const base=row?.positions||{};const special=[11,13].includes(hourStart(time));const cov=special?coverageRowFor(day,time):null;
  const defs=[
-  {title:"SURF COACH",subtitle:"Zone 1",keys:["Pool Pusher (Zone 1)","Pool Zone 1","Zone 1","Pool Pusher"],color:"blue"},
-  {title:"SURF COACH",subtitle:"Zone 2",keys:["Pool Zone 2","Zone 2","Pool 2"],color:"blue"},
-  {title:"SURF COACH",subtitle:"Zone 3",keys:["Pool Zone 3","Zone 3","Pool 3"],color:"blue"},
-  {title:"SURF COACH",subtitle:"Zone 4",keys:["Pool Zone 4","Zone 4","Pool 4"],color:"blue"},
-  {title:"SURF COACH",subtitle:"Zone 5",keys:["Pool Catcher (Zone 5)","Pool Zone 5","Zone 5","Pool Catcher"],color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 1",keys:["Pool Pusher (Zone 1)","Pool Pusher"],color:"green"},
+  {title:"SURF COACH",subtitle:"Zone 2",keys:["Pool Zone 2","Zone 2","Pool 2"],color:"green"},
+  {title:"SURF COACH",subtitle:"Zone 3",keys:["Pool Zone 3","Zone 3","Pool 3"],color:"green"},
+  {title:"SURF COACH",subtitle:"Zone 4",keys:["Pool Zone 4","Zone 4","Pool 4"],color:"green"},
+  {title:"SURF COACH",subtitle:"Zone 5",keys:["Pool Catcher (Zone 5)","Pool Catcher"],color:"blue"},
   {title:"CONTROL TOWER",subtitle:"Tower A",keys:["Tower A","Control Tower A","Control Tower","Tower"],color:"orange"},
   {title:"CONTROL TOWER",subtitle:"Tower B",keys:["Tower B","Control Tower B"],color:"orange"},
-  {title:"BOARD ROOM A",subtitle:"",keys:["Board Room A","Board Room A Staff"],color:"green"},
-  {title:"BOARD ROOM B",subtitle:"",keys:["Board Room B","Board Room B Staff"],color:"green"},
-  {title:"BOARD ROOM C",subtitle:"",keys:["Board Room C","Board Room C Staff"],color:"green"}
+  {title:"BOARD ROOM A",subtitle:"",keys:["Board Room A","Board Room A Staff"],color:"purple"},
+  {title:"BOARD ROOM B",subtitle:"",keys:["Board Room B","Board Room B Staff"],color:"pink"},
+  {title:"BOARD ROOM C",subtitle:"",keys:["Board Room C","Board Room C Staff"],color:"pink"}
  ];
  return (special?defs:defs.filter((d,i)=>[0,4,5,7,8].includes(i))).map((d,i)=>{
-  let val=cov?field(cov,d.keys):"";
+  let val="";
+  if(cov){
+   const group=i<5?splitNames(field(cov,["Pool (5)"])):i<7?splitNames(field(cov,["Tower (2)"])):splitNames(field(cov,["Board Room (3)"]));
+   val=group[i<5?i:i<7?i-5:i-7]||"";
+  }
   if(!val){if(d.subtitle==="Zone 1")val=base["Pool Pusher (Zone 1)"];else if(d.subtitle==="Zone 5")val=base["Pool Catcher (Zone 5)"];else if(d.subtitle==="Tower A")val=base["Control Tower"];else if(d.subtitle==="Board Room A")val=base["Board Room A"];else if(d.subtitle==="Board Room B")val=base["Board Room B"]}
   return {...d,name:splitNames(val).join(", ")||"—",number:i+1};
  });
