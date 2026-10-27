@@ -305,6 +305,16 @@ header .brand{margin-bottom:8px}
 .party-coverage-cards .assignment-name{background:#fff;color:#092532;font-weight:900}
 @media(max-width:780px){.assignment-cards.party-coverage-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}}
 
+
+/* Requested layout: Current Hour and Next Hour stacked, flow alongside, full-width schedule */
+.dashboard-grid:not(.lower-grid){grid-template-columns:minmax(0,1.45fr) minmax(240px,.9fr);grid-template-areas:"current flow" "next flow";align-items:start;gap:8px}
+.current-panel{grid-area:current}
+.flow-panel{grid-area:flow;grid-row:1 / span 2}
+.next-panel{grid-area:next}
+.lower-grid{display:block;width:100%;margin-top:8px}
+.lower-grid .schedule-panel{width:100%;box-sizing:border-box}
+#breakRoomPanel{margin:8px 0}
+@media(max-width:780px){.dashboard-grid:not(.lower-grid){grid-template-columns:1fr;grid-template-areas:"current" "next" "flow"}.flow-panel{grid-row:auto}.lower-grid{display:block}}
 </style>
 </head>
 <body>
@@ -353,15 +363,19 @@ header .brand{margin-bottom:8px}
       </div>
       <div class="flow-caption">Everyone rotates each hour in this direction.</div>
     </section>
+    <section class="dash-panel next-panel">
+      <div class="panel-heading"><h2>NEXT HOUR</h2><strong id="nextHourLabel">—</strong></div>
+      <div id="nextHourCards" class="next-cards"></div>
+    </section>
   </div>
+  <section id="breakRoomPanel" class="break-room-panel hidden" aria-live="polite">
+    <div class="panel-heading"><h2 id="breakRoomTitle">BREAK ROOM</h2><strong id="breakRoomPeriod">—</strong></div>
+    <div id="breakRoomCrewList" class="break-room-crew-list"></div>
+  </section>
   <div class="dashboard-grid lower-grid">
     <section class="dash-panel schedule-panel">
       <div class="panel-heading"><h2>HOURLY ROTATION SCHEDULE</h2><span class="map-note">Select a row to view it</span></div>
       <div id="hourlySchedule" class="schedule-table"></div>
-    </section>
-    <section class="dash-panel next-panel">
-      <div class="panel-heading"><h2>NEXT HOUR</h2><strong id="nextHourLabel">—</strong></div>
-      <div id="nextHourCards" class="next-cards"></div>
     </section>
   </div>
   <div class="section-title hidden">Position assignments · selected hour</div>
@@ -378,10 +392,6 @@ header .brand{margin-bottom:8px}
     <div class="location-card"><h3>Other / party coverage</h3><div id="extra" class="staff-tags"></div></div>
   </div>
   <div class="status-card hidden"><div class="section-title">Operating status · based on actual Cabo time</div><h2 id="operatingStatus">Loading roster…</h2><div id="statusDetail" class="muted">Operating hours are 7:00 AM–7:00 PM Cabo time.</div><div class="clock-row"><span id="liveClock" class="clock">--:--</span><span id="dateLabel" class="muted">Cabo time</span></div></div>
-  <section id="breakRoomPanel" class="break-room-panel hidden" aria-live="polite">
-    <div class="panel-heading"><h2 id="breakRoomTitle">BREAK ROOM</h2><strong id="breakRoomPeriod">—</strong></div>
-    <div id="breakRoomCrewList" class="break-room-crew-list"></div>
-  </section>
   <section class="daily-crew-panel">
     <div class="panel-heading"><h2>DAILY CREW OVERVIEW</h2><strong id="dailyCrewDay">—</strong></div>
     <div class="daily-crew-grid">
