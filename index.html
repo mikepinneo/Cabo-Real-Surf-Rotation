@@ -47,7 +47,7 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 .wheel-node{position:absolute;width:38%;min-height:54px;border-radius:9px;padding:7px 5px;color:white;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid #ffffff66;box-shadow:0 3px 9px #0005}
 .wheel-node span{font-weight:950;background:#fff;color:#092033;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-size:.8rem}
 .wheel-node b{font-size:.67rem}.wheel-node strong{font-size:.72rem;overflow-wrap:anywhere}
-.wheel-node.n1{background:#148b49;left:31%;top:0}.wheel-node.n2{background:#095cc7;right:0;top:30%}.wheel-node.n3{background:#e94d15;right:12%;bottom:0}.wheel-node.n4{background:#7622c8;left:12%;bottom:0}.wheel-node.n5{background:#d10d5b;left:0;top:30%}
+.wheel-node.n1{background:#095cc7;left:31%;top:0}.wheel-node.n2{background:#095cc7;right:0;top:30%}.wheel-node.n3{background:#e94d15;right:12%;bottom:0}.wheel-node.n4{background:#148b49;left:12%;bottom:0}.wheel-node.n5{background:#148b49;left:0;top:30%}
 .wheel-arrow{position:absolute;color:#fff;font-size:2rem;font-weight:900;line-height:1}.a12{right:20%;top:17%;transform:rotate(12deg)}.a23{right:16%;top:59%;transform:rotate(28deg)}.a34{left:44%;bottom:13%;transform:rotate(-15deg)}.a45{left:16%;top:59%;transform:rotate(-30deg)}.a51{left:21%;top:17%;transform:rotate(-12deg)}
 .schedule-table{overflow:auto;max-height:370px;border-radius:8px}.schedule-table table{min-width:650px;font-size:.83rem}.schedule-table th{background:#0d354a;color:#fff}.schedule-table td{background:#f0f5f8;color:#102637;padding:7px 9px;border-color:#bfd0dc}.schedule-table tr:nth-child(even) td{background:#dceaf1}.schedule-table tr.selected td{background:#c5f0df;font-weight:900}.schedule-table td button{color:#0b5474}
 .next-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.next-cards .assignment-head{padding:5px 3px;gap:3px;min-height:58px;align-items:flex-start}.next-cards .assignment-head>span{width:20px;height:20px;flex-basis:20px;font-size:.7rem}.next-cards .assignment-head b{font-size:.59rem}.next-cards .assignment-head small{font-size:.56rem}.next-cards .assignment-visual{height:58px;font-size:1.6rem}.next-cards .assignment-name{font-size:.7rem;padding:5px 2px}
@@ -299,6 +299,12 @@ header .brand{margin-bottom:8px}
 @media(max-width:780px){.assignment-cards.party-coverage-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}}
 
 
+/* Keep rotation flow compact: no forced panel height or stretched grid row. */
+.flow-panel.compact-flow-panel{min-height:0!important;height:auto!important;align-self:start;flex:none}
+.board-stack .flow-panel.compact-flow-panel{min-height:0!important;height:auto!important}
+.compact-flow-panel .rotation-wheel{height:82px;min-height:82px;max-height:82px;overflow:hidden}
+.compact-flow-panel .flow-caption{line-height:1.1}
+
 /* Correct mobile-first section order: current, next, compact flow, lunch, full-width schedule. */
 .board-stack{display:flex;flex-direction:column;gap:8px;margin:8px 0}
 .board-stack>.dash-panel,.break-room-panel,.full-schedule-panel{min-width:0;width:100%;box-sizing:border-box}
@@ -330,7 +336,7 @@ header .brand{margin-bottom:8px}
  .board-stack .next-cards .assignment-head{min-height:27px}
  .board-stack .next-cards .assignment-visual{height:22px}
  .board-stack .next-cards .assignment-name{font-size:clamp(6px,1.6vw,9px);padding:2px 0}
- .compact-flow-panel .rotation-wheel{height:86px;min-height:86px}
+ .compact-flow-panel .rotation-wheel{height:76px;min-height:76px;max-height:76px}
  .compact-flow-panel .wheel-node{min-height:22px;padding:2px 1px}
  .compact-flow-panel .wheel-node b{font-size:6px}
  .compact-flow-panel .wheel-arrow{font-size:10px}
@@ -368,11 +374,11 @@ header .brand{margin-bottom:8px}
     <section class="dash-panel current-panel">
       <div class="panel-heading"><h2>CURRENT HOUR</h2><strong id="currentHourLabel">—</strong></div>
       <div class="assignment-cards">
-        <article class="assignment-card green"><div class="assignment-head"><span>1</span><div><b>SURF COACH</b><small>Zone 1</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardPusher" class="assignment-name">—</div></article>
+        <article class="assignment-card blue"><div class="assignment-head"><span>1</span><div><b>SURF COACH</b><small>Zone 1</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardPusher" class="assignment-name">—</div></article>
         <article class="assignment-card blue"><div class="assignment-head"><span>2</span><div><b>SURF COACH</b><small>Zone 5</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardCatcher" class="assignment-name">—</div></article>
         <article class="assignment-card orange"><div class="assignment-head"><span>3</span><div><b>CONTROL TOWER</b><small>Make the waves</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardTower" class="assignment-name">—</div></article>
-        <article class="assignment-card purple"><div class="assignment-head"><span>4</span><div><b>BOARD ROOM A</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardA" class="assignment-name">—</div></article>
-        <article class="assignment-card pink"><div class="assignment-head"><span>5</span><div><b>BOARD ROOM B</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardB" class="assignment-name">—</div></article>
+        <article class="assignment-card green"><div class="assignment-head"><span>4</span><div><b>BOARD ROOM A</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardA" class="assignment-name">—</div></article>
+        <article class="assignment-card green"><div class="assignment-head"><span>5</span><div><b>BOARD ROOM B</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardB" class="assignment-name">—</div></article>
       </div>
     </section>
     <section class="dash-panel next-panel">
@@ -480,16 +486,16 @@ function coverageRowFor(day,time){
 function cardAssignments(row,day,time){
  const base=row?.positions||{};const special=[11,13].includes(hourStart(time));const cov=special?coverageRowFor(day,time):null;
  const defs=[
-  {title:"SURF COACH",subtitle:"Zone 1",keys:["Pool Pusher (Zone 1)","Pool Zone 1","Zone 1","Pool Pusher"],color:"green"},
-  {title:"SURF COACH",subtitle:"Zone 2",keys:["Pool Zone 2","Zone 2","Pool 2"],color:"green"},
-  {title:"SURF COACH",subtitle:"Zone 3",keys:["Pool Zone 3","Zone 3","Pool 3"],color:"green"},
-  {title:"SURF COACH",subtitle:"Zone 4",keys:["Pool Zone 4","Zone 4","Pool 4"],color:"green"},
+  {title:"SURF COACH",subtitle:"Zone 1",keys:["Pool Pusher (Zone 1)","Pool Zone 1","Zone 1","Pool Pusher"],color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 2",keys:["Pool Zone 2","Zone 2","Pool 2"],color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 3",keys:["Pool Zone 3","Zone 3","Pool 3"],color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 4",keys:["Pool Zone 4","Zone 4","Pool 4"],color:"blue"},
   {title:"SURF COACH",subtitle:"Zone 5",keys:["Pool Catcher (Zone 5)","Pool Zone 5","Zone 5","Pool Catcher"],color:"blue"},
   {title:"CONTROL TOWER",subtitle:"Tower A",keys:["Tower A","Control Tower A","Control Tower","Tower"],color:"orange"},
   {title:"CONTROL TOWER",subtitle:"Tower B",keys:["Tower B","Control Tower B"],color:"orange"},
-  {title:"BOARD ROOM A",subtitle:"",keys:["Board Room A","Board Room A Staff"],color:"purple"},
-  {title:"BOARD ROOM B",subtitle:"",keys:["Board Room B","Board Room B Staff"],color:"pink"},
-  {title:"BOARD ROOM C",subtitle:"",keys:["Board Room C","Board Room C Staff"],color:"pink"}
+  {title:"BOARD ROOM A",subtitle:"",keys:["Board Room A","Board Room A Staff"],color:"green"},
+  {title:"BOARD ROOM B",subtitle:"",keys:["Board Room B","Board Room B Staff"],color:"green"},
+  {title:"BOARD ROOM C",subtitle:"",keys:["Board Room C","Board Room C Staff"],color:"green"}
  ];
  return (special?defs:defs.filter((d,i)=>[0,4,5,7,8].includes(i))).map((d,i)=>{
   let val=cov?field(cov,d.keys):"";
