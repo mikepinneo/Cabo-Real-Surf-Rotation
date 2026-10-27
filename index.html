@@ -298,6 +298,47 @@ header .brand{margin-bottom:8px}
 .party-coverage-cards .assignment-name{background:#fff;color:#092532;font-weight:900}
 @media(max-width:780px){.assignment-cards.party-coverage-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}}
 
+
+/* Correct mobile-first section order: current, next, compact flow, lunch, full-width schedule. */
+.board-stack{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.board-stack>.dash-panel,.break-room-panel,.full-schedule-panel{min-width:0;width:100%;box-sizing:border-box}
+.board-stack .assignment-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}
+.board-stack .next-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}
+.compact-flow-panel{padding:7px!important}
+.compact-flow-panel .rotation-wheel{height:100px;min-height:100px;max-width:100%;margin:0 auto}
+.compact-flow-panel .wheel-node{min-height:25px;padding:2px 3px;border-radius:5px}
+.compact-flow-panel .wheel-node span{width:13px;height:13px;font-size:8px}
+.compact-flow-panel .wheel-node b{font-size:7px;line-height:1.05}
+.compact-flow-panel .wheel-arrow{font-size:12px}
+.compact-flow-panel .flow-caption{font-size:9px;margin-top:1px}
+.break-room-panel{margin:7px 0;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.break-room-panel .staff-tags{display:flex;flex-wrap:wrap;gap:4px}
+.full-schedule-panel{margin:8px 0}
+.full-schedule-panel .schedule-table{width:100%;max-width:100%;overflow-x:auto}
+@media(max-width:620px){
+ .board-stack{gap:6px;margin:6px 0}
+ .board-stack .dash-panel{padding:5px;border-radius:9px}
+ .board-stack .assignment-cards,.board-stack .next-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;overflow:visible}
+ .board-stack .assignment-card{min-width:0;border-radius:4px}
+ .board-stack .assignment-head{min-height:27px;padding:2px 1px;gap:1px}
+ .board-stack .assignment-head>span{width:12px;height:12px;flex-basis:12px;font-size:7px}
+ .board-stack .assignment-head b{font-size:clamp(5px,1.5vw,8px);line-height:1}
+ .board-stack .assignment-head small{font-size:clamp(4px,1.25vw,7px);line-height:1;margin-top:1px}
+ .board-stack .assignment-visual{height:22px;padding-top:0}
+ .board-stack .person-icon{transform:scale(.38);transform-origin:bottom center;height:18px}
+ .board-stack .assignment-name{font-size:clamp(6px,1.7vw,9px);padding:2px 0;min-height:14px}
+ .board-stack .next-cards .assignment-head{min-height:27px}
+ .board-stack .next-cards .assignment-visual{height:22px}
+ .board-stack .next-cards .assignment-name{font-size:clamp(6px,1.6vw,9px);padding:2px 0}
+ .compact-flow-panel .rotation-wheel{height:86px;min-height:86px}
+ .compact-flow-panel .wheel-node{min-height:22px;padding:2px 1px}
+ .compact-flow-panel .wheel-node b{font-size:6px}
+ .compact-flow-panel .wheel-arrow{font-size:10px}
+ .compact-flow-panel .flow-caption{font-size:8px}
+ .full-schedule-panel{padding:6px;margin:6px 0}
+ .full-schedule-panel .schedule-table table{min-width:540px}
+}
+
 </style>
 </head>
 <body>
@@ -323,7 +364,7 @@ header .brand{margin-bottom:8px}
       <img id="poolAerialImage" class="aerial-image" src="pool-aerial.png" alt="Aerial site layout showing the surf pool and surrounding staff work areas">
     </div>
   </div>
-  <div class="dashboard-grid">
+  <div class="board-stack">
     <section class="dash-panel current-panel">
       <div class="panel-heading"><h2>CURRENT HOUR</h2><strong id="currentHourLabel">—</strong></div>
       <div class="assignment-cards">
@@ -334,29 +375,31 @@ header .brand{margin-bottom:8px}
         <article class="assignment-card pink"><div class="assignment-head"><span>5</span><div><b>BOARD ROOM B</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardB" class="assignment-name">—</div></article>
       </div>
     </section>
-    <section class="dash-panel flow-panel">
+    <section class="dash-panel next-panel">
+      <div class="panel-heading"><h2>NEXT HOUR</h2><strong id="nextHourLabel">—</strong></div>
+      <div id="nextHourCards" class="next-cards"></div>
+    </section>
+    <section class="dash-panel flow-panel compact-flow-panel">
       <div class="panel-heading"><h2>ROTATION FLOW</h2><span class="map-note">Hourly rotation</span></div>
       <div class="rotation-wheel">
-        <div class="wheel-node n1"><span>1</span><b>SURF COACH</b><strong id="flowPusher">—</strong></div>
-        <div class="wheel-node n2"><span>2</span><b>SURF COACH</b><strong id="flowCatcher">—</strong></div>
-        <div class="wheel-node n3"><span>3</span><b>CONTROL TOWER</b><strong id="flowTower">—</strong></div>
-        <div class="wheel-node n4"><span>4</span><b>BOARD ROOM A</b><strong id="flowBoardA">—</strong></div>
-        <div class="wheel-node n5"><span>5</span><b>BOARD ROOM B</b><strong id="flowBoardB">—</strong></div>
+        <div class="wheel-node n1"><span>1</span><b>SURF COACH</b><strong id="flowPusher" class="hidden">—</strong></div>
+        <div class="wheel-node n2"><span>2</span><b>SURF COACH</b><strong id="flowCatcher" class="hidden">—</strong></div>
+        <div class="wheel-node n3"><span>3</span><b>CONTROL TOWER</b><strong id="flowTower" class="hidden">—</strong></div>
+        <div class="wheel-node n4"><span>4</span><b>BOARD ROOM A</b><strong id="flowBoardA" class="hidden">—</strong></div>
+        <div class="wheel-node n5"><span>5</span><b>BOARD ROOM B</b><strong id="flowBoardB" class="hidden">—</strong></div>
         <div class="wheel-arrow a12">↘</div><div class="wheel-arrow a23">↙</div><div class="wheel-arrow a34">←</div><div class="wheel-arrow a45">↖</div><div class="wheel-arrow a51">↗</div>
       </div>
       <div class="flow-caption">Everyone rotates each hour in this direction.</div>
     </section>
   </div>
-  <div class="dashboard-grid lower-grid">
-    <section class="dash-panel schedule-panel">
-      <div class="panel-heading"><h2>HOURLY ROTATION SCHEDULE</h2><span class="map-note">Select a row to view it</span></div>
-      <div id="hourlySchedule" class="schedule-table"></div>
-    </section>
-    <section class="dash-panel next-panel">
-      <div class="panel-heading"><h2>NEXT HOUR</h2><strong id="nextHourLabel">—</strong></div>
-      <div id="nextHourCards" class="next-cards"></div>
-    </section>
-  </div>
+  <section id="breakRoomPanel" class="dash-panel break-room-panel hidden">
+    <div class="panel-heading"><h2>BREAK ROOM</h2><strong id="breakRoomLabel">—</strong></div>
+    <div id="breakRoomVisible" class="staff-tags"></div>
+  </section>
+  <section class="dash-panel schedule-panel full-schedule-panel">
+    <div class="panel-heading"><h2>HOURLY ROTATION SCHEDULE</h2><span class="map-note">Select a row to view it</span></div>
+    <div id="hourlySchedule" class="schedule-table"></div>
+  </section>
   <div class="section-title hidden">Position assignments · selected hour</div>
 
   <div class="zone-grid hidden">
@@ -415,7 +458,7 @@ function renderPills(){const host=$("employeePills");host.innerHTML="";STAFF_NAM
 function staffTag(name){const b=document.createElement("button");b.className="staff-tag"+(selectedEmployee===name?" highlight":"");b.textContent=name;b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};return b}
 function fill(id,values){const el=$(id);el.innerHTML="";const names=[...new Set(values.flatMap(splitNames))];if(!names.length){el.innerHTML='<span class="empty">No assignment recorded</span>';return}names.forEach(n=>el.appendChild(staffTag(n)))}
 function setMap(id,names){const el=$(id),vals=[...new Set(names.flatMap(splitNames))];el.textContent=vals.length?vals.join(" · "):"—";el.classList.toggle("highlight",!!selectedEmployee&&vals.includes(selectedEmployee));const flowIds={mapPusher:"flowPusher",mapCatcher:"flowCatcher",mapTower:"flowTower",mapBoardA:"flowBoardA",mapBoardB:"flowBoardB"};if(flowIds[id])$(flowIds[id]).textContent=vals.length?vals.join(" · "):"—";if(flowIds[id])$(flowIds[id]).parentElement.classList.toggle("active",!!selectedEmployee&&vals.includes(selectedEmployee))}
-function renderBoard(){const day=$("daySelect").value,time=$("hourSelect").value,row=findRow(day,time);const selectedStart=hourStart(time);const poolImage=$("poolAerialImage");if(poolImage){const partyImage=[11,13].includes(selectedStart);poolImage.src=partyImage?"pool-party-aerial.png":"pool-aerial.png";poolImage.alt=partyImage?"Five surf coaches positioned in pool Zones 1, 2, 3, 4 and 5 for pool-party coverage":"Standard surf pool staff positions, including Surf Coach Zone 1 and Surf Coach Zone 5";}$("poolTime").textContent=`${day} · ${time||"No rotation selected"}`;const ids=["pusher","catcher","boardA","boardB","tower","breakRoom","extra"];if(!row){ids.forEach(id=>fill(id,[]));$("partyNotice").classList.add("hidden")}else{const p=row.positions;fill("pusher",[p["Pool Pusher (Zone 1)"]]);fill("catcher",[p["Pool Catcher (Zone 5)"]]);fill("tower",[p["Control Tower"]]);fill("boardA",[p["Board Room A"]]);fill("boardB",[p["Board Room B"]]);const extra=[],breaks=[];Object.keys(sheetMap).filter(n=>/pool party|daily coverage|daily staffing|positions|glide setup/i.test(n)).forEach(n=>parseSheet(n).forEach(r=>{const d=field(r,["Day","Weekday"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);if(normalize(d)===normalize(day)&&(!t||hourStart(t)===hourStart(time))){Object.entries(r).forEach(([k,v])=>{if(/break|lunch/i.test(k))breaks.push(...splitNames(v));else if(!/day|hour|time|rotation|session|date/i.test(k))extra.push(...splitNames(v))})}}));const core=new Set(Object.values(p).flatMap(splitNames));fill("extra",extra.filter(n=>!core.has(n)));const breakHour=hourStart(time);if(breakHour===12)breaks.push(...[...($("dailyAmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));if(breakHour===14)breaks.push(...[...($("dailyPmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));fill("breakRoom",breaks);const hasExtra=extra.some(n=>!core.has(n));$("partyNotice").classList.toggle("hidden",!hasExtra);$("partyNotice").textContent=hasExtra?"Additional pool-party or coverage assignments are listed in Other / party coverage.":""}
+function renderBoard(){const day=$("daySelect").value,time=$("hourSelect").value,row=findRow(day,time);const selectedStart=hourStart(time);const poolImage=$("poolAerialImage");if(poolImage){const partyImage=[11,13].includes(selectedStart);poolImage.src=partyImage?"pool-party-aerial.png":"pool-aerial.png";poolImage.alt=partyImage?"Five surf coaches positioned in pool Zones 1, 2, 3, 4 and 5 for pool-party coverage":"Standard surf pool staff positions, including Surf Coach Zone 1 and Surf Coach Zone 5";}$("poolTime").textContent=`${day} · ${time||"No rotation selected"}`;const ids=["pusher","catcher","boardA","boardB","tower","breakRoom","extra"];if(!row){ids.forEach(id=>fill(id,[]));$("partyNotice").classList.add("hidden")}else{const p=row.positions;fill("pusher",[p["Pool Pusher (Zone 1)"]]);fill("catcher",[p["Pool Catcher (Zone 5)"]]);fill("tower",[p["Control Tower"]]);fill("boardA",[p["Board Room A"]]);fill("boardB",[p["Board Room B"]]);const extra=[],breaks=[];Object.keys(sheetMap).filter(n=>/pool party|daily coverage|daily staffing|positions|glide setup/i.test(n)).forEach(n=>parseSheet(n).forEach(r=>{const d=field(r,["Day","Weekday"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);if(normalize(d)===normalize(day)&&(!t||hourStart(t)===hourStart(time))){Object.entries(r).forEach(([k,v])=>{if(/break|lunch/i.test(k))breaks.push(...splitNames(v));else if(!/day|hour|time|rotation|session|date/i.test(k))extra.push(...splitNames(v))})}}));const core=new Set(Object.values(p).flatMap(splitNames));fill("extra",extra.filter(n=>!core.has(n)));const breakHour=hourStart(time);if(breakHour===12)breaks.push(...[...($("dailyAmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));if(breakHour===14)breaks.push(...[...($("dailyPmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));fill("breakRoom",breaks);const visibleBreak=$("breakRoomVisible");if(visibleBreak)visibleBreak.innerHTML=$("breakRoom").innerHTML;const breakPanel=$("breakRoomPanel");if(breakPanel){const showBreak=[12,14].includes(breakHour);breakPanel.classList.toggle("hidden",!showBreak);$("breakRoomLabel").textContent=breakHour===12?"AM Crew Lunch":breakHour===14?"PM Crew Lunch":"";}const hasExtra=extra.some(n=>!core.has(n));$("partyNotice").classList.toggle("hidden",!hasExtra);$("partyNotice").textContent=hasExtra?"Additional pool-party or coverage assignments are listed in Other / party coverage.":""}
 const p=row?.positions||{};
 const h=currentHour(),open=h>=7&&h<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed";$("statusDetail").textContent=`Current status uses actual Cabo local time (${timeText()}), not the selected roster hour. Selected board: ${day} ${time||"—"}.`;
 }
