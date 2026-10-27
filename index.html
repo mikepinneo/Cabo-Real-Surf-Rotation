@@ -220,6 +220,61 @@ header .brand{margin-bottom:8px}
  .hour-buttons{grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
  .hour-btn{font-size:11px;padding:7px 0}
 }
+
+/* Extra compact mobile reference sizing */
+@media(max-width:620px){
+  body{font-size:12px;line-height:1.28}
+  header{padding:7px 8px 6px}
+  .brand{font-size:1rem;margin:1px 0 6px}
+  .kicker{font-size:.5rem}
+  .tabs{gap:4px}.tab{font-size:.6rem;padding:7px 2px;border-radius:7px}
+  .connection{font-size:.62rem;margin-top:5px}
+  main{padding:5px 7px 9px}
+  .section-title{font-size:.6rem;margin:5px 0}
+  .pills{gap:3px;margin-bottom:6px}
+  .pills .pill{font-size:10px;padding:5px 7px;line-height:1}
+  .day-buttons{gap:3px;margin:5px 0 4px}
+  .day-btn,.hour-btn{font-size:.62rem;padding:6px 0;border-radius:6px}
+  .hour-buttons{gap:2px;margin-bottom:6px}
+  .map-card{margin-bottom:5px}
+  .reference-map .aerial-stage{border-radius:7px}
+  .dashboard-grid{grid-template-columns:minmax(0,1.45fr) minmax(0,.9fr);gap:5px;margin:5px 0}
+  .dash-panel{padding:5px;border-radius:9px}
+  .panel-heading{margin-bottom:4px;gap:3px}
+  .panel-heading h2{font-size:.61rem;line-height:1.1}
+  .panel-heading>strong{font-size:.58rem}
+  .current-panel .assignment-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}
+  .current-panel .assignment-card{border-width:1px;border-radius:4px}
+  .current-panel .assignment-head{min-height:28px;padding:2px 1px;gap:1px}
+  .current-panel .assignment-head>span{width:12px;height:12px;flex-basis:12px;font-size:.48rem}
+  .current-panel .assignment-head b{font-size:.36rem;line-height:1}
+  .current-panel .assignment-head small{font-size:.34rem;line-height:1;margin-top:1px}
+  .current-panel .assignment-visual{height:38px;padding-top:0}
+  .current-panel .person-icon{transform:scale(.62);height:28px}
+  .current-panel .assignment-name{font-size:.5rem;padding:2px 1px;min-height:17px}
+  .rotation-wheel{height:126px;min-height:126px;max-width:100%}
+  .wheel-node{min-height:29px;padding:3px 1px;border-radius:4px}
+  .wheel-node span{width:13px;height:13px;font-size:8px}
+  .wheel-node b{font-size:6px;line-height:1}
+  .wheel-arrow{font-size:11px}
+  .flow-caption{font-size:8px}
+  .schedule-table{max-height:350px}
+  .schedule-table table{min-width:400px;font-size:.57rem}
+  .schedule-table th,.schedule-table td{padding:3px 4px}
+  .next-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}
+  .next-cards .assignment-head{min-height:33px;padding:2px 1px}
+  .next-cards .assignment-head>span{width:12px;height:12px;flex-basis:12px;font-size:.46rem}
+  .next-cards .assignment-head b{font-size:.34rem}.next-cards .assignment-head small{font-size:.32rem}
+  .next-cards .assignment-visual{height:35px}.next-cards .assignment-name{font-size:.48rem;padding:2px 1px}
+  .daily-crew-panel{margin:6px 0 3px;padding:5px}
+  .daily-crew-panel .panel-heading h2{font-size:.58rem}
+  .daily-crew-panel .panel-heading>strong{font-size:.54rem}
+  .crew-summary h3{font-size:.5rem;padding:4px 2px}
+  .crew-names{padding:3px;gap:2px}
+  .crew-name{font-size:.5rem;padding:2px 3px}
+  footer{padding:0 8px 10px;font-size:.65rem}
+}
+
 </style>
 </head>
 <body>
@@ -393,5 +448,3 @@ $("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()})
 </script>
 </body>
 </html>
-/* Current-hour cards: compact reference-style sizing on narrow screens */
-@media(max-width:620px){.current-panel .assignment-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}.current-panel .assignment-head{min-height:31px;padding:3px 2px}.current-panel .assignment-head>span{width:14px;height:14px;flex-basis:14px}.current-panel .assignment-head b{font-size:.4rem}.current-panel .assignment-head small{font-size:.38rem}.current-panel .assignment-visual{height:44px}.current-panel .assignment-name{font-size:.56rem;padding:3px 1px;min-height:20px}}
