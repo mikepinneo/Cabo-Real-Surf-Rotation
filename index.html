@@ -20,6 +20,16 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 .map-card{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:14px;margin:14px 0 20px}.map-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 8px}.map-heading h2{font-size:1.15rem;margin:0}.map-note{font-size:.82rem;color:var(--muted)}.site-map{display:block;width:100%;height:auto;max-height:560px}.map-zone{fill:#092f39;stroke:#65c5d7;stroke-width:2}.map-building{fill:#17383d;stroke:#80d5e1;stroke-width:2}.map-label{fill:#e4f2f4;font-size:15px;font-weight:800;text-anchor:middle}.map-sub{fill:#a9e8f1;font-size:12px;text-anchor:middle}.map-person{fill:#ffd84f;font-size:14px;font-weight:850;text-anchor:middle}.map-water{fill:#0d4654;stroke:#246778;stroke-width:5}.map-land{fill:#102b30;stroke:#24474e;stroke-width:2}.map-staff{cursor:pointer}
 
 
+.daily-crew-panel{margin:18px 0;background:#061b2a;border:1px solid #234353;border-radius:15px;padding:14px}
+.daily-crew-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.crew-summary{border:1px solid #284b5a;border-radius:12px;overflow:hidden;background:#0b2735;min-width:0}
+.crew-summary h3{font-size:.88rem;margin:0;padding:11px 12px;color:white;letter-spacing:.05em}
+.crew-summary.am h3{background:#14794b}.crew-summary.pm h3{background:#1457a6}.crew-summary.off h3{background:#5c6370}
+.crew-names{padding:12px;display:flex;flex-wrap:wrap;gap:7px;min-height:66px;color:#e4f2f4}
+.crew-name{border:1px solid #3c6371;background:#123744;border-radius:999px;padding:6px 10px;font-size:.85rem;font-weight:750}
+.crew-empty{color:#9bb8be;font-size:.86rem;font-style:italic}
+@media(max-width:600px){.daily-crew-grid{grid-template-columns:1fr}.crew-names{min-height:44px}}
+
 .dashboard-grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(310px,1fr);gap:14px;margin:14px 0}
 .dash-panel{min-width:0;background:#061b2a;border:1px solid #234353;border-radius:15px;padding:12px;overflow:hidden}
 .panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;flex-wrap:wrap}
@@ -62,6 +72,115 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 .hidden{display:none!important}.empty-state{border:1px dashed var(--line);border-radius:18px;padding:22px;color:var(--muted)}footer{max-width:1500px;margin:auto;padding:0 clamp(14px,4vw,42px) 28px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.85rem}
 @media(max-width:780px){.dashboard-grid{grid-template-columns:1fr}.assignment-cards,.next-cards{grid-template-columns:repeat(5,minmax(112px,1fr));overflow-x:auto;padding-bottom:4px}.assignment-cards{display:grid}.flow-panel{min-height:300px}.rotation-wheel{min-height:230px}.reference-map .aerial-image{aspect-ratio:1536/445;min-height:160px}header{padding-top:16px}.positions-grid{grid-template-columns:1fr 1fr}.site-map{max-height:none}.tab{font-size:.92rem;padding:12px 5px}.card{padding:14px}.map-card{padding:10px}}
 @media(max-width:460px){.panel-heading h2{font-size:.9rem}.wheel-node{width:40%}.wheel-node b{font-size:.6rem}.wheel-node strong{font-size:.65rem}.positions-grid{grid-template-columns:1fr}.zone-grid{grid-template-columns:1fr}.tabs{gap:6px}.tab{font-size:.82rem}.map-label{font-size:17px}.map-sub{font-size:14px}.map-person{font-size:15px}}
+
+
+/* Compact roster layout matched to the reference screen */
+body{font-size:14px}
+header{position:relative;padding:12px 16px 10px;background:#071d21;border-bottom:1px solid #173e48}
+.kicker{font-size:.65rem;letter-spacing:.18em}
+.brand{font-size:1.45rem;margin:2px 0 10px;letter-spacing:-.035em}
+.tabs{gap:6px}.tab{font-size:.78rem;padding:10px 4px;border-radius:9px}
+.connection{font-size:.72rem;margin-top:8px}
+main{max-width:1180px;padding:10px 16px 26px}
+.section-title{font-size:.72rem;letter-spacing:.1em;margin:7px 0}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 10px}
+.pills .pill{font-size:.74rem;padding:7px 10px;border:1px solid #284a54;background:#102b30;color:#e4f2f4}
+.pills .pill.selected{background:var(--yellow);border-color:var(--yellow);color:#24353b}
+.day-buttons{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:8px 0 6px}
+.day-btn,.hour-btn{border:1px solid #284a54;background:#0e2930;color:#d6e7eb;border-radius:8px;padding:9px 2px;font-weight:800;font-size:.75rem;min-width:0}
+.day-btn.active,.hour-btn.active{background:var(--cyan);color:#062b32;border-color:var(--cyan)}
+.hour-buttons{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin:0 0 10px}
+.hour-btn{padding:8px 1px;font-size:.7rem}
+.map-card{padding:0;border:0;background:transparent;border-radius:10px;margin:0 0 10px}
+.map-heading{display:none}.reference-map .aerial-stage{border-radius:9px;overflow:hidden}
+.reference-map .aerial-image{display:block;width:100%;height:auto;aspect-ratio:1536/445;object-fit:cover}
+.map-live{display:none!important}
+.dashboard-grid{grid-template-columns:minmax(0,1.45fr) minmax(240px,.9fr);gap:8px;margin:8px 0}
+.dash-panel{border-radius:11px;padding:8px;background:#071d2b}
+.panel-heading{margin-bottom:7px;align-items:baseline}
+.panel-heading h2{font-size:.83rem;letter-spacing:0}
+.panel-heading>strong{font-size:.8rem}
+.assignment-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.assignment-card{border-radius:7px;border-width:2px}
+.assignment-head{padding:4px 3px;gap:4px;min-height:38px}
+.assignment-head>span{width:19px;height:19px;flex-basis:19px;font-size:.72rem}
+.assignment-head b{font-size:clamp(.48rem,.78vw,.7rem)}
+.assignment-head small{font-size:.58rem;line-height:1.05}
+.assignment-visual{height:72px;background:linear-gradient(#d8e9e7,#91c8c5);display:flex;align-items:flex-end;justify-content:center;padding-top:10px}
+.person-icon{position:relative;display:block;width:32px;height:40px;margin:0 auto}
+.person-icon:before{content:"";position:absolute;top:0;left:10px;width:12px;height:12px;border-radius:50%;background:transparent;border:2px solid #172d32}
+.person-icon:after{content:"";position:absolute;bottom:0;left:2px;width:28px;height:21px;border-radius:15px 15px 3px 3px;background:transparent;border:2px solid #172d32;border-bottom-width:3px}
+.assignment-name{padding:5px 2px;min-height:27px;font-size:.75rem}
+.rotation-wheel{min-height:190px}
+.wheel-node{min-height:43px;padding:5px 3px;gap:1px}
+.wheel-node span{width:17px;height:17px;font-size:.65rem}
+.wheel-node b{font-size:.55rem}.wheel-node strong{font-size:.58rem}
+.wheel-arrow{font-size:1.5rem}
+.flow-caption{font-size:.7rem;margin-top:3px}
+.schedule-table{max-height:450px}
+.schedule-table table{min-width:540px;font-size:.72rem}
+.schedule-table th,.schedule-table td{padding:5px 6px}
+.next-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.next-cards .assignment-head{padding:4px 2px;gap:2px;min-height:44px}
+.next-cards .assignment-head>span{width:16px;height:16px;flex-basis:16px;font-size:.6rem}
+.next-cards .assignment-head b{font-size:.48rem}.next-cards .assignment-head small{font-size:.46rem}
+.next-cards .assignment-visual{height:52px}.next-cards .assignment-name{font-size:.62rem;padding:4px 1px}
+.zone-grid,.positions-grid,.status-card{display:none!important}
+@media(max-width:620px){
+  header{padding:10px 8px}.brand{font-size:1.18rem}.kicker{font-size:.58rem}
+  .tab{font-size:.66rem;padding:9px 2px}
+  main{padding:8px 8px 24px}
+  .pills{gap:4px}.pills .pill{font-size:.66rem;padding:6px 8px}
+  .hour-buttons{grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+  .hour-btn{font-size:.6rem;padding:7px 0}
+  .dashboard-grid{grid-template-columns:minmax(0,1.45fr) minmax(0,.9fr);gap:6px}
+  .dash-panel{padding:6px}
+  .panel-heading h2{font-size:.68rem}.panel-heading>strong{font-size:.65rem}
+  .assignment-cards{grid-template-columns:repeat(5,minmax(66px,1fr));overflow-x:auto}
+  .assignment-head{align-items:flex-start;min-height:42px}.assignment-head b{font-size:.49rem}.assignment-head small{font-size:.48rem}
+  .assignment-visual{height:62px}
+  .assignment-name{font-size:.68rem}
+  .rotation-wheel{min-height:170px}
+  .wheel-node{width:39%;min-height:38px}.wheel-node b{font-size:.43rem}.wheel-node strong{font-size:.48rem}
+  .wheel-arrow{font-size:1.15rem}
+  .schedule-table table{min-width:470px;font-size:.64rem}
+  .schedule-table th,.schedule-table td{padding:4px 5px}
+  .next-cards{grid-template-columns:repeat(4,minmax(0,1fr));overflow-x:auto}
+  .next-cards .assignment-card{min-width:50px}
+  .next-cards .assignment-head b{font-size:.42rem}.next-cards .assignment-head small{font-size:.4rem}
+  .next-cards .assignment-visual{height:42px}.next-cards .assignment-name{font-size:.56rem}
+}
+
+
+/* Final compact sizing pass: keep the whole board close to the reference proportions */
+main{padding-top:8px;padding-bottom:14px}
+header .brand{margin-bottom:8px}
+.dashboard-grid{align-items:start}
+.current-panel,.next-panel{min-width:0}
+.daily-crew-panel{margin:10px 0 4px;padding:8px;border-radius:10px}
+.daily-crew-panel .panel-heading{margin-bottom:5px}
+.daily-crew-panel .panel-heading h2{font-size:.76rem}
+.daily-crew-panel .panel-heading>strong{font-size:.7rem}
+.daily-crew-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.crew-summary{border-radius:8px}
+.crew-summary h3{font-size:.68rem;padding:7px 6px}
+.crew-names{padding:6px;gap:4px;min-height:34px}
+.crew-name{font-size:.65rem;padding:3px 6px}
+.crew-empty{font-size:.65rem}
+@media(max-width:620px){
+  main{padding:7px 7px 12px}
+  .daily-crew-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+  .daily-crew-panel{padding:6px;margin-top:8px}
+  .daily-crew-panel .panel-heading h2{font-size:.62rem}
+  .daily-crew-panel .panel-heading>strong{font-size:.58rem}
+  .crew-summary h3{font-size:.56rem;padding:6px 3px;letter-spacing:0}
+  .crew-names{padding:4px;gap:3px;min-height:28px}
+  .crew-name{font-size:.56rem;padding:3px 4px;border-radius:6px}
+  .crew-empty{font-size:.55rem}
+  .map-card{margin-bottom:7px}
+  .dashboard-grid{margin:6px 0;gap:5px}
+}
+
 </style>
 </head>
 <body>
@@ -75,32 +194,27 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 </header>
 <main>
 <section id="liveView">
-  <div class="section-title">Live operations · select an employee name to highlight assignments</div>
-  <div class="toolbar"><label for="daySelect">Day</label><select id="daySelect"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select><label for="hourSelect">Rotation</label><select id="hourSelect"></select><button id="nowButton" class="pill">Current time</button></div>
+  <div class="section-title">HIGHLIGHT A PERSON</div>
   <div id="employeePills" class="pills" aria-label="Employee selection"></div>
+  <div class="day-buttons" id="dayButtons" aria-label="Select day"></div>
+  <div class="hour-buttons" id="hourButtons" aria-label="Select hour"></div>
+  <div class="toolbar hidden"><label for="daySelect">Day</label><select id="daySelect"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select><label for="hourSelect">Rotation</label><select id="hourSelect"></select><button id="nowButton" class="pill">Current time</button></div>
   <div id="partyNotice" class="notice hidden"></div>
   <div class="map-card reference-map">
     <div class="map-heading"><h2>Surf Pool · Staff Positions</h2><span id="poolTime" class="map-note"></span></div>
     <div class="aerial-stage">
       <img class="aerial-image" src="pool-aerial.png" alt="Aerial site layout showing the surf pool and surrounding staff work areas">
-      <div id="mapPusher" class="map-live map-pusher">—</div>
-      <div id="mapCatcher" class="map-live map-catcher">—</div>
-      <div id="mapBoardA" class="map-live map-board-a">—</div>
-      <div id="mapBoardB" class="map-live map-board-b">—</div>
-      <div id="mapTower" class="map-live map-tower">—</div>
-      <div id="mapBreak" class="map-live map-break">—</div>
-      <div id="mapExtra" class="map-live map-extra">—</div>
     </div>
   </div>
   <div class="dashboard-grid">
     <section class="dash-panel current-panel">
       <div class="panel-heading"><h2>CURRENT HOUR</h2><strong id="currentHourLabel">—</strong></div>
       <div class="assignment-cards">
-        <article class="assignment-card green"><div class="assignment-head"><span>1</span><div><b>POOL PUSHER</b><small>Zone 1</small></div></div><div class="assignment-visual">🌊</div><div id="cardPusher" class="assignment-name">—</div></article>
-        <article class="assignment-card blue"><div class="assignment-head"><span>2</span><div><b>POOL CATCHER</b><small>Zone 5</small></div></div><div class="assignment-visual">🏄</div><div id="cardCatcher" class="assignment-name">—</div></article>
-        <article class="assignment-card orange"><div class="assignment-head"><span>3</span><div><b>CONTROL TOWER</b><small>Make the waves</small></div></div><div class="assignment-visual">🎛️</div><div id="cardTower" class="assignment-name">—</div></article>
-        <article class="assignment-card purple"><div class="assignment-head"><span>4</span><div><b>BOARD ROOM A</b><small>Check in / out</small></div></div><div class="assignment-visual">🏄‍♂️</div><div id="cardBoardA" class="assignment-name">—</div></article>
-        <article class="assignment-card pink"><div class="assignment-head"><span>5</span><div><b>BOARD ROOM B</b><small>Check in / out</small></div></div><div class="assignment-visual">🏄‍♂️</div><div id="cardBoardB" class="assignment-name">—</div></article>
+        <article class="assignment-card green"><div class="assignment-head"><span>1</span><div><b>POOL PUSHER</b><small>Zone 1</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardPusher" class="assignment-name">—</div></article>
+        <article class="assignment-card blue"><div class="assignment-head"><span>2</span><div><b>POOL CATCHER</b><small>Zone 5</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardCatcher" class="assignment-name">—</div></article>
+        <article class="assignment-card orange"><div class="assignment-head"><span>3</span><div><b>CONTROL TOWER</b><small>Make the waves</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardTower" class="assignment-name">—</div></article>
+        <article class="assignment-card purple"><div class="assignment-head"><span>4</span><div><b>BOARD ROOM A</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardA" class="assignment-name">—</div></article>
+        <article class="assignment-card pink"><div class="assignment-head"><span>5</span><div><b>BOARD ROOM B</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardB" class="assignment-name">—</div></article>
       </div>
     </section>
     <section class="dash-panel flow-panel">
@@ -126,20 +240,28 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
       <div id="nextHourCards" class="next-cards"></div>
     </section>
   </div>
-  <div class="section-title">Position assignments · selected hour</div>
+  <div class="section-title hidden">Position assignments · selected hour</div>
 
-  <div class="zone-grid">
+  <div class="zone-grid hidden">
     <div class="zone"><h4>POOL PUSHER · ZONE 1</h4><div id="pusher" class="staff-tags"></div></div>
     <div class="zone"><h4>POOL CATCHER · ZONE 5</h4><div id="catcher" class="staff-tags"></div></div>
     <div class="zone"><h4>BOARD ROOM A</h4><div id="boardA" class="staff-tags"></div></div>
     <div class="zone"><h4>BOARD ROOM B</h4><div id="boardB" class="staff-tags"></div></div>
   </div>
-  <div class="positions-grid">
+  <div class="positions-grid hidden">
     <div class="location-card"><h3>Control Tower</h3><div id="tower" class="staff-tags"></div></div>
     <div class="location-card"><h3>Break Room / Lunch</h3><div id="breakRoom" class="staff-tags"></div></div>
     <div class="location-card"><h3>Other / party coverage</h3><div id="extra" class="staff-tags"></div></div>
   </div>
-  <div class="status-card"><div class="section-title">Operating status · based on actual Cabo time</div><h2 id="operatingStatus">Loading roster…</h2><div id="statusDetail" class="muted">Operating hours are 7:00 AM–7:00 PM Cabo time.</div><div class="clock-row"><span id="liveClock" class="clock">--:--</span><span id="dateLabel" class="muted">Cabo time</span></div></div>
+  <div class="status-card hidden"><div class="section-title">Operating status · based on actual Cabo time</div><h2 id="operatingStatus">Loading roster…</h2><div id="statusDetail" class="muted">Operating hours are 7:00 AM–7:00 PM Cabo time.</div><div class="clock-row"><span id="liveClock" class="clock">--:--</span><span id="dateLabel" class="muted">Cabo time</span></div></div>
+  <section class="daily-crew-panel">
+    <div class="panel-heading"><h2>DAILY CREW OVERVIEW</h2><strong id="dailyCrewDay">—</strong></div>
+    <div class="daily-crew-grid">
+      <article class="crew-summary am"><h3>AM CREW</h3><div id="dailyAmCrew" class="crew-names">Loading…</div></article>
+      <article class="crew-summary pm"><h3>PM CREW</h3><div id="dailyPmCrew" class="crew-names">Loading…</div></article>
+      <article class="crew-summary off"><h3>DAY OFF</h3><div id="dailyDayOff" class="crew-names">Loading…</div></article>
+    </div>
+  </section>
 </section>
 <section id="weekView" class="hidden">
   <div class="section-title">My week · individual schedule</div>
@@ -157,7 +279,8 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 const DATABASE_URL="https://cabo-real-surf-club-default-rtdb.firebaseio.com";
 const DATA_PATH="/surfOps.json",REFRESH_MS=30000,CABO_TZ="America/Mazatlan";
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-let rootData=null,sheetMap={},employees=[],selectedEmployee="",allRows=[];
+const STAFF_NAMES=["Ana","Bost","Chino","Diana","Felix","Fernando","Green","Kody","Linden","Makeni","Marley","Pomo","Tlaca","Toni","Wikin","Lucho"];
+let rootData=null,sheetMap={},employees=[...STAFF_NAMES],selectedEmployee="",allRows=[];
 const $=id=>document.getElementById(id),normalize=s=>String(s??"").trim().toLowerCase().replace(/\s+/g," ");
 function asArray(v){if(Array.isArray(v))return v;if(v&&typeof v==="object")return Object.keys(v).sort((a,b)=>Number(a)-Number(b)).map(k=>v[k]);return []}
 function parseSheet(name){const s=sheetMap[name];if(!s)return [];const headers=asArray(s.headers).map(v=>String(v??"").trim());let rows=asArray(s.values);if(!rows.length)rows=asArray(s.rows);return rows.map(r=>{if(r&&!Array.isArray(r)&&typeof r==="object")return r;const o={};headers.forEach((h,i)=>o[h]=asArray(r)[i]??"");return o}).filter(o=>Object.values(o).some(v=>String(v??"").trim()!==""))}
@@ -165,20 +288,18 @@ function field(o,alts){const keys=Object.keys(o||{});for(const a of alts){const 
 function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>x.trim()).filter(x=>x&&!/^(n\/a|na|none|off|vacant|tbd|—|-)$/i.test(x))}
 function rowToAssignment(r,source){const day=String(field(r,["Day","Weekday"])||"").trim(),time=String(field(r,["Hour","Time","Time Slot","Rotation"])||"").trim();const defs=[["Pool Pusher (Zone 1)",["Pool Pusher (Zone 1)","Pool Pusher","Pusher","Zone 1"]],["Pool Catcher (Zone 5)",["Pool Catcher (Zone 5)","Pool Catcher","Catcher","Zone 5"]],["Control Tower",["Control Tower","Tower"]],["Board Room A",["Board Room A","Board Room A Staff"]],["Board Room B",["Board Room B","Board Room B Staff"]]];const positions={};defs.forEach(([label,alts])=>positions[label]=String(field(r,alts)||"").trim());return {day,time,positions,source,raw:r}}
 function getAllAssignments(){return Object.keys(sheetMap).filter(n=>["am hourly rotation","pm hourly rotation"].includes(normalize(n))).flatMap(n=>parseSheet(n).map(r=>rowToAssignment(r,normalize(n).startsWith("am")?"AM":"PM"))).filter(r=>r.day&&r.time)}
-function parseEmployees(){const name=Object.keys(sheetMap).find(n=>normalize(n)==="employees");const out=[];if(name)parseSheet(name).forEach(r=>{const v=field(r,["Employee","Employee Name","Name","Staff Name","Team Member"]);splitNames(v).forEach(n=>{if(!/^(employee name|name|employee|am team covers|pm team covers|all team)$/i.test(n))out.push(n)})});getAllAssignments().forEach(r=>Object.values(r.positions).forEach(v=>splitNames(v).forEach(n=>out.push(n))));return [...new Set(out)].filter(n=>!/^(am team covers|pm team covers|all team)$/i.test(n)).sort((a,b)=>a.localeCompare(b))}
-function parts(){return Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false,month:"short",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]))}
+function parseEmployees(){return [...STAFF_NAMES]}function parts(){return Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false,month:"short",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]))}
 function currentDay(){return parts().weekday}function currentHour(){return Number(parts().hour)}
 function timeText(){return new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,hour:"2-digit",minute:"2-digit",hour12:true}).format(new Date())}
 function hourStart(s){const m=String(s||"").match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);if(!m)return -1;let h=+m[1];const ap=(m[3]||"").toUpperCase();if(ap==="PM"&&h<12)h+=12;if(ap==="AM"&&h===12)h=0;if(!ap&&h>=1&&h<=6)h+=12;return h}
 function findRow(day,time){const candidates=allRows.filter(r=>normalize(r.day)===normalize(day));return candidates.find(r=>r.time===time)||candidates.find(r=>hourStart(r.time)===hourStart(time))||null}
 function connected(ok,msg){$("connectionDot").className="dot "+(ok?"ok":"bad");$("connectionText").textContent=msg}
-function renderPills(){const host=$("employeePills");host.innerHTML="";employees.forEach(name=>{const b=document.createElement("button");b.className="pill"+(selectedEmployee===name?" selected":"");b.textContent=name;b.setAttribute("aria-pressed",String(selectedEmployee===name));b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};host.appendChild(b)})}
+function renderPills(){const host=$("employeePills");host.innerHTML="";STAFF_NAMES.forEach(name=>{const b=document.createElement("button");b.className="pill"+(selectedEmployee===name?" selected":"");b.textContent=name;b.setAttribute("aria-pressed",String(selectedEmployee===name));b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};host.appendChild(b)})}
 function staffTag(name){const b=document.createElement("button");b.className="staff-tag"+(selectedEmployee===name?" highlight":"");b.textContent=name;b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};return b}
 function fill(id,values){const el=$(id);el.innerHTML="";const names=[...new Set(values.flatMap(splitNames))];if(!names.length){el.innerHTML='<span class="empty">No assignment recorded</span>';return}names.forEach(n=>el.appendChild(staffTag(n)))}
 function setMap(id,names){const el=$(id),vals=[...new Set(names.flatMap(splitNames))];el.textContent=vals.length?vals.join(" · "):"—";el.classList.toggle("highlight",!!selectedEmployee&&vals.includes(selectedEmployee));const flowIds={mapPusher:"flowPusher",mapCatcher:"flowCatcher",mapTower:"flowTower",mapBoardA:"flowBoardA",mapBoardB:"flowBoardB"};if(flowIds[id])$(flowIds[id]).textContent=vals.length?vals.join(" · "):"—";if(flowIds[id])$(flowIds[id]).parentElement.classList.toggle("active",!!selectedEmployee&&vals.includes(selectedEmployee))}
 function renderBoard(){const day=$("daySelect").value,time=$("hourSelect").value,row=findRow(day,time);$("poolTime").textContent=`${day} · ${time||"No rotation selected"}`;const ids=["pusher","catcher","boardA","boardB","tower","breakRoom","extra"];if(!row){ids.forEach(id=>fill(id,[]));$("partyNotice").classList.add("hidden")}else{const p=row.positions;fill("pusher",[p["Pool Pusher (Zone 1)"]]);fill("catcher",[p["Pool Catcher (Zone 5)"]]);fill("tower",[p["Control Tower"]]);fill("boardA",[p["Board Room A"]]);fill("boardB",[p["Board Room B"]]);const extra=[],breaks=[];Object.keys(sheetMap).filter(n=>/pool party|daily coverage|daily staffing|positions|glide setup/i.test(n)).forEach(n=>parseSheet(n).forEach(r=>{const d=field(r,["Day","Weekday"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);if(normalize(d)===normalize(day)&&(!t||hourStart(t)===hourStart(time))){Object.entries(r).forEach(([k,v])=>{if(/break|lunch/i.test(k))breaks.push(...splitNames(v));else if(!/day|hour|time|rotation|session|date/i.test(k))extra.push(...splitNames(v))})}}));const core=new Set(Object.values(p).flatMap(splitNames));fill("extra",extra.filter(n=>!core.has(n)));fill("breakRoom",breaks);const hasExtra=extra.some(n=>!core.has(n));$("partyNotice").classList.toggle("hidden",!hasExtra);$("partyNotice").textContent=hasExtra?"Additional pool-party or coverage assignments are listed in Other / party coverage.":""}
-const p=row?.positions||{};setMap("mapPusher",[p["Pool Pusher (Zone 1)"]||""]);setMap("mapCatcher",[p["Pool Catcher (Zone 5)"]||""]);setMap("mapTower",[p["Control Tower"]||""]);setMap("mapBoardA",[p["Board Room A"]||""]);setMap("mapBoardB",[p["Board Room B"]||""]);
-const mapBreak=$("mapBreak"),mapExtra=$("mapExtra");mapBreak.textContent=$("breakRoom").innerText.replace("No assignment recorded","—");mapExtra.textContent=$("extra").innerText.replace("No assignment recorded","—");
+const p=row?.positions||{};
 const h=currentHour(),open=h>=7&&h<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed";$("statusDetail").textContent=`Current status uses actual Cabo local time (${timeText()}), not the selected roster hour. Selected board: ${day} ${time||"—"}.`;
 }
 function populateTimes(preserve=true){const sel=$("hourSelect"),old=preserve?sel.value:"";sel.innerHTML="";const times=[...new Set(allRows.filter(r=>normalize(r.day)===normalize($("daySelect").value)).map(r=>r.time))].sort((a,b)=>hourStart(a)-hourStart(b));times.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;sel.appendChild(o)});if(old&&times.includes(old))sel.value=old;else{const now=currentHour(),match=times.find(t=>hourStart(t)===now);if(match)sel.value=match;else if(times.length)sel.selectedIndex=0}}
@@ -190,15 +311,46 @@ function renderTeam(){const q=normalize($("teamSearch").value),day=$("teamDay").
 function hourLabel(s){return String(s||"").replace(/\s*-\s*/," – ")}
 function nextRow(day,time){const rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));const i=rows.findIndex(r=>r.time===time||hourStart(r.time)===hourStart(time));return i>=0?rows[i+1]||null:null}
 function assignmentValues(row){const p=row?.positions||{};return [p["Pool Pusher (Zone 1)"],p["Pool Catcher (Zone 5)"],p["Control Tower"],p["Board Room A"],p["Board Room B"]].map(v=>splitNames(v).join(", ")||"—")}
-function makeAssignmentCard(index,title,subtitle,name,small=false){const colors=["green","blue","orange","purple","pink"];const icons=["🌊","🏄","🎛️","🏄‍♂️","🏄‍♂️"];const card=document.createElement("article");card.className="assignment-card "+colors[index];card.innerHTML=`<div class="assignment-head"><span>${index+1}</span><div><b>${title}</b><small>${subtitle}</small></div></div><div class="assignment-visual" aria-hidden="true">${icons[index]}</div><div class="assignment-name"></div>`;card.querySelector(".assignment-name").textContent=name||"—";return card}
-function renderSchedule(){const host=$("hourlySchedule");if(!host)return;const day=$("daySelect").value,rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));if(!rows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}const heads=["TIME","POOL PUSHER · ZONE 1","POOL CATCHER · ZONE 5","CONTROL TOWER","BOARD ROOM A","BOARD ROOM B"];const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const tr=document.createElement("tr");if(r.time===$("hourSelect").value)tr.className="selected";const vals=[r.time,...assignmentValues(r)];vals.forEach((v,i)=>{const td=document.createElement("td");if(i===0){const b=document.createElement("button");b.textContent=v;b.onclick=()=>{$("hourSelect").value=r.time;renderBoard()};td.appendChild(b)}else td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
+function makeAssignmentCard(index,title,subtitle,name,small=false){const colors=["green","blue","orange","purple","pink"];const card=document.createElement("article");card.className="assignment-card "+colors[index];card.innerHTML=`<div class="assignment-head"><span>${index+1}</span><div><b>${title}</b><small>${subtitle}</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div class="assignment-name"></div>`;card.querySelector(".assignment-name").textContent=name||"—";return card}function renderSchedule(){const host=$("hourlySchedule");if(!host)return;const day=$("daySelect").value,rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));if(!rows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}const heads=["TIME","POOL PUSHER · ZONE 1","POOL CATCHER · ZONE 5","CONTROL TOWER","BOARD ROOM A","BOARD ROOM B"];const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const tr=document.createElement("tr");if(r.time===$("hourSelect").value)tr.className="selected";const vals=[r.time,...assignmentValues(r)];vals.forEach((v,i)=>{const td=document.createElement("td");if(i===0){const b=document.createElement("button");b.textContent=v;b.onclick=()=>{$("hourSelect").value=r.time;renderBoard()};td.appendChild(b)}else td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
 function renderVisualCards(){const row=findRow($("daySelect").value,$("hourSelect").value),p=row?.positions||{};const vals=assignmentValues(row);["cardPusher","cardCatcher","cardTower","cardBoardA","cardBoardB"].forEach((id,i)=>$(id).textContent=vals[i]);$("currentHourLabel").textContent=row?hourLabel(row.time):"No shift data";const nxt=nextRow($("daySelect").value,$("hourSelect").value);$("nextHourLabel").textContent=nxt?hourLabel(nxt.time):"No next shift";const host=$("nextHourCards");host.innerHTML="";const nextVals=assignmentValues(nxt);["POOL PUSHER","POOL CATCHER","CONTROL TOWER","BOARD ROOM A","BOARD ROOM B"].forEach((title,i)=>host.appendChild(makeAssignmentCard(i,title,["Zone 1","Zone 5","Make the waves","Check in / out","Check in / out"][i],nextVals[i],true)));const flowMap=[["flowPusher",vals[0]],["flowCatcher",vals[1]],["flowTower",vals[2]],["flowBoardA",vals[3]],["flowBoardB",vals[4]]];flowMap.forEach(([id,v])=>$(id).textContent=v);renderSchedule()}
 
-function renderAll(){renderPills();renderBoard();renderVisualCards();populateEmployees();renderWeek();renderTeam()}
+function renderDayButtons(){const host=$("dayButtons");if(!host)return;host.innerHTML="";DAYS.forEach(d=>{const b=document.createElement("button");b.className="day-btn"+(normalize($("daySelect").value)===normalize(d)?" active":"");b.textContent=d.slice(0,3);if(normalize(d)===normalize(currentDay()))b.dataset.today="true";b.onclick=()=>{$("daySelect").value=d;populateTimes(false);renderAll()};host.appendChild(b)})}
+function renderHourButtons(){const host=$("hourButtons");if(!host)return;host.innerHTML="";[...$("hourSelect").options].forEach(o=>{const b=document.createElement("button");b.className="hour-btn"+(o.value===$("hourSelect").value?" active":"");b.textContent=String(o.value).replace(/\\s*(AM|PM)/ig,"").replace(/:00/g,"").replace(/\\s*[-–]\\s*/,"–").replace(/\\s/g,"");b.title=o.value;b.onclick=()=>{$("hourSelect").value=o.value;renderAll()};host.appendChild(b)})}
+
+function crewNamesFromValue(value){return splitNames(value).filter(n=>employees.includes(n))}
+function renderCrewNames(id,names){const el=$(id);el.innerHTML="";const clean=[...new Set(names)].filter(n=>employees.includes(n));if(!clean.length){el.innerHTML='<span class="crew-empty">No crew assignment recorded</span>';return}clean.forEach(name=>{const span=document.createElement("span");span.className="crew-name";span.textContent=name;el.appendChild(span)})}
+function renderDailyCrew(){
+ const day=$("daySelect")?.value||currentDay();$("dailyCrewDay").textContent=day;
+ const buckets={am:[],pm:[],off:[]};
+ Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|schedule summary|weekly schedule|employees/i.test(n)).forEach(sheetName=>{
+  parseSheet(sheetName).forEach(row=>{
+   const rowDay=field(row,["Day","Weekday","Day Name"]);
+   if(rowDay&&normalize(rowDay)!==normalize(day))return;
+   let foundHeader=false;
+   Object.keys(row).forEach(k=>{
+    const nk=normalize(k),names=crewNamesFromValue(row[k]);
+    if(/am crew|morning crew|am team|morning team/.test(nk)){buckets.am.push(...names);foundHeader=true}
+    else if(/pm crew|afternoon crew|pm team|afternoon team/.test(nk)){buckets.pm.push(...names);foundHeader=true}
+    else if(/day off|off today|days off|off duty/.test(nk)){buckets.off.push(...names);foundHeader=true}
+   });
+   if(!foundHeader){
+    const group=normalize(field(row,["Crew","Crew Type","Shift Type","Team","Category","Status","Shift"]));
+    const person=field(row,["Employee","Employee Name","Name","Staff Name","Team Member","Staff","Assigned Staff","Members"]);
+    const names=crewNamesFromValue(person);
+    if(/^(am|am crew|morning|morning crew|am team)$/.test(group))buckets.am.push(...names);
+    else if(/^(pm|pm crew|afternoon|afternoon crew|pm team)$/.test(group))buckets.pm.push(...names);
+    else if(/^(day off|off|off duty|rest day)$/.test(group))buckets.off.push(...names);
+   }
+  });
+ });
+ renderCrewNames("dailyAmCrew",buckets.am);renderCrewNames("dailyPmCrew",buckets.pm);renderCrewNames("dailyDayOff",buckets.off);
+}
+
+function renderAll(){renderPills();renderDayButtons();renderHourButtons();renderBoard();renderVisualCards();renderDailyCrew();populateEmployees();renderWeek();renderTeam()}
 function switchTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));$("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");if(tab==="week")renderWeek();if(tab==="team")renderTeam()}
 async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
 function tick(){const p=parts();$("liveClock").textContent=timeText();$("dateLabel").textContent=`${p.weekday} · ${p.month} ${p.day} · Cabo time`;const open=currentHour()>=7&&currentHour()<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed"}
-$("daySelect").addEventListener("change",()=>{populateTimes(false);renderBoard()});$("hourSelect").addEventListener("change",renderBoard);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderBoard()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);$("teamSearch").addEventListener("input",renderTeam);$("teamDay").addEventListener("change",renderTeam);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
+$("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()});$("hourSelect").addEventListener("change",renderAll);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderAll()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);$("teamSearch").addEventListener("input",renderTeam);$("teamDay").addEventListener("change",renderTeam);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
 </script>
 </body>
 </html>
