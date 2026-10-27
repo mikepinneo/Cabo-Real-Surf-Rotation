@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071d21">
+<title>Staff Rotation | Cabo Real Surf Club</title>
+<style>
+:root{--bg:#071d21;--panel:#0d282e;--panel2:#123238;--line:#24474e;--cyan:#51c5d8;--text:#e4f2f4;--muted:#9bb8be;--yellow:#ffd84f;--green:#22b486;--red:#ff8b83}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45}
+button,input,select{font:inherit}button{cursor:pointer}
+header{padding:24px clamp(16px,4vw,42px) 20px;background:#0d292f;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.kicker{color:var(--muted);letter-spacing:.16em;font-weight:800;font-size:.78rem}.brand{font-size:clamp(2rem,5vw,3rem);font-weight:850;letter-spacing:-.04em;line-height:1.15;margin:5px 0 20px}.brand span{color:var(--cyan)}
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.tab{border:0;border-radius:20px;padding:15px 8px;background:var(--panel2);color:var(--muted);font-weight:800}.tab.active{background:var(--cyan);color:#062b32}
+.connection{display:flex;gap:9px;align-items:center;color:var(--muted);margin-top:18px}.dot{width:11px;height:11px;border-radius:50%;background:#85979a;box-shadow:0 0 0 6px #243b3e}.dot.ok{background:var(--green)}.dot.bad{background:var(--red)}
+main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.section-title{font-size:.9rem;color:var(--muted);letter-spacing:.12em;font-weight:850;text-transform:uppercase;margin:0 0 12px}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:18px}.toolbar select,.toolbar input{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:11px 13px;min-height:44px}.toolbar label{color:var(--muted);font-size:.9rem}
+.pills{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:22px}.pill{border:2px solid var(--line);background:#102b30;color:var(--text);border-radius:999px;padding:10px 17px;font-weight:750}.pill.selected{background:var(--yellow);border-color:#aa8910;color:#294047}.pill.group{border-radius:999px;font-weight:850}.pill:focus-visible,.tab:focus-visible,button:focus-visible{outline:3px solid white;outline-offset:2px}
+.status-card,.card{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:18px;margin:18px 0}.status-card h2{font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.12;margin:4px 0 8px}.muted{color:var(--muted)}.clock-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#102b30;border:1px solid var(--line);border-radius:18px;padding:14px 18px;margin-top:18px}.clock{font-size:1.8rem;font-weight:850;font-variant-numeric:tabular-nums}
+.pool-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px}.pool-water{background:#0d4654;border:3px solid #246778;border-radius:24px;padding:18px;min-height:270px;position:relative;overflow:hidden}.pool-water:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 34px,#ffffff08 35px 36px);pointer-events:none}.pool-heading{position:relative;display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:14px}.pool-heading h3{margin:0;font-size:1.2rem}.zone-grid{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.zone{border:1px solid #7bc8d355;background:#092f39c9;border-radius:15px;padding:12px;min-height:90px}.zone h4{font-size:.78rem;letter-spacing:.04em;color:#a9e8f1;margin:0 0 8px}.staff-tags{display:flex;flex-wrap:wrap;gap:6px}.staff-tag{font-size:.86rem;background:#51c5d822;border:1px solid #74d7e455;padding:4px 8px;border-radius:9px;cursor:pointer}.staff-tag.highlight{background:var(--yellow);color:#21383d;border-color:var(--yellow)}.side-stack{display:grid;gap:12px;align-content:start}.location-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:15px}.location-card h3{margin:0 0 10px;font-size:1rem}.location-card .staff-tags{min-height:26px}.empty{color:var(--muted);font-size:.88rem;font-style:italic}
+.notice{background:#352d13;border:1px solid #79641c;color:#ffe99b;border-radius:14px;padding:12px 14px;margin:12px 0}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;margin-top:14px}table{border-collapse:collapse;width:100%;min-width:620px;background:var(--panel)}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:.82rem;background:#102b30;position:sticky;top:0}tr:last-child td{border-bottom:0}td button{border:0;background:transparent;color:var(--cyan);font-weight:750;padding:0;text-align:left}
+.hidden{display:none!important}.empty-state{border:1px dashed var(--line);border-radius:18px;padding:22px;color:var(--muted)}footer{max-width:1500px;margin:auto;padding:0 clamp(14px,4vw,42px) 28px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.85rem}
+@media(max-width:780px){header{padding-top:18px}.pool-grid{grid-template-columns:1fr}.pool-water{min-height:220px}.zone-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tab{font-size:.92rem;padding:13px 5px}.card{padding:14px}}
+@media(max-width:390px){.zone-grid{grid-template-columns:1fr}.tabs{gap:6px}.tab{font-size:.82rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">CABO REAL SURF CLUB</div>
+  <div class="brand">Staff <span>Rotation</span></div>
+  <nav class="tabs" aria-label="Main navigation">
+    <button class="tab active" data-tab="live">Live Board</button>
+    <button class="tab" data-tab="week">My Week</button>
+    <button class="tab" data-tab="team">Whole Team</button>
+  </nav>
+  <div class="connection"><span id="connectionDot" class="dot"></span><span id="connectionText">Connecting to live roster…</span></div>
+</header>
+<main>
+<section id="liveView">
+  <div class="section-title">Live operations · tap a name to highlight it</div>
+  <div class="toolbar">
+    <label for="daySelect">Day</label><select id="daySelect"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+    <label for="hourSelect">Rotation</label><select id="hourSelect"></select>
+    <button id="nowButton" class="pill">Current time</button>
+  </div>
+  <div id="employeePills" class="pills"></div>
+  <div id="partyNotice" class="notice hidden"></div>
+  <div class="section-title">Pool & positions</div>
+  <div class="pool-grid">
+    <div class="pool-water">
+      <div class="pool-heading"><h3>Surf Pool</h3><span id="poolTime" class="muted"></span></div>
+      <div class="zone-grid">
+        <div class="zone"><h4>POOL PUSHER · ZONE 1</h4><div id="pusher" class="staff-tags"></div></div>
+        <div class="zone"><h4>POOL CATCHER · ZONE 5</h4><div id="catcher" class="staff-tags"></div></div>
+        <div class="zone"><h4>BOARD ROOM A</h4><div id="boardA" class="staff-tags"></div></div>
+        <div class="zone"><h4>BOARD ROOM B</h4><div id="boardB" class="staff-tags"></div></div>
+      </div>
+    </div>
+    <div class="side-stack">
+      <div class="location-card"><h3>Control Tower</h3><div id="tower" class="staff-tags"></div></div>
+      <div class="location-card"><h3>Break Room / Lunch</h3><div id="breakRoom" class="staff-tags"></div></div>
+      <div class="location-card"><h3>Other / party coverage</h3><div id="extra" class="staff-tags"></div></div>
+      <div class="location-card"><h3>Selected employee</h3><div id="selectedInfo" class="muted">Choose an employee pill to highlight their assignments.</div></div>
+    </div>
+  </div>
+  <div class="status-card">
+    <div class="section-title">Operating status</div><h2 id="operatingStatus">Loading roster…</h2>
+    <div id="statusDetail" class="muted">Live rotations run from 7:00 AM to 7:00 PM Cabo time.</div>
+    <div class="clock-row"><span id="liveClock" class="clock">--:--</span><span id="dateLabel" class="muted">Cabo time</span></div>
+  </div>
+</section>
+<section id="weekView" class="hidden">
+  <div class="section-title">My week · individual schedule</div>
+  <div class="toolbar"><label for="weekEmployee">Employee</label><select id="weekEmployee"></select><label for="weekDay">Day</label><select id="weekDay"><option value="">All days</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
+  <div id="weekSummary" class="card muted">Choose an employee to see their shifts.</div>
+  <div id="weekTable" class="table-wrap"></div>
+</section>
+<section id="teamView" class="hidden">
+  <div class="section-title">Whole team · weekly coverage</div>
+  <div class="toolbar"><label for="teamSearch">Find employee</label><input id="teamSearch" type="search" placeholder="Type a name"><label for="teamDay">Day</label><select id="teamDay"><option value="">All days</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
+  <div id="teamSummary" class="muted"></div><div id="teamTable" class="table-wrap"></div>
+</section>
+</main>
+<footer><span>Staff Rotation · Cabo Real Surf Club</span><span id="updatedLabel">Waiting for first data refresh</span></footer>
+<script>
+/*
+  Configuration:
+  This page reads the existing /surfOps data using Firebase's REST endpoint.
+  If your database URL differs, replace DATABASE_URL below with the exact URL
+  shown at the top of Firebase Console > Realtime Database > Data.
+*/
+const DATABASE_URL = "https://cabo-real-surf-club-default-rtdb.firebaseio.com";
+const DATA_PATH = "/surfOps.json";
+const REFRESH_MS = 30000;
+const CABO_TZ = "America/Mazatlan";
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+let rootData=null, sheetMap={}, employees=[], selectedEmployee="", currentRows=[], allRows=[], lastFetch=null;
+
+const $ = id => document.getElementById(id);
+const normalize = s => String(s ?? "").trim().toLowerCase().replace(/\s+/g," ");
+function asArray(v){ if(Array.isArray(v)) return v; if(v && typeof v==="object") return Object.keys(v).sort((a,b)=>Number(a)-Number(b)).map(k=>v[k]); return []; }
+function sheetValues(name){
+  const raw = sheetMap[name];
+  if(!raw) return [];
+  const values = asArray(raw.values);
+  const headers = asArray(raw.headers).map(v=>String(v??"").trim());
+  if(values.length && Array.isArray(values[0])) return values.map(row=>asArray(row));
+  const rows = asArray(raw.rows);
+  if(rows.length) return rows.map(row=>asArray(row));
+  return [];
+}
+function getSheet(name){return sheetMap[name] || null;}
+function parseSheet(name){
+ const s=getSheet(name); if(!s) return [];
+ const headers=asArray(s.headers).map(v=>String(v??"").trim());
+ const vals=asArray(s.values);
+ const rawRows=asArray(s.rows);
+ let rows=vals.length?vals:rawRows;
+ if(!rows.length && rawRows.length) rows=rawRows;
+ return rows.map(r=>{const a=asArray(r);const o={};headers.forEach((h,i)=>o[h]=a[i]??"");return o;}).filter(o=>Object.values(o).some(v=>String(v??"").trim()!==""));
+}
+function getField(obj, alternatives){
+ const keys=Object.keys(obj||{});
+ for(const alt of alternatives){const k=keys.find(x=>normalize(x)===normalize(alt));if(k && String(obj[k]??"").trim()!=="")return obj[k];}
+ for(const alt of alternatives){const k=keys.find(x=>normalize(x).includes(normalize(alt)));if(k && String(obj[k]??"").trim()!=="")return obj[k];}
+ return "";
+}
+function getCell(row, alternatives){return getField(row,alternatives);}
+function rowToAssignment(row, source){
+ const day=String(getCell(row,["Day"])||"").trim();
+ const time=String(getCell(row,["Hour","Time","Time Slot","Rotation"])||"").trim();
+ const positionFields=[
+  ["Pool Pusher (Zone 1)",["Pool Pusher (Zone 1)","Pool Pusher","Pusher","Zone 1"]],
+  ["Pool Catcher (Zone 5)",["Pool Catcher (Zone 5)","Pool Catcher","Catcher","Zone 5"]],
+  ["Control Tower",["Control Tower","Tower"]],
+  ["Board Room A",["Board Room A","Board Room A Staff"]],
+  ["Board Room B",["Board Room B","Board Room B Staff"]]
+ ];
+ const positions={};
+ positionFields.forEach(([label,alts])=>positions[label]=String(getCell(row,alts)||"").trim());
+ return {day,time,positions,source,raw:row};
+}
+function getAllAssignments(){
+ const names=Object.keys(sheetMap);
+ const amName=names.find(n=>normalize(n)==="am hourly rotation")||"AM Hourly Rotation";
+ const pmName=names.find(n=>normalize(n)==="pm hourly rotation")||"PM Hourly Rotation";
+ const am=parseSheet(amName).map(r=>rowToAssignment(r,"AM"));
+ const pm=parseSheet(pmName).map(r=>rowToAssignment(r,"PM"));
+ return [...am,...pm].filter(r=>r.day && r.time);
+}
+function parseEmployees(){
+ const n=Object.keys(sheetMap).find(n=>normalize(n)==="employees")||"Employees";
+ const rows=parseSheet(n);
+ const names=[];
+ rows.forEach(r=>{
+  const name=getCell(r,["Employee","Employee Name","Name","Staff Name","Team Member"]);
+  if(name && !/^(employee name|name|employee)$/i.test(String(name).trim())) names.push(String(name).trim());
+ });
+ allRows.forEach(r=>Object.values(r.positions).forEach(v=>splitNames(v).forEach(n=>names.push(n))));
+ return [...new Set(names.filter(n=>n && !/^(n\/a|na|none|off|vacant|tbd|—|-)$/i.test(n)))].sort((a,b)=>a.localeCompare(b));
+}
+function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(s=>s.trim()).filter(Boolean).filter(s=>!/^(n\/a|na|none|off|vacant|tbd|—|-)$/i.test(s));}
+function formatTime12(value){
+ const s=String(value||"").trim(); if(!s)return "";
+ const m=s.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+ if(!m)return s;
+ let h=Number(m[1]), min=m[2]||"00", ap=(m[3]||"").toUpperCase();
+ if(ap) return `${h}:${min} ${ap}`;
+ return s;
+}
+function getCaboParts(){
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false,month:"short",day:"numeric"}).formatToParts(new Date());
+ return Object.fromEntries(parts.map(p=>[p.type,p.value]));
+}
+function currentDay(){return getCaboParts().weekday;}
+function currentHourNumber(){return Number(getCaboParts().hour);}
+function currentTimeText(){return new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,hour:"2-digit",minute:"2-digit",hour12:true}).format(new Date());}
+function rowHourStart(s){
+ const m=String(s||"").match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+ if(!m)return -1;
+ let h=Number(m[1]); const ap=(m[3]||"").toUpperCase();
+ if(ap==="PM"&&h<12)h+=12; if(ap==="AM"&&h===12)h=0;
+ // Rotation labels are commonly stored without AM/PM (e.g. "7:00-8:00").
+ // Treat 7–11 as morning, 12 as noon, and 1–6 as afternoon.
+ if(!ap && h>=1 && h<=6) h+=12;
+ return h;
+}
+function findCurrentAssignment(day, hourText){
+ const candidates=allRows.filter(r=>normalize(r.day)===normalize(day));
+ const start=rowHourStart(hourText);
+ return candidates.find(r=>r.time===hourText) || candidates.find(r=>rowHourStart(r.time)===start) || null;
+}
+function setConnected(ok,msg){$("connectionDot").className="dot "+(ok?"ok":"bad");$("connectionText").textContent=msg;}
+function renderPills(){
+ const host=$("employeePills"); host.innerHTML="";
+ const all=document.createElement("button"); all.className="pill"+(!selectedEmployee?" selected":"");all.textContent="All team";all.onclick=()=>{selectedEmployee="";renderAll();};host.appendChild(all);
+ const groupAm=document.createElement("span");groupAm.className="pill group";groupAm.textContent="AM Team Covers";host.appendChild(groupAm);
+ employees.forEach(name=>{const b=document.createElement("button");b.className="pill"+(selectedEmployee===name?" selected":"");b.textContent=name;b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll();};host.appendChild(b);});
+ const groupPm=document.createElement("span");groupPm.className="pill group";groupPm.textContent="PM Team Covers";host.appendChild(groupPm);
+}
+function makeStaffTag(name){
+ const b=document.createElement("button");b.className="staff-tag"+(selectedEmployee===name?" highlight":"");b.textContent=name;b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll();};return b;
+}
+function fillTags(id,names){
+ const el=$(id);el.innerHTML=""; const clean=[...new Set(names.flatMap(splitNames))];
+ if(!clean.length){el.innerHTML='<span class="empty">No assignment recorded</span>';return;}
+ clean.forEach(n=>el.appendChild(makeStaffTag(n)));
+}
+function currentSelectedRow(){
+ const day=$("daySelect").value, time=$("hourSelect").value;
+ return findCurrentAssignment(day,time);
+}
+function renderBoard(){
+ const row=currentSelectedRow();
+ const selectedDay=$("daySelect").value, selectedTime=$("hourSelect").value;
+ $("poolTime").textContent=`${selectedDay} · ${selectedTime}`;
+ if(!row){
+  ["pusher","catcher","boardA","boardB","tower","breakRoom","extra"].forEach(id=>fillTags(id,[]));
+  $("operatingStatus").textContent="No rotation row found";
+  $("statusDetail").textContent="Check the AM/PM rotation tabs and the selected day/time.";
+  $("partyNotice").classList.add("hidden");
+  $("selectedInfo").textContent=selectedEmployee||"Choose an employee pill to highlight their assignments.";
+  return;
+ }
+ const p=row.positions;
+ fillTags("pusher",[p["Pool Pusher (Zone 1)"]]);
+ fillTags("catcher",[p["Pool Catcher (Zone 5)"]]);
+ fillTags("tower",[p["Control Tower"]]);
+ fillTags("boardA",[p["Board Room A"]]);
+ fillTags("boardB",[p["Board Room B"]]);
+ const extra=[];
+ const partySheets=Object.keys(sheetMap).filter(n=>normalize(n).includes("pool party"));
+ partySheets.forEach(n=>parseSheet(n).forEach(pr=>{
+  const d=String(getCell(pr,["Day"])||"").trim(), t=String(getCell(pr,["Hour","Time","Time Slot"])||"").trim();
+  if(normalize(d)===normalize(selectedDay) && (t===selectedTime || rowHourStart(t)===rowHourStart(selectedTime))){
+   Object.entries(pr).forEach(([k,v])=>{if(!/day|hour|time|session/i.test(k)) splitNames(v).forEach(x=>extra.push(x));});
+  }
+ }));
+ fillTags("extra",extra);
+ const lunch=Object.entries(p).filter(([k,v])=>/lunch|break/i.test(k+" "+v)).flatMap(([k,v])=>splitNames(v));
+ fillTags("breakRoom",lunch);
+ const hour=rowHourStart(selectedTime), isOpen=hour>=7&&hour<19;
+ $("operatingStatus").textContent=isOpen?"Club operating hours":"Club currently closed";
+ $("statusDetail").textContent=isOpen?`Showing ${selectedDay}, ${selectedTime}. Assignments are read from the synced roster.`:"Live rotations run from 7:00 AM to 7:00 PM Cabo time.";
+ $("partyNotice").classList.toggle("hidden",extra.length===0);
+ $("partyNotice").textContent=extra.length?`Pool party coverage found for this period: ${[...new Set(extra)].join(", ")}`:"";
+ if(selectedEmployee){
+  const positions=Object.entries(p).filter(([k,v])=>splitNames(v).some(n=>n===selectedEmployee)).map(([k])=>k);
+  $("selectedInfo").textContent=positions.length?`${selectedEmployee} · ${positions.join(", ")}`:`${selectedEmployee} is not listed in a position for this selected hour.`;
+ }else $("selectedInfo").textContent="Tap a name pill to highlight the employee and see their current assignment.";
+}
+function populateTimeSelect(){
+ const sel=$("hourSelect"), old=sel.value; sel.innerHTML="";
+ const times=[...new Set(allRows.filter(r=>normalize(r.day)===normalize($("daySelect").value)).map(r=>r.time))];
+ times.sort((a,b)=>rowHourStart(a)-rowHourStart(b));
+ times.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;sel.appendChild(o);});
+ if(old && times.includes(old))sel.value=old;
+ else {
+  const now=currentHourNumber();
+  const match=times.find(t=>rowHourStart(t)===now);
+  if(match)sel.value=match; else if(times.length)sel.selectedIndex=0;
+ }
+}
+function renderWeek(){
+ const name=$("weekEmployee").value;const day=$("weekDay").value;
+ const weeklyName=Object.keys(sheetMap).find(n=>normalize(n)==="weekly schedule");
+ const weeklyRows=weeklyName ? parseSheet(weeklyName) : [];
+ const matchingWeekly=weeklyRows.filter(r=>{
+  const rowDay=String(getCell(r,["Day","Weekday"])||"").trim();
+  const rowText=Object.values(r).map(v=>String(v??"")).join(" ");
+  const employeeMatch=Object.entries(r).some(([k,v])=>/employee|staff|name|team member/i.test(k)&&splitNames(v).some(n=>normalize(n)===normalize(name)));
+  const containsName=splitNames(rowText).some(n=>normalize(n)===normalize(name));
+  return name && (!day||!rowDay||normalize(rowDay)===normalize(day)) && (employeeMatch||containsName);
+ });
+ $("weekTable").innerHTML="";
+ if(matchingWeekly.length){
+  $("weekSummary").textContent=`${name}: ${matchingWeekly.length} matching row(s) from Weekly Schedule. Verify the column labels against your live sheet.`;
+  const headers=Object.keys(matchingWeekly[0]);
+  const table=document.createElement("table");table.innerHTML="<thead><tr>"+headers.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";
+  const tbody=document.createElement("tbody");
+  matchingWeekly.forEach(r=>{const tr=document.createElement("tr");headers.forEach(h=>{const td=document.createElement("td");td.textContent=String(r[h]??"");tr.appendChild(td);});tbody.appendChild(tr);});
+  table.appendChild(tbody);$("weekTable").appendChild(table);return;
+ }
+ const rows=allRows.filter(r=>(!day||normalize(r.day)===normalize(day))&&Object.values(r.positions).some(v=>splitNames(v).some(n=>normalize(n)===normalize(name))));
+ $("weekSummary").textContent=name?`${name}: ${rows.length} matching hourly rotation assignment(s). No matching Weekly Schedule rows were detected, so this is a fallback view.`:"Choose an employee to see their shifts.";
+ if(!rows.length){$("weekTable").innerHTML='<div class="empty-state">No matching schedule rows found for this employee and filter.</div>';return;}
+ const table=document.createElement("table");table.innerHTML="<thead><tr><th>Day</th><th>Time</th><th>Assignment</th></tr></thead>";
+ const tbody=document.createElement("tbody");
+ rows.forEach(r=>{const assigned=Object.entries(r.positions).filter(([k,v])=>splitNames(v).some(n=>normalize(n)===normalize(name))).map(([k])=>k).join(", ");const tr=document.createElement("tr");tr.innerHTML=`<td>${esc(r.day)}</td><td>${esc(r.time)}</td><td>${esc(assigned)}</td>`;tbody.appendChild(tr);});
+ table.appendChild(tbody);$("weekTable").appendChild(table);
+}
+function renderTeam(){
+ const q=normalize($("teamSearch").value),day=$("teamDay").value;
+ let rows=allRows.filter(r=>!day||normalize(r.day)===normalize(day));
+ if(q)rows=rows.filter(r=>Object.values(r.positions).some(v=>splitNames(v).some(n=>normalize(n).includes(q))));
+ $("teamSummary").textContent=`${rows.length} rotation row(s) shown · sourced from AM/PM hourly rotation tabs.`;
+ $("teamTable").innerHTML="";
+ if(!rows.length){$("teamTable").innerHTML='<div class="empty-state">No rows match these filters.</div>';return;}
+ const table=document.createElement("table");table.innerHTML="<thead><tr><th>Day</th><th>Time</th><th>Pool Pusher · Zone 1</th><th>Pool Catcher · Zone 5</th><th>Control Tower</th><th>Board Room A</th><th>Board Room B</th></tr></thead>";
+ const tbody=document.createElement("tbody");
+ rows.forEach(r=>{const tr=document.createElement("tr");const cells=[r.day,r.time,...Object.values(r.positions)];cells.forEach((v,i)=>{const td=document.createElement("td");if(i>=2){splitNames(v).forEach((n,j)=>{if(j)td.append(" ");const b=document.createElement("button");b.textContent=n;b.onclick=()=>{selectedEmployee=n;switchTab("live");renderAll();};td.appendChild(b);});}else td.textContent=v;tr.appendChild(td);});tbody.appendChild(tr);});
+ table.appendChild(tbody);$("teamTable").appendChild(table);
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function switchTab(tab){
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+ $("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");
+ if(tab==="week")renderWeek();if(tab==="team")renderTeam();
+}
+function renderAll(){
+ renderPills();renderBoard();populateEmployeeSelects();renderWeek();renderTeam();
+}
+function populateEmployeeSelects(){
+ ["weekEmployee"].forEach(id=>{const sel=$(id),old=sel.value;sel.innerHTML="";employees.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});if(old&&employees.includes(old))sel.value=old;else if(selectedEmployee&&employees.includes(selectedEmployee))sel.value=selectedEmployee;});
+}
+async function fetchData(){
+ try{
+  const response=await fetch(DATABASE_URL.replace(/\/+$/,"")+DATA_PATH,{cache:"no-store"});
+  if(!response.ok)throw new Error(`Database request failed (${response.status}).`);
+  const data=await response.json();if(!data||!data.sheets)throw new Error("No /surfOps/sheets data found at this database URL.");
+  rootData=data;sheetMap=data.sheets;
+  allRows=getAllAssignments();employees=parseEmployees();
+  const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";
+  populateTimeSelect();renderAll();setConnected(true,"Live connected · roster refreshed");
+  lastFetch=new Date();$("updatedLabel").textContent="Updated "+currentTimeText()+" Cabo time";
+ }catch(err){
+  console.error(err);setConnected(false,"Unable to connect to roster");
+  $("operatingStatus").textContent="Roster connection needs setup";
+  $("statusDetail").textContent=err.message+" Check DATABASE_URL and Firebase Realtime Database read access.";
+  if(!rootData)$("employeePills").innerHTML='<div class="empty-state">The page is ready, but it could not read the database. Confirm the database URL in index.html.</div>';
+ }
+}
+function tick(){
+ $("liveClock").textContent=currentTimeText();
+ const p=getCaboParts();$("dateLabel").textContent=`${p.weekday} · ${p.month} ${p.day} · Cabo time`;
+}
+$("daySelect").addEventListener("change",()=>{populateTimeSelect();renderBoard();});
+$("hourSelect").addEventListener("change",renderBoard);
+$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimeSelect();const now=currentHourNumber();const options=[...$("hourSelect").options];const m=options.find(o=>rowHourStart(o.value)===now);if(m)$("hourSelect").value=m.value;renderBoard();});
+$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);
+$("teamSearch").addEventListener("input",renderTeam);$("teamDay").addEventListener("change",renderTeam);
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
+</script>
+</body>
+</html>
