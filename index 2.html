@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071d21">
+<title>Staff Rotation | Cabo Real Surf Club</title>
+<style>
+:root{--bg:#071d21;--panel:#0d282e;--panel2:#123238;--line:#24474e;--cyan:#51c5d8;--text:#e4f2f4;--muted:#9bb8be;--yellow:#ffd84f;--green:#22b486;--red:#ff8b83}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45}
+button,input,select{font:inherit}button{cursor:pointer}
+header{padding:20px clamp(14px,4vw,42px);background:#0d292f;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.kicker{color:var(--muted);letter-spacing:.16em;font-weight:800;font-size:.78rem}.brand{font-size:clamp(2rem,5vw,3rem);font-weight:850;letter-spacing:-.04em;line-height:1.15;margin:5px 0 18px}.brand span{color:var(--cyan)}
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.tab{border:0;border-radius:18px;padding:13px 8px;background:var(--panel2);color:var(--muted);font-weight:800}.tab.active{background:var(--cyan);color:#062b32}
+.connection{display:flex;gap:9px;align-items:center;color:var(--muted);margin-top:16px}.dot{width:10px;height:10px;border-radius:50%;background:#85979a}.dot.ok{background:var(--green)}.dot.bad{background:var(--red)}
+main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.section-title{font-size:.88rem;color:var(--muted);letter-spacing:.12em;font-weight:850;text-transform:uppercase;margin:0 0 12px}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:18px}.toolbar select,.toolbar input{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;min-height:44px}.toolbar label{color:var(--muted);font-size:.9rem}
+.pills{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:22px}.pill{border:2px solid var(--line);background:#102b30;color:var(--text);border-radius:999px;padding:10px 16px;font-weight:750}.pill.selected{background:var(--yellow);border-color:#aa8910;color:#294047}.pill:focus-visible,.tab:focus-visible,button:focus-visible{outline:3px solid white;outline-offset:2px}
+.status-card,.card{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:18px;margin:18px 0}.status-card h2{font-size:clamp(1.5rem,4vw,2.25rem);line-height:1.12;margin:4px 0 8px}.muted{color:var(--muted)}.clock-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#102b30;border:1px solid var(--line);border-radius:16px;padding:12px 16px;margin-top:16px}.clock{font-size:1.8rem;font-weight:850;font-variant-numeric:tabular-nums}
+.map-card{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:14px;margin:14px 0 20px}.map-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 8px}.map-heading h2{font-size:1.15rem;margin:0}.map-note{font-size:.82rem;color:var(--muted)}.site-map{display:block;width:100%;height:auto;max-height:560px}.map-zone{fill:#092f39;stroke:#65c5d7;stroke-width:2}.map-building{fill:#17383d;stroke:#80d5e1;stroke-width:2}.map-label{fill:#e4f2f4;font-size:15px;font-weight:800;text-anchor:middle}.map-sub{fill:#a9e8f1;font-size:12px;text-anchor:middle}.map-person{fill:#ffd84f;font-size:14px;font-weight:850;text-anchor:middle}.map-water{fill:#0d4654;stroke:#246778;stroke-width:5}.map-land{fill:#102b30;stroke:#24474e;stroke-width:2}.map-staff{cursor:pointer}
+
+
+.daily-crew-panel{margin:18px 0;background:#061b2a;border:1px solid #234353;border-radius:15px;padding:14px}
+.daily-crew-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.crew-summary{border:1px solid #284b5a;border-radius:12px;overflow:hidden;background:#0b2735;min-width:0}
+.crew-summary h3{font-size:.88rem;margin:0;padding:11px 12px;color:white;letter-spacing:.05em}
+.crew-summary.am h3{background:#14794b}.crew-summary.pm h3{background:#1457a6}.crew-summary.off h3{background:#5c6370}
+.crew-names{padding:12px;display:flex;flex-wrap:wrap;gap:7px;min-height:66px;color:#e4f2f4}
+.crew-name{border:1px solid #3c6371;background:#123744;border-radius:999px;padding:6px 10px;font-size:.85rem;font-weight:750}
+.crew-empty{color:#9bb8be;font-size:.86rem;font-style:italic}
+@media(max-width:600px){.daily-crew-grid{grid-template-columns:1fr}.crew-names{min-height:44px}}
+
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(310px,1fr);gap:14px;margin:14px 0}
+.dash-panel{min-width:0;background:#061b2a;border:1px solid #234353;border-radius:15px;padding:12px;overflow:hidden}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;flex-wrap:wrap}
+.panel-heading h2{font-size:1.05rem;letter-spacing:.04em;margin:0;font-weight:900}
+.panel-heading>strong{color:#66cde5;font-size:1.05rem}
+.assignment-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.assignment-card{overflow:hidden;border-radius:10px;border:2px solid var(--accent);background:#e9f3f8;color:#081e2b;min-width:0;display:flex;flex-direction:column}
+.assignment-card.green{--accent:#15975a}.assignment-card.blue{--accent:#1267d5}.assignment-card.orange{--accent:#ee531c}.assignment-card.purple{--accent:#7a22cc}.assignment-card.pink{--accent:#d41465}
+.assignment-head{display:flex;align-items:center;gap:6px;background:var(--accent);color:white;padding:6px;min-height:50px}
+.assignment-head>span{display:grid;place-items:center;background:#fff;color:var(--accent);font-weight:950;border-radius:50%;width:27px;height:27px;flex:0 0 27px}
+.assignment-head b{font-size:clamp(.56rem,.85vw,.8rem);line-height:1.05;display:block}.assignment-head small{font-size:.7rem;display:block;opacity:.92;margin-top:3px}
+.assignment-visual{height:76px;display:grid;place-items:center;background:linear-gradient(145deg,#c9e7ed,#6ab5cb);font-size:2.2rem}
+.assignment-name{background:#fff;text-align:center;font-weight:900;padding:7px 3px;font-size:.88rem;overflow-wrap:anywhere;min-height:34px}
+.rotation-wheel{position:relative;min-height:220px;max-width:460px;margin:0 auto}
+.wheel-node{position:absolute;width:38%;min-height:54px;border-radius:9px;padding:7px 5px;color:white;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid #ffffff66;box-shadow:0 3px 9px #0005}
+.wheel-node span{font-weight:950;background:#fff;color:#092033;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;font-size:.8rem}
+.wheel-node b{font-size:.67rem}.wheel-node strong{font-size:.72rem;overflow-wrap:anywhere}
+.wheel-node.n1{background:#095cc7;left:31%;top:0}.wheel-node.n2{background:#095cc7;right:0;top:30%}.wheel-node.n3{background:#e94d15;right:12%;bottom:0}.wheel-node.n4{background:#148b49;left:12%;bottom:0}.wheel-node.n5{background:#148b49;left:0;top:30%}
+.wheel-arrow{position:absolute;color:#fff;font-size:2rem;font-weight:900;line-height:1}.a12{right:20%;top:17%;transform:rotate(12deg)}.a23{right:16%;top:59%;transform:rotate(28deg)}.a34{left:44%;bottom:13%;transform:rotate(-15deg)}.a45{left:16%;top:59%;transform:rotate(-30deg)}.a51{left:21%;top:17%;transform:rotate(-12deg)}
+.schedule-table{overflow:auto;max-height:370px;border-radius:8px}.schedule-table table{min-width:650px;font-size:.83rem}.schedule-table th{background:#0d354a;color:#fff}.schedule-table td{background:#f0f5f8;color:#102637;padding:7px 9px;border-color:#bfd0dc}.schedule-table tr:nth-child(even) td{background:#dceaf1}.schedule-table tr.selected td{background:#c5f0df;font-weight:900}.schedule-table td button{color:#0b5474}
+.next-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.next-cards .assignment-head{padding:5px 3px;gap:3px;min-height:58px;align-items:flex-start}.next-cards .assignment-head>span{width:20px;height:20px;flex-basis:20px;font-size:.7rem}.next-cards .assignment-head b{font-size:.59rem}.next-cards .assignment-head small{font-size:.56rem}.next-cards .assignment-visual{height:58px;font-size:1.6rem}.next-cards .assignment-name{font-size:.7rem;padding:5px 2px}
+.reference-map .aerial-stage{border-radius:8px}.reference-map .aerial-image{width:100%;aspect-ratio:1536/445;object-fit:cover}
+
+.aerial-stage{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:#102b30}
+.aerial-image{display:block;width:100%;height:auto}
+.map-live.highlight{background:#ffd84f;color:#21383d;border-color:#ffd84f}.map-live{position:absolute;z-index:2;max-width:22%;overflow-wrap:anywhere;text-align:center;padding:5px 8px;border-radius:10px;background:#071d21ed;border:1px solid #7de3ef;color:#fff;font-size:clamp(9px,1.3vw,15px);font-weight:850;box-shadow:0 3px 12px #0008;transform:translate(-50%,-50%);min-width:34px}
+.map-pusher{left:26%;top:28%}.map-catcher{left:61%;top:39%}.map-board-a{left:48%;top:61%}.map-board-b{left:65%;top:54%}.map-tower{left:15%;top:76%}.map-break{left:81%;top:82%}.map-extra{left:83%;top:50%}
+.flow-card{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:16px;margin:18px 0}
+.flow-track{display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:6px 2px 12px}
+.flow-node{position:relative;display:flex;flex:1 0 135px;flex-direction:column;gap:4px;border:1px solid var(--line);background:#102b30;border-radius:15px;padding:12px;min-height:112px}
+.flow-node>span{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:var(--cyan);color:#062b32;font-weight:900}
+.flow-node b{font-size:.9rem}.flow-node small{color:var(--muted)}.flow-node strong{color:var(--yellow);font-size:.9rem;overflow-wrap:anywhere}
+.flow-arrow{align-self:center;color:var(--cyan);font-size:1.6rem;font-weight:900;animation:flowPulse 1.4s ease-in-out infinite}
+.flow-node.active{border-color:var(--yellow);box-shadow:0 0 0 2px #ffd84f40}
+.flow-caption{color:var(--muted);font-size:.85rem}
+@keyframes flowPulse{0%,100%{opacity:.45;transform:translateX(0)}50%{opacity:1;transform:translateX(3px)}}
+
+.zone-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.zone{border:1px solid #7bc8d355;background:#092f39c9;border-radius:15px;padding:12px;min-height:82px}.zone h4{font-size:.78rem;letter-spacing:.04em;color:#a9e8f1;margin:0 0 8px}.staff-tags{display:flex;flex-wrap:wrap;gap:6px}.staff-tag{font-size:.86rem;background:#51c5d822;border:1px solid #74d7e455;padding:4px 8px;border-radius:9px;color:var(--text)}.staff-tag.highlight{background:var(--yellow);color:#21383d;border-color:var(--yellow)}.positions-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}.location-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:14px}.location-card h3{margin:0 0 9px;font-size:1rem}.empty{color:var(--muted);font-size:.88rem;font-style:italic}
+.notice{background:#352d13;border:1px solid #79641c;color:#ffe99b;border-radius:14px;padding:12px 14px;margin:12px 0}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;margin-top:14px}table{border-collapse:collapse;width:100%;min-width:620px;background:var(--panel)}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:.82rem;background:#102b30;position:sticky;top:0}tr:last-child td{border-bottom:0}td button{border:0;background:transparent;color:var(--cyan);font-weight:750;padding:0;text-align:left}
+.hidden{display:none!important}.empty-state{border:1px dashed var(--line);border-radius:18px;padding:22px;color:var(--muted)}footer{max-width:1500px;margin:auto;padding:0 clamp(14px,4vw,42px) 28px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.85rem}
+@media(max-width:780px){.dashboard-grid{grid-template-columns:1fr}.assignment-cards,.next-cards{grid-template-columns:repeat(5,minmax(112px,1fr));overflow-x:auto;padding-bottom:4px}.assignment-cards{display:grid}.flow-panel{min-height:300px}.rotation-wheel{min-height:230px}.reference-map .aerial-image{aspect-ratio:1536/445;min-height:160px}header{padding-top:16px}.positions-grid{grid-template-columns:1fr 1fr}.site-map{max-height:none}.tab{font-size:.92rem;padding:12px 5px}.card{padding:14px}.map-card{padding:10px}}
+@media(max-width:460px){.panel-heading h2{font-size:.9rem}.wheel-node{width:40%}.wheel-node b{font-size:.6rem}.wheel-node strong{font-size:.65rem}.positions-grid{grid-template-columns:1fr}.zone-grid{grid-template-columns:1fr}.tabs{gap:6px}.tab{font-size:.82rem}.map-label{font-size:17px}.map-sub{font-size:14px}.map-person{font-size:15px}}
+
+
+/* Compact roster layout matched to the reference screen */
+body{font-size:14px}
+header{position:relative;padding:12px 16px 10px;background:#071d21;border-bottom:1px solid #173e48}
+.kicker{font-size:.65rem;letter-spacing:.18em}
+.brand{font-size:1.45rem;margin:2px 0 10px;letter-spacing:-.035em}
+.tabs{gap:6px}.tab{font-size:.78rem;padding:10px 4px;border-radius:9px}
+.connection{font-size:.72rem;margin-top:8px}
+main{max-width:1180px;padding:10px 16px 26px}
+.section-title{font-size:.72rem;letter-spacing:.1em;margin:7px 0}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 10px}
+.pills .pill{font-size:.74rem;padding:7px 10px;border:1px solid #284a54;background:#102b30;color:#e4f2f4}
+.pills .pill.selected{background:var(--yellow);border-color:var(--yellow);color:#24353b}
+.day-buttons{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:8px 0 6px}
+.day-btn,.hour-btn{border:1px solid #284a54;background:#0e2930;color:#d6e7eb;border-radius:8px;padding:9px 2px;font-weight:800;font-size:.75rem;min-width:0}
+.day-btn.active,.hour-btn.active{background:var(--cyan);color:#062b32;border-color:var(--cyan)}
+.hour-buttons{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin:0 0 10px}
+.hour-btn{padding:8px 1px;font-size:.7rem}
+.map-card{padding:0;border:0;background:transparent;border-radius:10px;margin:0 0 10px}
+.map-heading{display:none}.reference-map .aerial-stage{border-radius:9px;overflow:hidden}
+.reference-map .aerial-image{display:block;width:100%;height:auto;aspect-ratio:1536/445;object-fit:cover}
+.map-live{display:none!important}
+.dashboard-grid{grid-template-columns:minmax(0,1.45fr) minmax(240px,.9fr);gap:8px;margin:8px 0}
+.dash-panel{border-radius:11px;padding:8px;background:#071d2b}
+.panel-heading{margin-bottom:7px;align-items:baseline}
+.panel-heading h2{font-size:.83rem;letter-spacing:0}
+.panel-heading>strong{font-size:.8rem}
+.assignment-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.assignment-card{border-radius:7px;border-width:2px}
+.assignment-head{padding:4px 3px;gap:4px;min-height:38px}
+.assignment-head>span{width:19px;height:19px;flex-basis:19px;font-size:.72rem}
+.assignment-head b{font-size:clamp(.48rem,.78vw,.7rem)}
+.assignment-head small{font-size:.58rem;line-height:1.05}
+.assignment-visual{height:72px;background:linear-gradient(#d8e9e7,#91c8c5);display:flex;align-items:flex-end;justify-content:center;padding-top:10px}
+.person-icon{position:relative;display:block;width:32px;height:40px;margin:0 auto}
+.person-icon:before{content:"";position:absolute;top:0;left:10px;width:12px;height:12px;border-radius:50%;background:var(--silhouette,#4d8c78);border:0}
+.person-icon:after{content:"";position:absolute;bottom:0;left:2px;width:28px;height:21px;border-radius:50% 50% 0 0;background:var(--silhouette,#4d8c78);border:0}
+.assignment-card.green{--silhouette:#4d8c68}
+.assignment-card.blue{--silhouette:#4e70b2}
+.assignment-card.orange{--silhouette:#b96d4c}
+.assignment-card.purple{--silhouette:#8d5cb2}
+.assignment-card.pink{--silhouette:#b84778}
+.assignment-name{padding:5px 2px;min-height:27px;font-size:.75rem}
+.rotation-wheel{min-height:190px}
+.wheel-node{min-height:43px;padding:5px 3px;gap:1px}
+.wheel-node span{width:17px;height:17px;font-size:.65rem}
+.wheel-node b{font-size:.55rem}.wheel-node strong{font-size:.58rem}
+.wheel-arrow{font-size:1.5rem}
+.flow-caption{font-size:.7rem;margin-top:3px}
+.schedule-table{max-height:450px}
+.schedule-table table{min-width:540px;font-size:.72rem}
+.schedule-table th,.schedule-table td{padding:5px 6px}
+.next-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.next-cards .assignment-head{padding:4px 2px;gap:2px;min-height:44px}
+.next-cards .assignment-head>span{width:16px;height:16px;flex-basis:16px;font-size:.6rem}
+.next-cards .assignment-head b{font-size:.48rem}.next-cards .assignment-head small{font-size:.46rem}
+.next-cards .assignment-visual{height:52px}.next-cards .assignment-name{font-size:.62rem;padding:4px 1px}
+.zone-grid,.positions-grid,.status-card{display:none!important}
+@media(max-width:620px){
+  header{padding:10px 8px}.brand{font-size:1.18rem}.kicker{font-size:.58rem}
+  .tab{font-size:.66rem;padding:9px 2px}
+  main{padding:8px 8px 24px}
+  .pills{gap:4px}.pills .pill{font-size:.66rem;padding:6px 8px}
+  .hour-buttons{grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+  .hour-btn{font-size:.6rem;padding:7px 0}
+  .dashboard-grid{grid-template-columns:minmax(0,1.45fr) minmax(0,.9fr);gap:6px}
+  .dash-panel{padding:6px}
+  .panel-heading h2{font-size:.68rem}.panel-heading>strong{font-size:.65rem}
+  .assignment-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;overflow:visible}
+  .assignment-card{border-radius:5px;border-width:1px}
+  .assignment-head{align-items:flex-start;min-height:32px;padding:3px 2px;gap:2px}
+  .assignment-head>span{width:14px;height:14px;flex-basis:14px;font-size:.52rem}
+  .assignment-head b{font-size:.4rem;line-height:1.05}.assignment-head small{font-size:.38rem;line-height:1.05;margin-top:2px}
+  .assignment-visual{height:45px;padding-top:3px}
+  .person-icon{transform:scale(.72);transform-origin:bottom center;height:32px}
+  .assignment-name{font-size:.57rem;padding:3px 1px;min-height:21px}
+  .rotation-wheel{min-height:170px}
+  .wheel-node{width:39%;min-height:38px}.wheel-node b{font-size:.43rem}.wheel-node strong{font-size:.48rem}
+  .wheel-arrow{font-size:1.15rem}
+  .schedule-table table{min-width:470px;font-size:.64rem}
+  .schedule-table th,.schedule-table td{padding:4px 5px}
+  .next-cards{grid-template-columns:repeat(4,minmax(0,1fr));overflow-x:auto}
+  .next-cards .assignment-card{min-width:50px}
+  .next-cards .assignment-head b{font-size:.42rem}.next-cards .assignment-head small{font-size:.4rem}
+  .next-cards .assignment-visual{height:42px}.next-cards .assignment-name{font-size:.56rem}
+}
+
+
+/* Final compact sizing pass: keep the whole board close to the reference proportions */
+main{padding-top:8px;padding-bottom:14px}
+header .brand{margin-bottom:8px}
+.dashboard-grid{align-items:start}
+.current-panel,.next-panel{min-width:0}
+.daily-crew-panel{margin:10px 0 4px;padding:8px;border-radius:10px}
+.daily-crew-panel .panel-heading{margin-bottom:5px}
+.daily-crew-panel .panel-heading h2{font-size:.76rem}
+.daily-crew-panel .panel-heading>strong{font-size:.7rem}
+.daily-crew-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.crew-summary{border-radius:8px}
+.crew-summary h3{font-size:.68rem;padding:7px 6px}
+.crew-names{padding:6px;gap:4px;min-height:34px}
+.crew-name{font-size:.65rem;padding:3px 6px}
+.crew-empty{font-size:.65rem}
+@media(max-width:620px){
+  main{padding:7px 7px 12px}
+  .daily-crew-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+  .daily-crew-panel{padding:6px;margin-top:8px}
+  .daily-crew-panel .panel-heading h2{font-size:.62rem}
+  .daily-crew-panel .panel-heading>strong{font-size:.58rem}
+  .crew-summary h3{font-size:.56rem;padding:6px 3px;letter-spacing:0}
+  .crew-names{padding:4px;gap:3px;min-height:28px}
+  .crew-name{font-size:.56rem;padding:3px 4px;border-radius:6px}
+  .crew-empty{font-size:.55rem}
+  .map-card{margin-bottom:7px}
+  .dashboard-grid{margin:6px 0;gap:5px}
+}
+
+/* Final reference-match adjustments requested */
+#partyNotice{display:none!important}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 9px}
+.pills .pill{font-size:12px;line-height:1.1;padding:7px 10px;white-space:nowrap}
+@media(min-width:620px){.pills{max-width:100%}}
+.rotation-wheel{height:158px;min-height:158px;max-width:270px}
+.wheel-node{width:29%;min-height:38px;padding:4px 3px;border-radius:6px;box-shadow:none;gap:0}
+.wheel-node span{width:16px;height:16px;font-size:10px}
+.wheel-node b{font-size:8px;line-height:1.05}
+.wheel-node strong{display:none!important}
+.wheel-node.n1{left:35%;top:0}
+.wheel-node.n2{right:0;top:32%}
+.wheel-node.n3{right:13%;bottom:0}
+.wheel-node.n4{left:13%;bottom:0}
+.wheel-node.n5{left:0;top:32%}
+.wheel-arrow{font-size:17px;line-height:1;animation:none}
+.a12{right:24%;top:19%;transform:rotate(0deg)}.a23{right:10%;top:61%;transform:rotate(0deg)}.a34{left:46%;bottom:7%;transform:rotate(0deg)}.a45{left:22%;top:61%;transform:rotate(0deg)}.a51{left:25%;top:19%;transform:rotate(0deg)}
+.flow-caption{font-size:10px;margin-top:0}
+@media(max-width:620px){
+ .pills{gap:4px;margin-bottom:8px}
+ .pills .pill{font-size:11px;padding:6px 8px}
+ .rotation-wheel{height:150px;min-height:150px;max-width:230px}
+ .wheel-node{width:31%;min-height:34px}
+ .wheel-node b{font-size:7px}
+ .wheel-arrow{font-size:13px;color:#fff}
+ .a12{right:23%;top:20%}.a23{right:9%;top:61%}.a34{left:46%;bottom:7%}.a45{left:22%;top:61%}.a51{left:25%;top:20%}
+ .flow-caption{font-size:9px}
+ .hour-buttons{grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+ .hour-btn{font-size:11px;padding:7px 0}
+}
+
+/* Extra compact mobile reference sizing */
+@media(max-width:620px){
+  body{font-size:12px;line-height:1.28}
+  header{padding:7px 8px 6px}
+  .brand{font-size:1rem;margin:1px 0 6px}
+  .kicker{font-size:.5rem}
+  .tabs{gap:4px}.tab{font-size:.6rem;padding:7px 2px;border-radius:7px}
+  .connection{font-size:.62rem;margin-top:5px}
+  main{padding:5px 7px 9px}
+  .section-title{font-size:.6rem;margin:5px 0}
+  .pills{gap:3px;margin-bottom:6px}
+  .pills .pill{font-size:10px;padding:5px 7px;line-height:1}
+  .day-buttons{gap:3px;margin:5px 0 4px}
+  .day-btn,.hour-btn{font-size:.62rem;padding:6px 0;border-radius:6px}
+  .hour-buttons{gap:2px;margin-bottom:6px}
+  .map-card{margin-bottom:5px}
+  .reference-map .aerial-stage{border-radius:7px}
+  .dashboard-grid{grid-template-columns:minmax(0,1.45fr) minmax(0,.9fr);gap:5px;margin:5px 0}
+  .dash-panel{padding:5px;border-radius:9px}
+  .panel-heading{margin-bottom:4px;gap:3px}
+  .panel-heading h2{font-size:.61rem;line-height:1.1}
+  .panel-heading>strong{font-size:.58rem}
+  .current-panel .assignment-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}
+  .current-panel .assignment-card{border-width:1px;border-radius:4px}
+  .current-panel .assignment-head{min-height:28px;padding:2px 1px;gap:1px}
+  .current-panel .assignment-head>span{width:12px;height:12px;flex-basis:12px;font-size:.48rem}
+  .current-panel .assignment-head b{font-size:.36rem;line-height:1}
+  .current-panel .assignment-head small{font-size:.34rem;line-height:1;margin-top:1px}
+  .current-panel .assignment-visual{height:24px;padding-top:0}
+  .current-panel .person-icon{transform:scale(.42);transform-origin:bottom center;height:20px}
+  .current-panel .assignment-name{font-size:.48rem;padding:2px 1px;min-height:15px}
+  .rotation-wheel{height:126px;min-height:126px;max-width:100%}
+  .wheel-node{min-height:29px;padding:3px 1px;border-radius:4px}
+  .wheel-node span{width:13px;height:13px;font-size:8px}
+  .wheel-node b{font-size:6px;line-height:1}
+  .wheel-arrow{font-size:11px}
+  .flow-caption{font-size:8px}
+  .schedule-table{max-height:350px}
+  .schedule-table table{min-width:400px;font-size:.57rem}
+  .schedule-table th,.schedule-table td{padding:3px 4px}
+  .next-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}
+  .next-cards .assignment-head{min-height:33px;padding:2px 1px}
+  .next-cards .assignment-head>span{width:12px;height:12px;flex-basis:12px;font-size:.46rem}
+  .next-cards .assignment-head b{font-size:.34rem}.next-cards .assignment-head small{font-size:.32rem}
+  .next-cards .assignment-visual{height:35px}.next-cards .assignment-name{font-size:.48rem;padding:2px 1px}
+  .daily-crew-panel{margin:6px 0 3px;padding:5px}
+  .daily-crew-panel .panel-heading h2{font-size:.58rem}
+  .daily-crew-panel .panel-heading>strong{font-size:.54rem}
+  .crew-summary h3{font-size:.5rem;padding:4px 2px}
+  .crew-names{padding:3px;gap:2px}
+  .crew-name{font-size:.5rem;padding:2px 3px}
+  footer{padding:0 8px 10px;font-size:.65rem}
+}
+
+
+/* Special 11 AM pool-party coverage: show all ten positions compactly. */
+.assignment-cards.party-coverage-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.party-coverage-cards .assignment-card{min-width:0}
+.party-coverage-cards .assignment-head{min-height:32px;padding:3px 2px;gap:2px}
+.party-coverage-cards .assignment-head b{font-size:.48rem}
+.party-coverage-cards .assignment-head small{font-size:.52rem}
+.party-coverage-cards .assignment-visual{height:42px}
+.party-coverage-cards .person-icon{transform:scale(.72);transform-origin:bottom center}
+.party-coverage-cards .assignment-name{font-size:.62rem;min-height:22px;padding:3px 1px;overflow-wrap:anywhere}
+
+/* High-contrast colors for the 10-position pool-party cards. */
+.party-coverage-cards .assignment-card.green{--accent:#087443}
+.party-coverage-cards .assignment-card.blue{--accent:#0754b8}
+.party-coverage-cards .assignment-card.orange{--accent:#b83b0a}
+.party-coverage-cards .assignment-card.purple{--accent:#6420a5}
+.party-coverage-cards .assignment-card.pink{--accent:#a9004b}
+.party-coverage-cards .assignment-head{color:#fff;background:var(--accent)}
+.party-coverage-cards .assignment-head b,.party-coverage-cards .assignment-head small{color:#fff;opacity:1}
+.party-coverage-cards .assignment-visual{background:linear-gradient(145deg,#d8f0f2,#8ac9c8)}
+.party-coverage-cards .assignment-name{background:#fff;color:#092532;font-weight:900}
+@media(max-width:780px){.assignment-cards.party-coverage-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}}
+
+
+/* Keep rotation flow compact: no forced panel height or stretched grid row. */
+.flow-panel.compact-flow-panel{min-height:0!important;height:auto!important;align-self:start;flex:none}
+.board-stack .flow-panel.compact-flow-panel{min-height:0!important;height:auto!important}
+.compact-flow-panel .rotation-wheel{height:82px;min-height:82px;max-height:82px;overflow:hidden}
+.compact-flow-panel .flow-caption{line-height:1.1}
+
+/* Correct mobile-first section order: current, next, compact flow, lunch, full-width schedule. */
+.board-stack{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.board-stack>.dash-panel,.break-room-panel,.full-schedule-panel{min-width:0;width:100%;box-sizing:border-box}
+.board-stack .assignment-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}
+.board-stack .next-cards{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}
+.compact-flow-panel{padding:7px!important}
+.compact-flow-panel .rotation-wheel{height:100px;min-height:100px;max-width:100%;margin:0 auto}
+.compact-flow-panel .wheel-node{min-height:25px;padding:2px 3px;border-radius:5px}
+.compact-flow-panel .wheel-node span{width:13px;height:13px;font-size:8px}
+.compact-flow-panel .wheel-node b{font-size:7px;line-height:1.05}
+.compact-flow-panel .wheel-arrow{font-size:12px}
+.compact-flow-panel .flow-caption{font-size:9px;margin-top:1px}
+.break-room-panel{margin:7px 0;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.break-room-panel .staff-tags{display:flex;flex-wrap:wrap;gap:4px}
+.full-schedule-panel{margin:8px 0}
+.full-schedule-panel .schedule-table{width:100%;max-width:100%;overflow-x:auto}
+@media(max-width:620px){
+ .board-stack{gap:6px;margin:6px 0}
+ .board-stack .dash-panel{padding:5px;border-radius:9px}
+ .board-stack .assignment-cards,.board-stack .next-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;overflow:visible}
+ .board-stack .assignment-card{min-width:0;border-radius:4px}
+ .board-stack .assignment-head{min-height:27px;padding:2px 1px;gap:1px}
+ .board-stack .assignment-head>span{width:12px;height:12px;flex-basis:12px;font-size:7px}
+ .board-stack .assignment-head b{font-size:clamp(5px,1.5vw,8px);line-height:1}
+ .board-stack .assignment-head small{font-size:clamp(4px,1.25vw,7px);line-height:1;margin-top:1px}
+ .board-stack .assignment-visual{height:22px;padding-top:0}
+ .board-stack .person-icon{transform:scale(.38);transform-origin:bottom center;height:18px}
+ .board-stack .assignment-name{font-size:clamp(6px,1.7vw,9px);padding:2px 0;min-height:14px}
+ .board-stack .next-cards .assignment-head{min-height:27px}
+ .board-stack .next-cards .assignment-visual{height:22px}
+ .board-stack .next-cards .assignment-name{font-size:clamp(6px,1.6vw,9px);padding:2px 0}
+ .compact-flow-panel .rotation-wheel{height:76px;min-height:76px;max-height:76px}
+ .compact-flow-panel .wheel-node{min-height:22px;padding:2px 1px}
+ .compact-flow-panel .wheel-node b{font-size:6px}
+ .compact-flow-panel .wheel-arrow{font-size:10px}
+ .compact-flow-panel .flow-caption{font-size:8px}
+ .full-schedule-panel{padding:6px;margin:6px 0}
+ .full-schedule-panel .schedule-table table{min-width:540px}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">CABO REAL SURF CLUB</div>
+  <div class="brand">Staff <span>Rotation</span></div>
+  <nav class="tabs" aria-label="Main navigation">
+    <button class="tab active" data-tab="live">Live Board</button><button class="tab" data-tab="week">My Week</button><button class="tab" data-tab="team">Whole Team</button>
+  </nav>
+  <div class="connection"><span id="connectionDot" class="dot"></span><span id="connectionText">Connecting to live roster…</span></div>
+</header>
+<main>
+<section id="liveView">
+  <div class="section-title">HIGHLIGHT A PERSON</div>
+  <div id="employeePills" class="pills" aria-label="Employee selection"></div>
+  <div class="day-buttons" id="dayButtons" aria-label="Select day"></div>
+  <div class="hour-buttons" id="hourButtons" aria-label="Select hour"></div>
+  <div class="toolbar hidden"><label for="daySelect">Day</label><select id="daySelect"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select><label for="hourSelect">Rotation</label><select id="hourSelect"></select><button id="nowButton" class="pill">Current time</button></div>
+  <div id="partyNotice" class="notice hidden"></div>
+  <div class="map-card reference-map">
+    <div class="map-heading"><h2>Surf Pool · Staff Positions</h2><span id="poolTime" class="map-note"></span></div>
+    <div class="aerial-stage">
+      <img id="poolAerialImage" class="aerial-image" src="pool-aerial.png" alt="Aerial site layout showing the surf pool and surrounding staff work areas">
+    </div>
+  </div>
+  <div class="board-stack">
+    <section class="dash-panel current-panel">
+      <div class="panel-heading"><h2>CURRENT HOUR</h2><strong id="currentHourLabel">—</strong></div>
+      <div class="assignment-cards">
+        <article class="assignment-card blue"><div class="assignment-head"><span>1</span><div><b>SURF COACH</b><small>Zone 1</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardPusher" class="assignment-name">—</div></article>
+        <article class="assignment-card blue"><div class="assignment-head"><span>2</span><div><b>SURF COACH</b><small>Zone 5</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardCatcher" class="assignment-name">—</div></article>
+        <article class="assignment-card orange"><div class="assignment-head"><span>3</span><div><b>CONTROL TOWER</b><small>Make the waves</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardTower" class="assignment-name">—</div></article>
+        <article class="assignment-card green"><div class="assignment-head"><span>4</span><div><b>BOARD ROOM A</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardA" class="assignment-name">—</div></article>
+        <article class="assignment-card green"><div class="assignment-head"><span>5</span><div><b>BOARD ROOM B</b><small>Check in / out</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div id="cardBoardB" class="assignment-name">—</div></article>
+      </div>
+    </section>
+    <section class="dash-panel next-panel">
+      <div class="panel-heading"><h2>NEXT HOUR</h2><strong id="nextHourLabel">—</strong></div>
+      <div id="nextHourCards" class="next-cards"></div>
+    </section>
+    <section class="dash-panel flow-panel compact-flow-panel">
+      <div class="panel-heading"><h2>ROTATION FLOW</h2><span class="map-note">Hourly rotation</span></div>
+      <div class="rotation-wheel">
+        <div class="wheel-node n1"><span>1</span><b>SURF COACH</b><strong id="flowPusher" class="hidden">—</strong></div>
+        <div class="wheel-node n2"><span>2</span><b>SURF COACH</b><strong id="flowCatcher" class="hidden">—</strong></div>
+        <div class="wheel-node n3"><span>3</span><b>CONTROL TOWER</b><strong id="flowTower" class="hidden">—</strong></div>
+        <div class="wheel-node n4"><span>4</span><b>BOARD ROOM A</b><strong id="flowBoardA" class="hidden">—</strong></div>
+        <div class="wheel-node n5"><span>5</span><b>BOARD ROOM B</b><strong id="flowBoardB" class="hidden">—</strong></div>
+        <div class="wheel-arrow a12">↘</div><div class="wheel-arrow a23">↙</div><div class="wheel-arrow a34">←</div><div class="wheel-arrow a45">↖</div><div class="wheel-arrow a51">↗</div>
+      </div>
+      <div class="flow-caption">Everyone rotates each hour in this direction.</div>
+    </section>
+  </div>
+  <section id="breakRoomPanel" class="dash-panel break-room-panel hidden">
+    <div class="panel-heading"><h2>BREAK ROOM</h2><strong id="breakRoomLabel">—</strong></div>
+    <div id="breakRoomVisible" class="staff-tags"></div>
+  </section>
+  <section class="dash-panel schedule-panel full-schedule-panel">
+    <div class="panel-heading"><h2>HOURLY ROTATION SCHEDULE</h2><span class="map-note">Select a row to view it</span></div>
+    <div id="hourlySchedule" class="schedule-table"></div>
+  </section>
+  <div class="section-title hidden">Position assignments · selected hour</div>
+
+  <div class="zone-grid hidden">
+    <div class="zone"><h4>SURF COACH · ZONE 1</h4><div id="pusher" class="staff-tags"></div></div>
+    <div class="zone"><h4>SURF COACH · ZONE 5</h4><div id="catcher" class="staff-tags"></div></div>
+    <div class="zone"><h4>BOARD ROOM A</h4><div id="boardA" class="staff-tags"></div></div>
+    <div class="zone"><h4>BOARD ROOM B</h4><div id="boardB" class="staff-tags"></div></div>
+  </div>
+  <div class="positions-grid hidden">
+    <div class="location-card"><h3>Control Tower</h3><div id="tower" class="staff-tags"></div></div>
+    <div class="location-card"><h3>Break Room / Lunch</h3><div id="breakRoom" class="staff-tags"></div></div>
+    <div class="location-card"><h3>Other / party coverage</h3><div id="extra" class="staff-tags"></div></div>
+  </div>
+  <div class="status-card hidden"><div class="section-title">Operating status · based on actual Cabo time</div><h2 id="operatingStatus">Loading roster…</h2><div id="statusDetail" class="muted">Operating hours are 7:00 AM–7:00 PM Cabo time.</div><div class="clock-row"><span id="liveClock" class="clock">--:--</span><span id="dateLabel" class="muted">Cabo time</span></div></div>
+  <section class="daily-crew-panel">
+    <div class="panel-heading"><h2>DAILY CREW OVERVIEW</h2><strong id="dailyCrewDay">—</strong></div>
+    <div class="daily-crew-grid">
+      <article class="crew-summary am"><h3>AM CREW</h3><div id="dailyAmCrew" class="crew-names">Loading…</div></article>
+      <article class="crew-summary pm"><h3>PM CREW</h3><div id="dailyPmCrew" class="crew-names">Loading…</div></article>
+      <article class="crew-summary off"><h3>DAY OFF</h3><div id="dailyDayOff" class="crew-names">Loading…</div></article>
+    </div>
+  </section>
+</section>
+<section id="weekView" class="hidden">
+  <div class="section-title">My week · individual schedule</div>
+  <div class="toolbar"><label for="weekEmployee">Employee</label><select id="weekEmployee"></select><label for="weekDay">Day</label><select id="weekDay"><option value="">All days</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
+  <div id="weekSummary" class="card muted">Choose an employee to see their shifts.</div><div id="weekTable" class="table-wrap"></div>
+</section>
+<section id="teamView" class="hidden">
+  <div class="section-title">Whole team · weekly coverage</div>
+  <div class="toolbar"><label for="teamSearch">Find employee</label><input id="teamSearch" type="search" placeholder="Type a name"><label for="teamDay">Day</label><select id="teamDay"><option value="">All days</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
+  <div id="teamSummary" class="muted"></div><div id="teamTable" class="table-wrap"></div>
+</section>
+</main>
+<footer><span>Staff Rotation · Cabo Real Surf Club</span><span id="updatedLabel">Waiting for first data refresh</span></footer>
+<script>
+const DATABASE_URL="https://cabo-real-surf-club-default-rtdb.firebaseio.com";
+const DATA_PATH="/surfOps.json",REFRESH_MS=30000,CABO_TZ="America/Mazatlan";
+const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const STAFF_NAMES=["Ana","Bost","Chino","Diana","Felix","Fernando","Green","Kody","Linden","Makeni","Marley","Pomo","Tlaca","Toni","Wikin","Lucho"];
+let rootData=null,sheetMap={},employees=[...STAFF_NAMES],selectedEmployee="",allRows=[];
+const $=id=>document.getElementById(id),normalize=s=>String(s??"").trim().toLowerCase().replace(/\s+/g," ");
+function asArray(v){if(Array.isArray(v))return v;if(v&&typeof v==="object")return Object.keys(v).sort((a,b)=>Number(a)-Number(b)).map(k=>v[k]);return []}
+function parseSheet(name){const s=sheetMap[name];if(!s)return [];const headers=asArray(s.headers).map(v=>String(v??"").trim());let rows=asArray(s.values);if(!rows.length)rows=asArray(s.rows);return rows.map(r=>{if(r&&!Array.isArray(r)&&typeof r==="object")return r;const o={};headers.forEach((h,i)=>o[h]=asArray(r)[i]??"");return o}).filter(o=>Object.values(o).some(v=>String(v??"").trim()!==""))}
+function field(o,alts){const keys=Object.keys(o||{});for(const a of alts){const k=keys.find(x=>normalize(x)===normalize(a));if(k&&String(o[k]??"").trim())return o[k]}for(const a of alts){const k=keys.find(x=>normalize(x).includes(normalize(a)));if(k&&String(o[k]??"").trim())return o[k]}return ""}
+function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>x.trim()).filter(x=>x&&!/^(n\/a|na|none|off|vacant|tbd|—|-)$/i.test(x))}
+function rowToAssignment(r,source){const day=String(field(r,["Day","Weekday"])||"").trim(),time=String(field(r,["Hour","Time","Time Slot","Rotation"])||"").trim();const defs=[["Pool Pusher (Zone 1)",["Pool Pusher (Zone 1)","Pool Pusher","Pusher","Zone 1"]],["Pool Catcher (Zone 5)",["Pool Catcher (Zone 5)","Pool Catcher","Catcher","Zone 5"]],["Control Tower",["Control Tower","Tower"]],["Board Room A",["Board Room A","Board Room A Staff"]],["Board Room B",["Board Room B","Board Room B Staff"]]];const positions={};defs.forEach(([label,alts])=>positions[label]=String(field(r,alts)||"").trim());return {day,time,positions,source,raw:r}}
+function getAllAssignments(){return Object.keys(sheetMap).filter(n=>["am hourly rotation","pm hourly rotation"].includes(normalize(n))).flatMap(n=>parseSheet(n).map(r=>rowToAssignment(r,normalize(n).startsWith("am")?"AM":"PM"))).filter(r=>r.day&&r.time)}
+function parseEmployees(){return [...STAFF_NAMES]}function parts(){return Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false,month:"short",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]))}
+function currentDay(){return parts().weekday}function currentHour(){return Number(parts().hour)}
+function timeText(){return new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,hour:"2-digit",minute:"2-digit",hour12:true}).format(new Date())}
+function hourStart(s){const m=String(s||"").match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);if(!m)return -1;let h=+m[1];const ap=(m[3]||"").toUpperCase();if(ap==="PM"&&h<12)h+=12;if(ap==="AM"&&h===12)h=0;if(!ap&&h>=1&&h<=6)h+=12;return h}
+function findRow(day,time){const candidates=allRows.filter(r=>normalize(r.day)===normalize(day));return candidates.find(r=>r.time===time)||candidates.find(r=>hourStart(r.time)===hourStart(time))||null}
+function connected(ok,msg){$("connectionDot").className="dot "+(ok?"ok":"bad");$("connectionText").textContent=msg}
+function renderPills(){const host=$("employeePills");host.innerHTML="";STAFF_NAMES.forEach(name=>{const b=document.createElement("button");b.className="pill"+(selectedEmployee===name?" selected":"");b.textContent=name;b.setAttribute("aria-pressed",String(selectedEmployee===name));b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};host.appendChild(b)})}
+function staffTag(name){const b=document.createElement("button");b.className="staff-tag"+(selectedEmployee===name?" highlight":"");b.textContent=name;b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};return b}
+function fill(id,values){const el=$(id);el.innerHTML="";const names=[...new Set(values.flatMap(splitNames))];if(!names.length){el.innerHTML='<span class="empty">No assignment recorded</span>';return}names.forEach(n=>el.appendChild(staffTag(n)))}
+function setMap(id,names){const el=$(id),vals=[...new Set(names.flatMap(splitNames))];el.textContent=vals.length?vals.join(" · "):"—";el.classList.toggle("highlight",!!selectedEmployee&&vals.includes(selectedEmployee));const flowIds={mapPusher:"flowPusher",mapCatcher:"flowCatcher",mapTower:"flowTower",mapBoardA:"flowBoardA",mapBoardB:"flowBoardB"};if(flowIds[id])$(flowIds[id]).textContent=vals.length?vals.join(" · "):"—";if(flowIds[id])$(flowIds[id]).parentElement.classList.toggle("active",!!selectedEmployee&&vals.includes(selectedEmployee))}
+function renderBoard(){const day=$("daySelect").value,time=$("hourSelect").value,row=findRow(day,time);const selectedStart=hourStart(time);const poolImage=$("poolAerialImage");if(poolImage){const partyImage=[11,13].includes(selectedStart);poolImage.src=partyImage?"pool-party-aerial.png":"pool-aerial.png";poolImage.alt=partyImage?"Five surf coaches positioned in pool Zones 1, 2, 3, 4 and 5 for pool-party coverage":"Standard surf pool staff positions, including Surf Coach Zone 1 and Surf Coach Zone 5";}$("poolTime").textContent=`${day} · ${time||"No rotation selected"}`;const ids=["pusher","catcher","boardA","boardB","tower","breakRoom","extra"];if(!row){ids.forEach(id=>fill(id,[]));$("partyNotice").classList.add("hidden")}else{const p=row.positions;fill("pusher",[p["Pool Pusher (Zone 1)"]]);fill("catcher",[p["Pool Catcher (Zone 5)"]]);fill("tower",[p["Control Tower"]]);fill("boardA",[p["Board Room A"]]);fill("boardB",[p["Board Room B"]]);const extra=[],breaks=[];Object.keys(sheetMap).filter(n=>/pool party|daily coverage|daily staffing|positions|glide setup/i.test(n)).forEach(n=>parseSheet(n).forEach(r=>{const d=field(r,["Day","Weekday"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);if(normalize(d)===normalize(day)&&(!t||hourStart(t)===hourStart(time))){Object.entries(r).forEach(([k,v])=>{if(/break|lunch/i.test(k))breaks.push(...splitNames(v));else if(!/day|hour|time|rotation|session|date/i.test(k))extra.push(...splitNames(v))})}}));const core=new Set(Object.values(p).flatMap(splitNames));fill("extra",extra.filter(n=>!core.has(n)));const breakHour=hourStart(time);if(breakHour===12)breaks.push(...[...($("dailyAmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));if(breakHour===14)breaks.push(...[...($("dailyPmCrew")?.querySelectorAll(".crew-name")||[])].map(el=>el.textContent));fill("breakRoom",breaks);const visibleBreak=$("breakRoomVisible");if(visibleBreak)visibleBreak.innerHTML=$("breakRoom").innerHTML;const breakPanel=$("breakRoomPanel");if(breakPanel){const showBreak=[12,14].includes(breakHour);breakPanel.classList.toggle("hidden",!showBreak);$("breakRoomLabel").textContent=breakHour===12?"AM Crew Lunch":breakHour===14?"PM Crew Lunch":"";}const hasExtra=extra.some(n=>!core.has(n));$("partyNotice").classList.toggle("hidden",!hasExtra);$("partyNotice").textContent=hasExtra?"Additional pool-party or coverage assignments are listed in Other / party coverage.":""}
+const p=row?.positions||{};
+const h=currentHour(),open=h>=7&&h<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed";$("statusDetail").textContent=`Current status uses actual Cabo local time (${timeText()}), not the selected roster hour. Selected board: ${day} ${time||"—"}.`;
+}
+function populateTimes(preserve=true){const sel=$("hourSelect"),old=preserve?sel.value:"";sel.innerHTML="";const times=[...new Set(allRows.filter(r=>normalize(r.day)===normalize($("daySelect").value)).map(r=>r.time))].sort((a,b)=>hourStart(a)-hourStart(b));times.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;sel.appendChild(o)});if(old&&times.includes(old))sel.value=old;else{const now=currentHour(),match=times.find(t=>hourStart(t)===now);if(match)sel.value=match;else if(times.length)sel.selectedIndex=0}}
+function populateEmployees(){const s=$("weekEmployee"),old=s.value;s.innerHTML="";employees.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;s.appendChild(o)});if(old&&employees.includes(old))s.value=old;else if(selectedEmployee&&employees.includes(selectedEmployee))s.value=selectedEmployee}
+function renderWeek(){const name=$("weekEmployee").value,day=$("weekDay").value;const rows=allRows.filter(r=>(!day||normalize(r.day)===normalize(day))&&Object.values(r.positions).some(v=>splitNames(v).includes(name)));$("weekSummary").textContent=name?`${name} · ${rows.length} hourly assignment(s) in the AM/PM rotation sheets.`:"Choose an employee.";const host=$("weekTable");host.innerHTML="";if(!rows.length){host.innerHTML='<div class="empty-state">No matching rotation assignments found for this employee and filter.</div>';return}const table=document.createElement("table");table.innerHTML="<thead><tr><th>Day</th><th>Time</th><th>Assignment</th></tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const assigned=Object.entries(r.positions).filter(([k,v])=>splitNames(v).includes(name)).map(([k])=>k).join(", ");const tr=document.createElement("tr");[r.day,r.time,assigned].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderTeam(){const q=normalize($("teamSearch").value),day=$("teamDay").value;const rows=allRows.filter(r=>(!day||normalize(r.day)===normalize(day))&&(!q||Object.values(r.positions).some(v=>splitNames(v).some(n=>normalize(n).includes(q)))));$("teamSummary").textContent=`${rows.length} rotation row(s) · AM/PM hourly rotation sheets.`;const host=$("teamTable");host.innerHTML="";if(!rows.length){host.innerHTML='<div class="empty-state">No rows match these filters.</div>';return}const heads=["Day","Time","Surf Coach · Zone 1","Surf Coach · Zone 5","Control Tower","Board Room A","Board Room B"];const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(x=>`<th>${esc(x)}</th>`).join("")+"</tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const tr=document.createElement("tr");[r.day,r.time,...Object.values(r.positions)].forEach((v,i)=>{const td=document.createElement("td");if(i>=2)splitNames(v).forEach((n,j)=>{if(j)td.append(" ");const b=document.createElement("button");b.textContent=n;b.onclick=()=>{selectedEmployee=n;switchTab("live");renderAll()};td.appendChild(b)});else td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
+
+function hourLabel(s){return String(s||"").replace(/\s*-\s*/," – ")}
+function nextRow(day,time){const rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));const i=rows.findIndex(r=>r.time===time||hourStart(r.time)===hourStart(time));return i>=0?rows[i+1]||null:null}
+function assignmentValues(row){const p=row?.positions||{};return [p["Pool Pusher (Zone 1)"],p["Pool Catcher (Zone 5)"],p["Control Tower"],p["Board Room A"],p["Board Room B"]].map(v=>splitNames(v).join(", ")||"—")}
+function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){const colors=["green","blue","orange","purple","pink"];const card=document.createElement("article");card.className="assignment-card "+(color||colors[index%colors.length]);card.innerHTML=`<div class="assignment-head"><span>${index+1}</span><div><b>${title}</b><small>${subtitle}</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div class="assignment-name"></div>`;card.querySelector(".assignment-name").textContent=name||"—";return card}function renderSchedule(){
+ const host=$("hourlySchedule");if(!host)return;
+ const day=$("daySelect").value;
+ const sourceRows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));
+ if(!sourceRows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}
+ // Merge AM/PM rows with the same hour for this table only. Do not change the live cards or other sections.
+ const grouped=new Map();
+ sourceRows.forEach(r=>{
+   const h=hourStart(r.time);
+   if(!grouped.has(h))grouped.set(h,{time:r.time,rows:[]});
+   grouped.get(h).rows.push(r);
+ });
+ const rows=[...grouped.values()].sort((a,b)=>hourStart(a.time)-hourStart(b.time)).map(g=>{
+   const columns=Array.from({length:5},(_,i)=>{
+     const key=["Pool Pusher (Zone 1)","Pool Catcher (Zone 5)","Control Tower","Board Room A","Board Room B"][i];
+     const values=[];
+     g.rows.forEach(r=>{
+       const value=assignmentValues(r)[i];
+       if(value&&value!=="—"&&!values.includes(value))values.push(value);
+     });
+     return values.join(" · ")||"—";
+   });
+   return {time:g.time,columns};
+ });
+ const heads=["TIME","SURF COACH · ZONE 1","SURF COACH · ZONE 5","CONTROL TOWER","BOARD ROOM A","BOARD ROOM B"];
+ const table=document.createElement("table");
+ table.innerHTML="<thead><tr>"+heads.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";
+ const body=document.createElement("tbody");
+ rows.forEach(r=>{
+   const tr=document.createElement("tr");
+   if(hourStart(r.time)===hourStart($("hourSelect").value))tr.className="selected";
+   [r.time,...r.columns].forEach((v,i)=>{
+     const td=document.createElement("td");
+     if(i===0){
+       const b=document.createElement("button");b.textContent=v;
+       b.onclick=()=>{$("hourSelect").value=r.time;renderAll()};
+       td.appendChild(b);
+     }else td.textContent=v;
+     tr.appendChild(td);
+   });
+   body.appendChild(tr);
+ });
+ table.appendChild(body);host.appendChild(table);
+}
+function coverageRowFor(day,time){
+ const sheets=Object.keys(sheetMap).filter(n=>/pool party coverage|daily coverage|daily staffing|positions|glide setup/i.test(n));
+ for(const sn of sheets){for(const r of parseSheet(sn)){const d=field(r,["Day","Weekday","Day Name"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);if(d&&normalize(d)!==normalize(day))continue;if(t&&hourStart(t)!==hourStart(time))continue;return r}}
+ return null;
+}
+function cardAssignments(row,day,time){
+ const base=row?.positions||{};const special=[11,13].includes(hourStart(time));const cov=special?coverageRowFor(day,time):null;
+ const defs=[
+  {title:"SURF COACH",subtitle:"Zone 1",keys:["Pool Pusher (Zone 1)","Pool Zone 1","Zone 1","Pool Pusher"],color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 2",keys:["Pool Zone 2","Zone 2","Pool 2"],color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 3",keys:["Pool Zone 3","Zone 3","Pool 3"],color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 4",keys:["Pool Zone 4","Zone 4","Pool 4"],color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 5",keys:["Pool Catcher (Zone 5)","Pool Zone 5","Zone 5","Pool Catcher"],color:"blue"},
+  {title:"CONTROL TOWER",subtitle:"Tower A",keys:["Tower A","Control Tower A","Control Tower","Tower"],color:"orange"},
+  {title:"CONTROL TOWER",subtitle:"Tower B",keys:["Tower B","Control Tower B"],color:"orange"},
+  {title:"BOARD ROOM A",subtitle:"",keys:["Board Room A","Board Room A Staff"],color:"green"},
+  {title:"BOARD ROOM B",subtitle:"",keys:["Board Room B","Board Room B Staff"],color:"green"},
+  {title:"BOARD ROOM C",subtitle:"",keys:["Board Room C","Board Room C Staff"],color:"green"}
+ ];
+ return (special?defs:defs.filter((d,i)=>[0,4,5,7,8].includes(i))).map((d,i)=>{
+  let val=cov?field(cov,d.keys):"";
+  if(!val){if(d.subtitle==="Zone 1")val=base["Pool Pusher (Zone 1)"];else if(d.subtitle==="Zone 5")val=base["Pool Catcher (Zone 5)"];else if(d.subtitle==="Tower A")val=base["Control Tower"];else if(d.subtitle==="Board Room A")val=base["Board Room A"];else if(d.subtitle==="Board Room B")val=base["Board Room B"]}
+  return {...d,name:splitNames(val).join(", ")||"—",number:i+1};
+ });
+}
+function renderVisualCards(){
+ const day=$("daySelect").value,time=$("hourSelect").value,row=findRow(day,time),p=row?.positions||{};
+ const assignments=cardAssignments(row,day,time),hostCurrent=document.querySelector(".current-panel .assignment-cards");
+ hostCurrent.innerHTML="";hostCurrent.classList.toggle("party-coverage-cards",assignments.length>5);
+ assignments.forEach((a,i)=>hostCurrent.appendChild(makeAssignmentCard(i,a.title,a.subtitle,a.name,false,a.color)));
+ $("currentHourLabel").textContent=row?hourLabel(row.time):"No shift data";
+ const nxt=nextRow(day,time);$("nextHourLabel").textContent=nxt?hourLabel(nxt.time):"No next shift";
+ const host=$("nextHourCards");host.innerHTML="";const nextAssignments=cardAssignments(nxt,day,nxt?.time||"");
+ nextAssignments.forEach((a,i)=>host.appendChild(makeAssignmentCard(i,a.title,a.subtitle,a.name,true,a.color)));
+ const vals=assignmentValues(row);const flowMap=[["flowPusher",vals[0]],["flowCatcher",vals[1]],["flowTower",vals[2]],["flowBoardA",vals[3]],["flowBoardB",vals[4]]];flowMap.forEach(([id,v])=>$(id).textContent=v);renderSchedule()
+}
+function renderDayButtons(){const host=$("dayButtons");if(!host)return;host.innerHTML="";DAYS.forEach(d=>{const b=document.createElement("button");b.className="day-btn"+(normalize($("daySelect").value)===normalize(d)?" active":"");b.textContent=d.slice(0,3);if(normalize(d)===normalize(currentDay()))b.dataset.today="true";b.onclick=()=>{$("daySelect").value=d;populateTimes(false);renderAll()};host.appendChild(b)})}
+function renderHourButtons(){const host=$("hourButtons");if(!host)return;host.innerHTML="";[...$("hourSelect").options].forEach(o=>{const b=document.createElement("button");b.className="hour-btn"+(o.value===$("hourSelect").value?" active":"");const h=hourStart(o.value);b.textContent=h===0?"12a":h<12?`${h}a`:h===12?"12p":`${h-12}p`;b.title=o.value;b.onclick=()=>{$("hourSelect").value=o.value;renderAll()};host.appendChild(b)})}
+
+function crewNamesFromValue(value){return splitNames(value).filter(n=>employees.includes(n))}
+function renderCrewNames(id,names){const el=$(id);el.innerHTML="";const clean=[...new Set(names)].filter(n=>employees.includes(n));if(!clean.length){el.innerHTML='<span class="crew-empty">No crew assignment recorded</span>';return}clean.forEach(name=>{const span=document.createElement("span");span.className="crew-name";span.textContent=name;el.appendChild(span)})}
+function renderDailyCrew(){
+ const day=$("daySelect")?.value||currentDay();$("dailyCrewDay").textContent=day;
+ const buckets={am:[],pm:[],off:[]};
+ Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|schedule summary|weekly schedule|employees/i.test(n)).forEach(sheetName=>{
+  parseSheet(sheetName).forEach(row=>{
+   const rowDay=field(row,["Day","Weekday","Day Name"]);
+   if(rowDay&&normalize(rowDay)!==normalize(day))return;
+   let foundHeader=false;
+   Object.keys(row).forEach(k=>{
+    const nk=normalize(k),names=crewNamesFromValue(row[k]);
+    if(/am crew|morning crew|am team|morning team/.test(nk)){buckets.am.push(...names);foundHeader=true}
+    else if(/pm crew|afternoon crew|pm team|afternoon team/.test(nk)){buckets.pm.push(...names);foundHeader=true}
+    else if(/day off|off today|days off|off duty/.test(nk)){buckets.off.push(...names);foundHeader=true}
+   });
+   if(!foundHeader){
+    const group=normalize(field(row,["Crew","Crew Type","Shift Type","Team","Category","Status","Shift"]));
+    const person=field(row,["Employee","Employee Name","Name","Staff Name","Team Member","Staff","Assigned Staff","Members"]);
+    const names=crewNamesFromValue(person);
+    if(/^(am|am crew|morning|morning crew|am team)$/.test(group))buckets.am.push(...names);
+    else if(/^(pm|pm crew|afternoon|afternoon crew|pm team)$/.test(group))buckets.pm.push(...names);
+    else if(/^(day off|off|off duty|rest day)$/.test(group))buckets.off.push(...names);
+   }
+  });
+ });
+ renderCrewNames("dailyAmCrew",buckets.am);renderCrewNames("dailyPmCrew",buckets.pm);renderCrewNames("dailyDayOff",buckets.off);
+}
+
+function renderAll(){renderPills();renderDayButtons();renderHourButtons();renderDailyCrew();renderBoard();renderVisualCards();populateEmployees();renderWeek();renderTeam()}
+function switchTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));$("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");if(tab==="week")renderWeek();if(tab==="team")renderTeam()}
+async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
+function tick(){const p=parts();$("liveClock").textContent=timeText();$("dateLabel").textContent=`${p.weekday} · ${p.month} ${p.day} · Cabo time`;const open=currentHour()>=7&&currentHour()<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed"}
+$("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()});$("hourSelect").addEventListener("change",renderAll);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderAll()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);$("teamSearch").addEventListener("input",renderTeam);$("teamDay").addEventListener("change",renderTeam);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
+</script>
+</body>
+</html>
