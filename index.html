@@ -315,6 +315,50 @@ header .brand{margin-bottom:8px}
 .lower-grid .schedule-panel{width:100%;box-sizing:border-box}
 #breakRoomPanel{margin:8px 0}
 @media(max-width:780px){.dashboard-grid:not(.lower-grid){grid-template-columns:1fr;grid-template-areas:"current" "next" "flow"}.flow-panel{grid-row:auto}.lower-grid{display:block}}
+
+/* Small-screen density: five staff cards across and a compact rotation flow. */
+@media(max-width:780px){
+  .dashboard-grid:not(.lower-grid){grid-template-columns:minmax(0,1fr);grid-template-areas:"current" "next" "flow";gap:7px}
+  .assignment-cards,.next-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;overflow:visible;padding-bottom:0}
+  .dash-panel{padding:8px;border-radius:12px}
+  .panel-heading{gap:5px;margin-bottom:6px;flex-wrap:nowrap}
+  .panel-heading h2{font-size:.78rem;letter-spacing:.025em}
+  .panel-heading>strong{font-size:.78rem;white-space:nowrap}
+  .assignment-card{border-width:1.5px;border-radius:7px}
+  .assignment-head{padding:3px 2px;gap:2px;min-height:35px;align-items:flex-start}
+  .assignment-head>span{width:17px;height:17px;flex-basis:17px;font-size:.63rem}
+  .assignment-head b{font-size:clamp(.38rem,1.65vw,.56rem);line-height:1.02;overflow-wrap:anywhere}
+  .assignment-head small{font-size:clamp(.35rem,1.45vw,.5rem);line-height:1.02;margin-top:1px;overflow-wrap:anywhere}
+  .assignment-visual{height:38px;font-size:1.15rem}
+  .assignment-visual .person-icon{transform:scale(.58);transform-origin:center bottom}
+  .assignment-name{font-size:clamp(.48rem,1.8vw,.65rem);padding:3px 1px;min-height:22px;line-height:1.05}
+  .next-cards .assignment-head{padding:3px 2px;gap:2px;min-height:35px}
+  .next-cards .assignment-head>span{width:17px;height:17px;flex-basis:17px;font-size:.63rem}
+  .next-cards .assignment-head b{font-size:clamp(.38rem,1.65vw,.56rem)}
+  .next-cards .assignment-head small{font-size:clamp(.35rem,1.45vw,.5rem)}
+  .next-cards .assignment-visual{height:38px;font-size:1.15rem}
+  .next-cards .assignment-name{font-size:clamp(.48rem,1.8vw,.65rem);padding:3px 1px;min-height:22px}
+  .flow-panel{min-height:0!important;grid-row:auto;padding:8px}
+  .rotation-wheel{min-height:112px!important;height:112px;max-width:290px;margin:0 auto}
+  .wheel-node{width:31%;min-height:29px;padding:3px 2px;gap:1px;border-radius:6px;box-shadow:none}
+  .wheel-node span{width:15px;height:15px;font-size:.58rem}
+  .wheel-node b{font-size:.43rem;line-height:1.02}
+  .wheel-node strong{display:none}
+  .wheel-node.n1{left:34.5%;top:0}
+  .wheel-node.n2{right:0;top:31%}
+  .wheel-node.n3{right:11%;bottom:0}
+  .wheel-node.n4{left:11%;bottom:0}
+  .wheel-node.n5{left:0;top:31%}
+  .wheel-arrow{font-size:1rem;line-height:1}
+  .a12{right:20%;top:17%}.a23{right:15%;top:58%}.a34{left:47%;bottom:15%}.a45{left:15%;top:58%}.a51{left:22%;top:17%}
+  .flow-caption{font-size:.58rem;line-height:1.1;margin-top:2px}
+}
+@media(max-width:390px){
+ .assignment-head{min-height:32px}.assignment-visual{height:32px}.assignment-name{font-size:.45rem}
+ .rotation-wheel{height:100px;min-height:100px!important}
+ .wheel-node b{font-size:.39rem}
+}
+
 </style>
 </head>
 <body>
