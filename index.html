@@ -607,41 +607,70 @@ function renderWeek(){
  $("weekSummary").textContent=name?`${name} · ${all.length} scheduled shift(s) · ${all.length*8} paid hours/week · ${off.length} day(s) off${off.length?": "+off.join(", "):""}`:"Choose an employee.";
  const host=$("weekTable");host.innerHTML="";
  if(!rows.length){host.innerHTML='<div class="empty-state">No scheduled shift found for this employee and filter.</div>';return}
- const roleDefs=[
-  {key:"Surf Coach Zone 1",legacy:"Pool Pusher (Zone 1)",title:"SURF COACH",subtitle:"Zone 1 · left side",kind:"blue"},
-  {key:"Surf Coach Zone 2",title:"SURF COACH",subtitle:"Zone 2",kind:"blue"},
-  {key:"Surf Coach Zone 3",title:"SURF COACH",subtitle:"Zone 3",kind:"blue"},
-  {key:"Surf Coach Zone 4",title:"SURF COACH",subtitle:"Zone 4",kind:"blue"},
-  {key:"Surf Coach Zone 5",legacy:"Pool Catcher (Zone 5)",title:"SURF COACH",subtitle:"Zone 5 · right side",kind:"blue"},
-  {key:"Control Tower A",legacy:"Control Tower",title:"CONTROL TOWER",subtitle:"Tower A",kind:"orange"},
-  {key:"Control Tower B",title:"CONTROL TOWER",subtitle:"Tower B",kind:"orange"},
-  {key:"Board Room A",title:"BOARD ROOM A",subtitle:"Check in / check out",kind:"green"},
-  {key:"Board Room B",title:"BOARD ROOM B",subtitle:"Check in / check out",kind:"green"},
-  {key:"Board Room C",title:"BOARD ROOM C",subtitle:"Check in / check out",kind:"green"}
+ const roles=[
+  {key:"Pool Pusher (Zone 1)",aliases:["Pool Pusher (Zone 1)","Pool Pusher","Pusher","Surf Coach Zone 1","Zone 1"],title:"SURF COACH",subtitle:"Zone 1 · left side",kind:"blue"},
+  {key:"Pool Catcher (Zone 5)",aliases:["Pool Catcher (Zone 5)","Pool Catcher","Catcher","Surf Coach Zone 5","Zone 5"],title:"SURF COACH",subtitle:"Zone 5 · right side",kind:"blue"},
+  {key:"Control Tower",aliases:["Control Tower","Control Tower A","Tower A"],title:"CONTROL TOWER",subtitle:"Tower A",kind:"orange"},
+  {key:"Board Room A",aliases:["Board Room A"],title:"BOARD ROOM A",subtitle:"Check in / check out",kind:"green"},
+  {key:"Board Room B",aliases:["Board Room B"],title:"BOARD ROOM B",subtitle:"Check in / check out",kind:"green"}
  ];
- const coverageFor=(d,h)=>parseSheet("Pool Party Coverage").find(x=>normalize(field(x,["Day","Weekday","Day Name"]))===normalize(d)&&hourStart(field(x,["Pool Party Hour","Hour","Time","Time Slot"]))===h);
- const getRoleNames=(ar,role,d,h)=>{
-  // Pool-party hours must use the dedicated 10-person allocation before the
-  // ordinary five-person rotation; the latter is not the source of truth then.
-  if([11,13].includes(h)){
-   const c=coverageFor(d,h);
+ const sheetRows=sheetName=>parseSheet(sheetName);
+ const rowFor=(sheetName,d,h)=>sheetRows(sheetName).find(x=>
+  normalize(field(x,["Day","Weekday","Day Name"]))===normalize(d)&&
+  hourStart(field(x,["Hour","Time","Time Slot","Rotation","Pool Party Hour"]))===h
+ );
+ const baseFor=(d,shift)=>sheetRows("Daily Staffing").find(x=>
+  normalize(field(x,["Day","Weekday"]))===normalize(d)&&
+  normalize(field(x,["Shift","Shift Type"]))===normalize(shift)
+ );
+ const poolPartyFor=(d,h)=>sheetRows("Pool Party Coverage").find(x=>
+  normalize(field(x,["Day","Weekday","Day Name"]))===normalize(d)&&
+  hourStart(field(x,["Pool Party Hour","Hour","Time","Time Slot"]))===h
+ );
+ const positionFor=(d,shift,h,employee)=>{
+  // Pool-party coverage is a separate 10-person allocation and must take priority
+  // over the standard five-person rotation.
+  if(h===11||h===13){
+   const c=poolPartyFor(d,h);
    if(c){
-    const direct=field(c,[role.key,role.title+" "+role.subtitle,role.subtitle]);
-    if(direct)return splitNames(direct);
     const pool=splitNames(field(c,["Pool (5)","Pool","Pool Staff"]));
     const tower=splitNames(field(c,["Tower (2)","Tower","Tower Staff"]));
     const board=splitNames(field(c,["Board Room (3)","Board Room","Board Room Staff"]));
-    if(role.key.startsWith("Surf Coach Zone "))return pool[Number(role.key.slice(-1))-1]?[pool[Number(role.key.slice(-1))-1]]:[];
-    if(role.key==="Control Tower A")return tower[0]?[tower[0]]:[];
-    if(role.key==="Control Tower B")return tower[1]?[tower[1]]:[];
-    if(role.key==="Board Room A")return board[0]?[board[0]]:[];
-    if(role.key==="Board Room B")return board[1]?[board[1]]:[];
-    if(role.key==="Board Room C")return board[2]?[board[2]]:[];
+    const pi=pool.findIndex(n=>normalize(n)===normalize(employee));
+    if(pi>=0)return {title:"SURF COACH",subtitle:`Zone ${pi+1}${pi===0?" · left side":pi===4?" · right side":""}`,kind:"blue"};
+    const ti=tower.findIndex(n=>normalize(n)===normalize(employee));
+    if(ti>=0)return {title:"CONTROL TOWER",subtitle:`Tower ${ti===0?"A":"B"}`,kind:"orange"};
+    const bi=board.findIndex(n=>normalize(n)===normalize(employee));
+    if(bi>=0)return {title:`BOARD ROOM ${String.fromCharCode(65+bi)}`,subtitle:"Check in / check out",kind:"green"};
    }
   }
-  const p=ar?.positions||{};
-  const value=p[role.key]||(role.legacy?p[role.legacy]:"");
-  return value?splitNames(value):[];
+  // Read the Google-Sheets-backed hourly tab directly, instead of using the
+  // combined display rows. A blank hourly cell/row falls back to the daily base
+  // assignment plus the documented five-position rotation order.
+  const sourceSheet=(h<11||h===14)?"AM Hourly Rotation":"PM Hourly Rotation";
+  const hourly=rowFor(sourceSheet,d,h);
+  if(hourly){
+   for(const role of roles){
+    const assigned=splitNames(field(hourly,role.aliases));
+    if(assigned.some(n=>normalize(n)===normalize(employee))){
+     return {title:role.title,subtitle:role.subtitle,kind:role.kind};
+    }
+   }
+  }
+  const base=baseFor(d,shift);
+  if(base){
+   const baseNames=roles.map(role=>splitNames(field(base,role.aliases))[0]||"");
+   const shiftStart=shift==="AM"?7:11;
+   const offset=((h-shiftStart)%5+5)%5;
+   // The published rotation rule moves each person one position clockwise per hour.
+   const rotated=baseNames.map((_,i)=>baseNames[(i-offset+5*10)%5]);
+   const idx=rotated.findIndex(n=>normalize(n)===normalize(employee));
+   if(idx>=0){
+    const role=roles[idx];
+    return {title:role.title,subtitle:role.subtitle,kind:role.kind};
+   }
+  }
+  return null;
  };
  rows.forEach(r=>{
   const section=document.createElement("article");section.className="week-day-card";
@@ -649,44 +678,22 @@ function renderWeek(){
   const title=document.createElement("h3");title.textContent=r.day;head.appendChild(title);
   const badge=document.createElement("span");badge.className="week-day-shift "+(/^AM/i.test(r.shift)?"shift-am":"shift-pm");badge.textContent=`${r.shift} · ${r.start} – ${r.end}`;head.appendChild(badge);section.appendChild(head);
   const grid=document.createElement("div");grid.className="week-assignment-grid";
-  const startHour=hourStart(r.start),endHour=hourStart(r.end);let found=0;
-  // Read the two source tabs directly here instead of relying on the merged
-  // dashboard rows. This avoids losing assignments when duplicate day/hour rows
-  // from AM and PM tabs are combined for the Live Board.
-  const dayRows=Object.keys(sheetMap)
-   .filter(n=>["am hourly rotation","pm hourly rotation"].includes(normalize(n)))
-   .flatMap(n=>parseSheet(n).map(raw=>rowToAssignment(raw,n)))
-   .filter(ar=>normalize(ar.day)===normalize(r.day)&&ar.time)
-   .sort((a,b)=>hourStart(a.time)-hourStart(b.time));
+  const startHour=hourStart(r.start),endHour=hourStart(r.end);
   const fullHour=x=>{const hh=((x%24)+24)%24;return `${hh%12||12}:00 ${hh<12?"AM":"PM"}`};
-  // Render every hour in the shift: seven position cards plus the paid lunch card.
-  // Missing source assignments stay visible instead of silently shortening the shift.
   for(let h=startHour;h<endHour;h++){
-   if((/^AM/i.test(r.shift)&&h===12)||(/^PM/i.test(r.shift)&&h===14)){
-    const card=document.createElement("article");card.className="week-assignment-card lunch";
-    const time=document.createElement("div");time.className="week-assignment-time";time.textContent=`${fullHour(h)}–${fullHour(h+1)}`;
-    const label=document.createElement("div");label.className="week-assignment-title";label.textContent="LUNCH BREAK";
-    const sub=document.createElement("div");sub.className="week-assignment-subtitle";sub.textContent="Paid lunch break";
-    card.append(time,label,sub);grid.appendChild(card);found++;continue;
-   }
-   const matchingRows=dayRows.filter(x=>hourStart(x.time)===h);
-   const ar=matchingRows.length?{positions:Object.assign({},...matchingRows.map(x=>x.positions||{}))}:null;
-   const assigned=ar?roleDefs.map(role=>({role,names:getRoleNames(ar,role,r.day,h)})).filter(x=>x.names.some(n=>normalize(n)===normalize(canonicalStaffName(name)))):[];
-   const chosen=assigned[0];
-   const card=document.createElement("article");
+   const card=document.createElement("article");card.className="week-assignment-card";
    const time=document.createElement("div");time.className="week-assignment-time";time.textContent=`${fullHour(h)}–${fullHour(h+1)}`;
    const label=document.createElement("div");label.className="week-assignment-title";
    const sub=document.createElement("div");sub.className="week-assignment-subtitle";
-   if(chosen){
-    card.className="week-assignment-card "+chosen.role.kind;
-    label.textContent=chosen.role.title;sub.textContent=chosen.role.subtitle;
+   if((/^AM/i.test(r.shift)&&h===12)||(/^PM/i.test(r.shift)&&h===14)){
+    card.classList.add("lunch");label.textContent="LUNCH BREAK";sub.textContent="Paid lunch break";
    }else{
-    card.className="week-assignment-card missing";
-    label.textContent="ASSIGNMENT MISSING";sub.textContent="Check hourly rotation data";
+    const position=positionFor(r.day,/^AM/i.test(r.shift)?"AM":"PM",h,name);
+    if(position){card.classList.add(position.kind);label.textContent=position.title;sub.textContent=position.subtitle}
+    else{card.classList.add("missing");label.textContent="ASSIGNMENT MISSING";sub.textContent="No matching name in the Google Sheets roster"}
    }
-   card.append(time,label,sub);grid.appendChild(card);found++;
+   card.append(time,label,sub);grid.appendChild(card);
   }
-  if(!found){const empty=document.createElement("div");empty.className="week-no-positions";empty.textContent="No scheduled hours found for this shift.";grid.appendChild(empty)}
   section.appendChild(grid);host.appendChild(section);
  });
 }
@@ -759,6 +766,10 @@ function nextRow(day,time){const rows=allRows.filter(r=>normalize(r.day)===norma
 function assignmentValues(row){const p=row?.positions||{};return [p["Pool Pusher (Zone 1)"],p["Pool Catcher (Zone 5)"],p["Control Tower"],p["Board Room A"],p["Board Room B"]].map(v=>splitNames(v).join(", ")||"—")}
 function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){const colors=["green","blue","orange","purple","pink"];const card=document.createElement("article");card.className="assignment-card "+(color||colors[index%colors.length]);card.innerHTML=`<div class="assignment-head"><span>${index+1}</span><div><b>${title}</b><small>${subtitle}</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div class="assignment-name"></div>`;card.querySelector(".assignment-name").textContent=name||"—";return card}function renderSchedule(){
  const host=$("hourlySchedule");if(!host)return;
+ // renderSchedule is called by renderAll and again by renderVisualCards.
+ // Clear the previous table before drawing so repeated refreshes never append
+ // a second copy of the hours or another table header.
+ host.innerHTML="";
  const day=$("daySelect").value,rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));
  if(!rows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}
  const heads=["TIME","SURF COACH · ZONE 1","SURF COACH · ZONE 2","SURF COACH · ZONE 3","SURF COACH · ZONE 4","SURF COACH · ZONE 5","CONTROL TOWER A","CONTROL TOWER B","BOARD ROOM A","BOARD ROOM B","BOARD ROOM C"];
