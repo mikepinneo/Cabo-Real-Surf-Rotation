@@ -620,53 +620,28 @@ function renderWeek(){
   {key:"Board Room C",title:"BOARD ROOM C",subtitle:"Check in / check out",kind:"green"}
  ];
  const coverageFor=(d,h)=>parseSheet("Pool Party Coverage").find(x=>normalize(field(x,["Day","Weekday","Day Name"]))===normalize(d)&&hourStart(field(x,["Pool Party Hour","Hour","Time","Time Slot"]))===h);
- const roleAliases={
-  "Surf Coach Zone 1":["Surf Coach Zone 1","Surf Coach · Zone 1","Pool Pusher (Zone 1)","Pool Pusher","Pusher","Zone 1"],
-  "Surf Coach Zone 2":["Surf Coach Zone 2","Surf Coach · Zone 2","Zone 2"],
-  "Surf Coach Zone 3":["Surf Coach Zone 3","Surf Coach · Zone 3","Zone 3"],
-  "Surf Coach Zone 4":["Surf Coach Zone 4","Surf Coach · Zone 4","Zone 4"],
-  "Surf Coach Zone 5":["Surf Coach Zone 5","Surf Coach · Zone 5","Pool Catcher (Zone 5)","Pool Catcher","Catcher","Zone 5"],
-  "Control Tower A":["Control Tower A","Tower A","Control Tower"],
-  "Control Tower B":["Control Tower B","Tower B"],
-  "Board Room A":["Board Room A","Board Room A Staff"],
-  "Board Room B":["Board Room B","Board Room B Staff"],
-  "Board Room C":["Board Room C","Board Room C Staff"]
- };
- const roleForEmployee=(ar,d,h,employeeName)=>{
-  // Pool-party coverage is the source of truth at 11 AM and 1 PM.
+ const getRoleNames=(ar,role,d,h)=>{
+  // Pool-party hours must use the dedicated 10-person allocation before the
+  // ordinary five-person rotation; the latter is not the source of truth then.
   if([11,13].includes(h)){
    const c=coverageFor(d,h);
    if(c){
-    for(const role of roleDefs){
-     const direct=field(c,[role.key,role.title+" "+role.subtitle,role.subtitle]);
-     if(direct&&splitNames(direct).some(n=>normalize(n)===normalize(employeeName)))return role;
-    }
+    const direct=field(c,[role.key,role.title+" "+role.subtitle,role.subtitle]);
+    if(direct)return splitNames(direct);
     const pool=splitNames(field(c,["Pool (5)","Pool","Pool Staff"]));
     const tower=splitNames(field(c,["Tower (2)","Tower","Tower Staff"]));
     const board=splitNames(field(c,["Board Room (3)","Board Room","Board Room Staff"]));
-    const pi=pool.findIndex(n=>normalize(n)===normalize(employeeName));
-    if(pi>=0)return roleDefs.find(x=>x.key==="Surf Coach Zone "+(pi+1))||null;
-    const ti=tower.findIndex(n=>normalize(n)===normalize(employeeName));
-    if(ti>=0)return roleDefs.find(x=>x.key===(ti===0?"Control Tower A":"Control Tower B"))||null;
-    const bi=board.findIndex(n=>normalize(n)===normalize(employeeName));
-    if(bi>=0)return roleDefs.find(x=>x.key===["Board Room A","Board Room B","Board Room C"][bi])||null;
+    if(role.key.startsWith("Surf Coach Zone "))return pool[Number(role.key.slice(-1))-1]?[pool[Number(role.key.slice(-1))-1]]:[];
+    if(role.key==="Control Tower A")return tower[0]?[tower[0]]:[];
+    if(role.key==="Control Tower B")return tower[1]?[tower[1]]:[];
+    if(role.key==="Board Room A")return board[0]?[board[0]]:[];
+    if(role.key==="Board Room B")return board[1]?[board[1]]:[];
+    if(role.key==="Board Room C")return board[2]?[board[2]]:[];
    }
   }
-  // Check each underlying source row so merged AM/PM rows and alternate headers
-  // cannot hide a valid employee-to-position match.
-  const sources=ar?(ar.sourceRows||[ar]):[];
-  for(const source of sources){
-   for(const role of roleDefs){
-    let value=source.positions?.[role.key]||(role.legacy?source.positions?.[role.legacy]:"");
-    if(!value&&source.raw)value=field(source.raw,roleAliases[role.key]||[role.key]);
-    if(value&&splitNames(value).some(n=>normalize(n)===normalize(employeeName)))return role;
-   }
-  }
-  for(const role of roleDefs){
-   const value=ar?.positions?.[role.key]||(role.legacy?ar?.positions?.[role.legacy]:"");
-   if(value&&splitNames(value).some(n=>normalize(n)===normalize(employeeName)))return role;
-  }
-  return null;
+  const p=ar?.positions||{};
+  const value=p[role.key]||(role.legacy?p[role.legacy]:"");
+  return value?splitNames(value):[];
  };
  rows.forEach(r=>{
   const section=document.createElement("article");section.className="week-day-card";
@@ -675,7 +650,14 @@ function renderWeek(){
   const badge=document.createElement("span");badge.className="week-day-shift "+(/^AM/i.test(r.shift)?"shift-am":"shift-pm");badge.textContent=`${r.shift} · ${r.start} – ${r.end}`;head.appendChild(badge);section.appendChild(head);
   const grid=document.createElement("div");grid.className="week-assignment-grid";
   const startHour=hourStart(r.start),endHour=hourStart(r.end);let found=0;
-  const dayRows=allRows.filter(ar=>normalize(ar.day)===normalize(r.day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));
+  // Read the two source tabs directly here instead of relying on the merged
+  // dashboard rows. This avoids losing assignments when duplicate day/hour rows
+  // from AM and PM tabs are combined for the Live Board.
+  const dayRows=Object.keys(sheetMap)
+   .filter(n=>["am hourly rotation","pm hourly rotation"].includes(normalize(n)))
+   .flatMap(n=>parseSheet(n).map(raw=>rowToAssignment(raw,n)))
+   .filter(ar=>normalize(ar.day)===normalize(r.day)&&ar.time)
+   .sort((a,b)=>hourStart(a.time)-hourStart(b.time));
   const fullHour=x=>{const hh=((x%24)+24)%24;return `${hh%12||12}:00 ${hh<12?"AM":"PM"}`};
   // Render every hour in the shift: seven position cards plus the paid lunch card.
   // Missing source assignments stay visible instead of silently shortening the shift.
@@ -688,7 +670,9 @@ function renderWeek(){
     card.append(time,label,sub);grid.appendChild(card);found++;continue;
    }
    const matchingRows=dayRows.filter(x=>hourStart(x.time)===h);
-   const chosen=matchingRows.map(ar=>roleForEmployee(ar,r.day,h,name)).find(Boolean)||null;
+   const ar=matchingRows.length?{positions:Object.assign({},...matchingRows.map(x=>x.positions||{}))}:null;
+   const assigned=ar?roleDefs.map(role=>({role,names:getRoleNames(ar,role,r.day,h)})).filter(x=>x.names.some(n=>normalize(n)===normalize(canonicalStaffName(name)))):[];
+   const chosen=assigned[0];
    const card=document.createElement("article");
    const time=document.createElement("div");time.className="week-assignment-time";time.textContent=`${fullHour(h)}–${fullHour(h+1)}`;
    const label=document.createElement("div");label.className="week-assignment-title";
