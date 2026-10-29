@@ -373,6 +373,15 @@ header .brand{margin-bottom:8px}
 /* On 11 AM and 1 PM, show both AM and PM source-sheet assignments in each schedule cell. */
 .rotation-source-name{white-space:normal;line-height:1.35;margin:2px 0}
 .rotation-source-name small{display:inline-block;font-size:.72em;font-weight:800;color:#17607b;margin-right:3px}
+
+/* Tight hourly rotation schedule: compact, readable 10-position layout */
+.full-schedule-panel .schedule-table{width:100%;max-width:100%;overflow-x:auto;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.full-schedule-panel .schedule-table table{width:874px;min-width:874px;max-width:none;table-layout:fixed;border-spacing:0;font-size:.68rem}
+.full-schedule-panel .schedule-table th,.full-schedule-panel .schedule-table td{box-sizing:border-box;width:82px;min-width:0;max-width:82px;padding:5px 4px;line-height:1.15;overflow-wrap:anywhere;word-break:normal;white-space:normal}
+.full-schedule-panel .schedule-table th:first-child,.full-schedule-panel .schedule-table td:first-child{width:54px;min-width:54px;max-width:54px}
+.full-schedule-panel .schedule-table th{font-size:.64rem;vertical-align:bottom}
+.full-schedule-panel .schedule-table td button{font-size:.68rem;white-space:normal}
+@media(max-width:620px){.full-schedule-panel .schedule-table table{width:874px;min-width:874px;font-size:.62rem}.full-schedule-panel .schedule-table th,.full-schedule-panel .schedule-table td{padding:4px 3px}.full-schedule-panel .schedule-table th{font-size:.58rem}}
 </style>
 </head>
 <body>
@@ -788,40 +797,9 @@ function renderDailyCrew(){
 
 function renderAll(){renderPills();renderDayButtons();renderHourButtons();renderDailyCrew();renderBoard();renderVisualCards();populateEmployees();renderWeek();renderTeam()}
 function switchTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));$("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");if(tab==="week")renderWeek();if(tab==="team")renderTeam()}
-async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;renderScheduleWeek();allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster · check Firebase access");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
+async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;renderScheduleWeek();allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster · check Firebase access");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData){$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>';const schedule=$("hourlySchedule");if(schedule)schedule.innerHTML='<div class="empty-state">Hourly rotation schedule unavailable because the live roster could not be loaded. Check the Firebase connection and refresh.</div>'}}}
 function tick(){const p=parts();$("liveClock").textContent=timeText();$("dateLabel").textContent=`${p.weekday} · ${p.month} ${p.day} · Cabo time`;const open=currentHour()>=7&&currentHour()<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed"}
 $("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()});$("hourSelect").addEventListener("change",renderAll);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderAll()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
 </script>
 </body>
 </html>
-/* Tight hourly schedule columns: compact widths, no stretched empty space */
-.full-schedule-panel .schedule-table table{
-  width:833px;
-  min-width:833px;
-  max-width:none;
-  table-layout:fixed;
-  border-spacing:0;
-  font-size:.72rem;
-}
-.full-schedule-panel .schedule-table th,
-.full-schedule-panel .schedule-table td{
-  box-sizing:border-box;
-  width:78px;
-  min-width:0;
-  max-width:78px;
-  padding:5px 4px;
-  line-height:1.15;
-  overflow-wrap:anywhere;
-  word-break:normal;
-}
-.full-schedule-panel .schedule-table th:first-child,
-.full-schedule-panel .schedule-table td:first-child{
-  width:53px;
-  min-width:53px;
-  max-width:53px;
-}
-@media(max-width:620px){
-  .full-schedule-panel .schedule-table table{width:833px;min-width:833px;font-size:.64rem}
-  .full-schedule-panel .schedule-table th,
-  .full-schedule-panel .schedule-table td{padding:4px 3px}
-}
