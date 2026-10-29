@@ -722,11 +722,20 @@ function renderWeek(){
   const crew=weeklyCrewFor(d,shift);
   const employeeIndex=crew.findIndex(n=>normalize(n)===normalize(employee));
   if(employeeIndex>=0){
-   // A standard shift has five positions. Rotate the crew through the five roles
-   // each hour; this fallback is used only where the hourly sheet has no assignment.
+   // A standard shift has five positions. Rotate through working hours only; lunch pauses progression. Pool-party hours are working steps. This fallback is used only where the hourly sheet has no assignment.
    const shiftStart=shift==="AM"?7:11;
-   const offset=((h-shiftStart)%5+5)%5;
-   const roleIndex=((employeeIndex+offset)%5+5)%5;
+   // Lunch is a pause, not a rotation slot. Count only actual working hours
+   // from the start of this crew's shift. Pool-party hours (11 AM and 1 PM)
+   // are working hours and therefore advance the rotation normally.
+   let workingSteps=0;
+   for(let step=shiftStart;step<h;step++){
+    const isThisCrewLunch=(shift==="AM"&&step===12)||(shift==="PM"&&step===14);
+    if(!isThisCrewLunch)workingSteps++;
+   }
+   // Rotate the starting point across the week so staff do not repeatedly land
+   // in the same role each day. Lunch does not affect this day-to-day offset.
+   const dayIndex=Math.max(0,DAYS.findIndex(x=>normalize(x)===normalize(d)));
+   const roleIndex=((employeeIndex+workingSteps+dayIndex)%roles.length+roles.length)%roles.length;
    return {title:roles[roleIndex].title,subtitle:roles[roleIndex].subtitle,kind:roles[roleIndex].kind};
   }
   return null;
