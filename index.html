@@ -524,7 +524,7 @@ function parseScheduleDate(value){
 function validScheduleDate(y,m,d){const date=new Date(y,m-1,d);return date.getFullYear()===y&&date.getMonth()===m-1&&date.getDate()===d?date:null}
 function renderScheduleWeek(){let start=parseScheduleDate(scheduleInfoValue("Week Start Date")),end=parseScheduleDate(scheduleInfoValue("Week End Date"));let status=scheduleInfoValue("Schedule Status")||"SCHEDULE WEEK";const label=$("scheduleWeekLabel"),statusEl=$("scheduleWeekStatus");if(!label||!statusEl)return;if(!(start&&end&&end>=start)){const parts=Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]));const today=new Date(Date.UTC(+parts.year,+parts.month-1,+parts.day));const day=today.getUTCDay();start=new Date(today);start.setUTCDate(today.getUTCDate()-(day===0?6:day-1));end=new Date(start);end.setUTCDate(start.getUTCDate()+6);status="CURRENT WEEK · AUTO";}const fmt=(d,{month="long",day="numeric",year="numeric"}={})=>new Intl.DateTimeFormat("en-US",{month,day,year,timeZone:"UTC"}).format(new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())));label.textContent=start.getFullYear()===end.getFullYear()?(start.getMonth()===end.getMonth()?`${fmt(start,{month:"long",day:"numeric",year:"numeric"}).replace(", "+start.getFullYear(),"")} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"}).replace(", "+end.getFullYear(),"")}, ${end.getFullYear()}`:`${fmt(start)} – ${fmt(end)}`):`${fmt(start)} – ${fmt(end)}`;statusEl.textContent=status}
 function field(o,alts){const keys=Object.keys(o||{});for(const a of alts){const k=keys.find(x=>normalize(x)===normalize(a));if(k&&String(o[k]??"").trim())return o[k]}for(const a of alts){const k=keys.find(x=>normalize(x).includes(normalize(a)));if(k&&String(o[k]??"").trim())return o[k]}return ""}
-function canonicalStaffName(value){const name=String(value??"").trim();return STAFF_NAMES.find(n=>normalize(n)===normalize(name))||""}
+function canonicalStaffName(value){const name=String(value??"").trim();const canonical=normalize(name)==="bost"?"Pollo":name;return STAFF_NAMES.find(n=>normalize(n)===normalize(canonical))||""}
 function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>canonicalStaffName(x)).filter(Boolean)}
 function rowToAssignment(r,source){
  const day=String(field(r,["Day","Weekday"])||"").trim(),time=String(field(r,["Hour","Time","Time Slot","Rotation"])||"").trim();
@@ -589,7 +589,7 @@ const h=currentHour(),open=h>=7&&h<19;$("operatingStatus").textContent=open?"Clu
 }
 function populateTimes(preserve=true){const sel=$("hourSelect"),old=preserve?sel.value:"";sel.innerHTML="";const times=[...new Set(allRows.filter(r=>normalize(r.day)===normalize($("daySelect").value)).map(r=>r.time))].sort((a,b)=>hourStart(a)-hourStart(b));times.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;sel.appendChild(o)});if(old&&times.includes(old))sel.value=old;else{const now=currentHour(),match=times.find(t=>hourStart(t)===now);if(match)sel.value=match;else if(times.length)sel.selectedIndex=0}}
 function populateEmployees(){const s=$("weekEmployee"),old=s.value;s.innerHTML="";employees.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;s.appendChild(o)});if(old&&employees.includes(old))s.value=old;else if(selectedEmployee&&employees.includes(selectedEmployee))s.value=selectedEmployee}
-function weeklyRows(){return parseSheet("Weekly Schedule").map(r=>({
+function weeklyScheduleRows(){return parseSheet("Weekly Schedule").map(r=>({
  employee:canonicalStaffName(field(r,["Employee","Name","Staff Name"])),
  type:String(field(r,["Employment Type","Type"])||"").trim(),
  day:String(field(r,["Day","Weekday"])||"").trim(),
@@ -597,7 +597,8 @@ function weeklyRows(){return parseSheet("Weekly Schedule").map(r=>({
  start:String(field(r,["Start","Start Time"])||"").trim(),
  end:String(field(r,["End","End Time"])||"").trim(),
  notes:String(field(r,["Notes","Note"])||"").trim()
-})).filter(r=>r.employee&&r.day&&r.shift&&!/^(off|day off|days off)$/i.test(r.shift))}
+})).filter(r=>r.employee&&r.day&&r.shift)}
+function weeklyRows(){return weeklyScheduleRows().filter(r=>! /^(off|day off|days off)$/i.test(r.shift))}
 function renderWeek(){
  const name=$("weekEmployee").value,day=$("weekDay").value;
  const all=weeklyRows().filter(r=>normalize(r.employee)===normalize(name));
@@ -619,10 +620,11 @@ function renderWeek(){
   normalize(field(x,["Day","Weekday","Day Name"]))===normalize(d)&&
   hourStart(field(x,["Hour","Time","Time Slot","Rotation","Pool Party Hour"]))===h
  );
- const baseFor=(d,shift)=>sheetRows("Daily Staffing").find(x=>
-  normalize(field(x,["Day","Weekday"]))===normalize(d)&&
-  normalize(field(x,["Shift","Shift Type"]))===normalize(shift)
- );
+ const weeklyCrewFor=(d,shift)=>weeklyScheduleRows()
+  .filter(x=>normalize(x.day)===normalize(d)&&normalize(x.shift)===normalize(shift))
+  .map(x=>x.employee)
+  .filter((n,i,a)=>n&&a.findIndex(v=>normalize(v)===normalize(n))===i)
+  .sort((a,b)=>STAFF_NAMES.findIndex(n=>normalize(n)===normalize(a))-STAFF_NAMES.findIndex(n=>normalize(n)===normalize(b)));
  const poolPartyFor=(d,h)=>sheetRows("Pool Party Coverage").find(x=>
   normalize(field(x,["Day","Weekday","Day Name"]))===normalize(d)&&
   hourStart(field(x,["Pool Party Hour","Hour","Time","Time Slot"]))===h
@@ -644,9 +646,9 @@ function renderWeek(){
     if(bi>=0)return {title:`BOARD ROOM ${String.fromCharCode(65+bi)}`,subtitle:"Check in / check out",kind:"green"};
    }
   }
-  // Read the Google-Sheets-backed hourly tab directly, instead of using the
-  // combined display rows. A blank hourly cell/row falls back to the daily base
-  // assignment plus the documented five-position rotation order.
+  // First honor an explicit assignment in the hourly Google-Sheets-backed row.
+  // If a row/cell is blank, do not show "ASSIGNMENT MISSING": derive the position
+  // from the same Weekly Schedule used by Whole Team and My Week.
   const sourceSheet=(h<11||h===14)?"AM Hourly Rotation":"PM Hourly Rotation";
   const hourly=rowFor(sourceSheet,d,h);
   if(hourly){
@@ -657,18 +659,15 @@ function renderWeek(){
     }
    }
   }
-  const base=baseFor(d,shift);
-  if(base){
-   const baseNames=roles.map(role=>splitNames(field(base,role.aliases))[0]||"");
+  const crew=weeklyCrewFor(d,shift);
+  const employeeIndex=crew.findIndex(n=>normalize(n)===normalize(employee));
+  if(employeeIndex>=0){
+   // A standard shift has five positions. Rotate the crew through the five roles
+   // each hour; this fallback is used only where the hourly sheet has no assignment.
    const shiftStart=shift==="AM"?7:11;
    const offset=((h-shiftStart)%5+5)%5;
-   // The published rotation rule moves each person one position clockwise per hour.
-   const rotated=baseNames.map((_,i)=>baseNames[(i-offset+5*10)%5]);
-   const idx=rotated.findIndex(n=>normalize(n)===normalize(employee));
-   if(idx>=0){
-    const role=roles[idx];
-    return {title:role.title,subtitle:role.subtitle,kind:role.kind};
-   }
+   const roleIndex=((employeeIndex+offset)%5+5)%5;
+   return {title:roles[roleIndex].title,subtitle:roles[roleIndex].subtitle,kind:roles[roleIndex].kind};
   }
   return null;
  };
@@ -690,7 +689,7 @@ function renderWeek(){
    }else{
     const position=positionFor(r.day,/^AM/i.test(r.shift)?"AM":"PM",h,name);
     if(position){card.classList.add(position.kind);label.textContent=position.title;sub.textContent=position.subtitle}
-    else{card.classList.add("missing");label.textContent="ASSIGNMENT MISSING";sub.textContent="No matching name in the Google Sheets roster"}
+    else{card.classList.add("missing");label.textContent="CHECK SCHEDULE";sub.textContent="No hourly or weekly shift assignment found"}
    }
    card.append(time,label,sub);grid.appendChild(card);
   }
@@ -872,51 +871,20 @@ function renderDailyCrew(){
  const day=$("daySelect")?.value||currentDay();
  $("dailyCrewDay").textContent=day;
  const buckets={am:[],pm:[],off:[]};
- const namesSet=new Set(employees.map(normalize));
- const staffingSheets=Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|weekly schedule/i.test(n));
- // Primary source: rows in Daily Staffing for the selected day and AM/PM shift.
- staffingSheets.forEach(sheetName=>{
-  parseSheet(sheetName).forEach(row=>{
-   const rowDay=field(row,["Day","Weekday","Day Name"]);
-   if(!rowDay||normalize(rowDay)!==normalize(day))return;
-   const shift=normalize(field(row,["Shift","Shift Type","Crew","Team"]));
-   if(!/^(am|pm|am crew|pm crew|morning|afternoon)$/.test(shift))return;
-   const found=[];
-   Object.entries(row).forEach(([key,value])=>{
-    if(/day|weekday|shift|start|end|time|date|break|lunch|crew type|team|status/i.test(normalize(key)))return;
-    splitNames(value).forEach(n=>{if(namesSet.has(normalize(n)))found.push(employees.find(e=>normalize(e)===normalize(n))||n)});
-   });
-   if(shift.startsWith("am")||shift==="morning")buckets.am.push(...found);
-   else buckets.pm.push(...found);
-  });
+ // Whole Team / Weekly Schedule is the single source of truth for crew and days off.
+ // Do not read Daily Staffing here, and do not cap or reshuffle names: that caused
+ // the Daily Crew Overview to disagree with the employee's weekly schedule.
+ const rows=weeklyScheduleRows().filter(r=>normalize(r.day)===normalize(day));
+ rows.forEach(r=>{
+  const name=employees.find(n=>normalize(n)===normalize(r.employee));
+  if(!name)return;
+  const shift=normalize(r.shift);
+  if(/^(am|am crew|morning)$/.test(shift))buckets.am.push(name);
+  else if(/^(pm|pm crew|afternoon)$/.test(shift))buckets.pm.push(name);
+  else if(/^(off|day off|days off)$/.test(shift))buckets.off.push(name);
  });
- // Fallback to explicit AM Crew / PM Crew columns if staffing rows use a different shape.
- if(!buckets.am.length&&!buckets.pm.length){
-  Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|schedule summary|weekly schedule/i.test(n)).forEach(sheetName=>{
-   parseSheet(sheetName).forEach(row=>{
-    const rowDay=field(row,["Day","Weekday","Day Name"]);
-    if(rowDay&&normalize(rowDay)!==normalize(day))return;
-    Object.entries(row).forEach(([key,value])=>{
-     const nk=normalize(key),found=crewNamesFromValue(value);
-     if(/am crew|morning crew|am team|morning team/.test(nk))buckets.am.push(...found);
-     else if(/pm crew|afternoon crew|pm team|afternoon team/.test(nk))buckets.pm.push(...found);
-     else if(/day off|off today|days off|off duty/.test(nk))buckets.off.push(...found);
-    });
-   });
-  });
- }
- // Enforce the operating rule: no more than five people in either shift crew.
- // Some Firebase staffing rows may include names from multiple coverage groups.
- // Cap each crew after deduplication and move overflow to Day Off.
- buckets.am=[...new Set(buckets.am)];
- buckets.pm=[...new Set(buckets.pm)].filter(n=>!buckets.am.includes(n));
- buckets.am=buckets.am.slice(0,5);
- buckets.pm=buckets.pm.slice(0,5);
- // Day Off is the complement of the actual AM/PM crews for this day.
- // Do not rely only on explicit "Day Off" cells: staffing sheets often omit
- // off-duty people entirely, which previously caused names such as Linden and
- // Chino to disappear whenever at least one explicit off-duty name existed.
- buckets.off=employees.filter(n=>!buckets.am.includes(n)&&!buckets.pm.includes(n));
+ // Preserve roster order and unique names while matching each employee's Weekly Schedule row.
+ Object.keys(buckets).forEach(k=>buckets[k]=employees.filter(n=>buckets[k].some(x=>normalize(x)===normalize(n))));
  renderCrewNames("dailyAmCrew",buckets.am);
  renderCrewNames("dailyPmCrew",buckets.pm);
  renderCrewNames("dailyDayOff",buckets.off);
