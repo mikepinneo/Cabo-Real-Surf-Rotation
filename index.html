@@ -472,7 +472,7 @@ header .brand{margin-bottom:8px}
 const DATABASE_URL="https://cabo-real-surf-club-default-rtdb.firebaseio.com";
 const DATA_PATH="/surfOps.json",REFRESH_MS=30000,CABO_TZ="America/Mazatlan";
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-const STAFF_NAMES=["Kody","Ana","Chino","Tlaca","Diana","Felix","Fernando","Linden","Lucho","Makeni","Marley","Pollo","Pomo","Toni","Wikin"];
+const STAFF_NAMES=["Kody","Ana","Chino","Diana","Felix","Fernando","Green","Linden","Lucho","Makeni","Marley","Pollo","Pomo","Tlaca","Toni","Wikin"];
 let rootData=null,sheetMap={},employees=[...STAFF_NAMES],selectedEmployee="",allRows=[];
 const $=id=>document.getElementById(id),normalize=s=>String(s??"").trim().toLowerCase().replace(/\s+/g," ");
 function asArray(v){if(Array.isArray(v))return v;if(v&&typeof v==="object")return Object.keys(v).sort((a,b)=>Number(a)-Number(b)).map(k=>v[k]);return []}
@@ -494,7 +494,8 @@ function parseScheduleDate(value){
 function validScheduleDate(y,m,d){const date=new Date(y,m-1,d);return date.getFullYear()===y&&date.getMonth()===m-1&&date.getDate()===d?date:null}
 function renderScheduleWeek(){let start=parseScheduleDate(scheduleInfoValue("Week Start Date")),end=parseScheduleDate(scheduleInfoValue("Week End Date"));let status=scheduleInfoValue("Schedule Status")||"SCHEDULE WEEK";const label=$("scheduleWeekLabel"),statusEl=$("scheduleWeekStatus");if(!label||!statusEl)return;if(!(start&&end&&end>=start)){const parts=Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]));const today=new Date(Date.UTC(+parts.year,+parts.month-1,+parts.day));const day=today.getUTCDay();start=new Date(today);start.setUTCDate(today.getUTCDate()-(day===0?6:day-1));end=new Date(start);end.setUTCDate(start.getUTCDate()+6);status="CURRENT WEEK · AUTO";}const fmt=(d,{month="long",day="numeric",year="numeric"}={})=>new Intl.DateTimeFormat("en-US",{month,day,year,timeZone:"UTC"}).format(new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())));label.textContent=start.getFullYear()===end.getFullYear()?(start.getMonth()===end.getMonth()?`${fmt(start,{month:"long",day:"numeric",year:"numeric"}).replace(", "+start.getFullYear(),"")} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"}).replace(", "+end.getFullYear(),"")}, ${end.getFullYear()}`:`${fmt(start)} – ${fmt(end)}`):`${fmt(start)} – ${fmt(end)}`;statusEl.textContent=status}
 function field(o,alts){const keys=Object.keys(o||{});for(const a of alts){const k=keys.find(x=>normalize(x)===normalize(a));if(k&&String(o[k]??"").trim())return o[k]}for(const a of alts){const k=keys.find(x=>normalize(x).includes(normalize(a)));if(k&&String(o[k]??"").trim())return o[k]}return ""}
-function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>x.trim()).filter(x=>x&&!/^(n\/a|na|none|off|vacant|tbd|—|-)$/i.test(x))}
+function canonicalStaffName(value){const name=String(value??"").trim();return STAFF_NAMES.find(n=>normalize(n)===normalize(name))||""}
+function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>canonicalStaffName(x)).filter(Boolean)}
 function rowToAssignment(r,source){const day=String(field(r,["Day","Weekday"])||"").trim(),time=String(field(r,["Hour","Time","Time Slot","Rotation"])||"").trim();const defs=[["Pool Pusher (Zone 1)",["Pool Pusher (Zone 1)","Pool Pusher","Pusher","Zone 1"]],["Pool Catcher (Zone 5)",["Pool Catcher (Zone 5)","Pool Catcher","Catcher","Zone 5"]],["Control Tower",["Control Tower","Tower"]],["Board Room A",["Board Room A","Board Room A Staff"]],["Board Room B",["Board Room B","Board Room B Staff"]]];const positions={};defs.forEach(([label,alts])=>positions[label]=String(field(r,alts)||"").trim());return {day,time,positions,source,raw:r}}
 function getAllAssignments(){
  const raw=Object.keys(sheetMap)
@@ -519,9 +520,9 @@ function getAllAssignments(){
  return [...grouped.values()].sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||hourStart(a.time)-hourStart(b.time));
 }
 function parseEmployees(){
- const rows=parseSheet("Employees");
- const names=rows.map(r=>String(field(r,["Name","Employee","Staff Name"])||"").trim()).filter(Boolean);
- const valid=names.filter(n=>! /^(employee|green|bost)$/i.test(n.trim()));return valid.length?[...new Set(valid)]:[...STAFF_NAMES];
+ // The published roster is fixed: keep every name pill, dropdown, and crew filter
+ // aligned to the approved 16-person list regardless of stale/extra sheet rows.
+ return [...STAFF_NAMES];
 }function parts(){return Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false,month:"short",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]))}
 function currentDay(){return parts().weekday}function currentHour(){return Number(parts().hour)}
 function timeText(){return new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,hour:"2-digit",minute:"2-digit",hour12:true}).format(new Date())}
@@ -539,7 +540,7 @@ const h=currentHour(),open=h>=7&&h<19;$("operatingStatus").textContent=open?"Clu
 function populateTimes(preserve=true){const sel=$("hourSelect"),old=preserve?sel.value:"";sel.innerHTML="";const times=[...new Set(allRows.filter(r=>normalize(r.day)===normalize($("daySelect").value)).map(r=>r.time))].sort((a,b)=>hourStart(a)-hourStart(b));times.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;sel.appendChild(o)});if(old&&times.includes(old))sel.value=old;else{const now=currentHour(),match=times.find(t=>hourStart(t)===now);if(match)sel.value=match;else if(times.length)sel.selectedIndex=0}}
 function populateEmployees(){const s=$("weekEmployee"),old=s.value;s.innerHTML="";employees.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;s.appendChild(o)});if(old&&employees.includes(old))s.value=old;else if(selectedEmployee&&employees.includes(selectedEmployee))s.value=selectedEmployee}
 function weeklyRows(){return parseSheet("Weekly Schedule").map(r=>({
- employee:String(field(r,["Employee","Name","Staff Name"])||"").trim(),
+ employee:canonicalStaffName(field(r,["Employee","Name","Staff Name"])),
  type:String(field(r,["Employment Type","Type"])||"").trim(),
  day:String(field(r,["Day","Weekday"])||"").trim(),
  shift:String(field(r,["Shift","Shift Type"])||"").trim(),
@@ -565,12 +566,7 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 let highlightedTeamEmployee="";
 function renderTeam(){
  const raw=weeklyRows();
- const employeeSet=new Set([...STAFF_NAMES,...raw.map(r=>r.employee)].filter(n=>n&&!/^(employee|green|bost)$/i.test(String(n).trim())));
- const ordered=[...employeeSet].sort((a,b)=>{
-   if(normalize(a)==="kody")return -1;
-   if(normalize(b)==="kody")return 1;
-   return a.localeCompare(b,undefined,{sensitivity:"base"});
- });
+ const ordered=[...STAFF_NAMES];
  const byEmployee=new Map();
  raw.forEach(r=>{
    const key=normalize(r.employee);
