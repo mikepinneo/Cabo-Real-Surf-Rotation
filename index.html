@@ -591,7 +591,42 @@ function getAllAssignments(){
    // Prefer a readable canonical time label from the first source row.
   }
  });
- return [...grouped.values()].sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||hourStart(a.time)-hourStart(b.time));
+ const result=[...grouped.values()].sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||hourStart(a.time)-hourStart(b.time));
+ // Reconcile legacy hourly assignments against the Weekly Schedule without deleting
+ // whole positions. Keep valid assigned names, then fill vacancies from staff actually
+ // scheduled for that day and shift. This avoids the previous all-blank result when a
+ // source rotation named somebody who is off.
+ result.forEach(r=>{
+  const h=hourStart(r.time); if([11,13].includes(h)) return; // party-hour coverage is handled from its dedicated sheet
+  const crew=scheduledCrewForHour(r.day,h);
+  if(!crew.length)return;
+  const keys=["Pool Pusher (Zone 1)","Pool Catcher (Zone 5)","Control Tower","Board Room A","Board Room B"];
+  const used=new Set();
+  keys.forEach(k=>{
+   const name=splitNames(r.positions[k]).find(n=>crew.some(c=>normalize(c)===normalize(n))&&!used.has(normalize(n)));
+   if(name){r.positions[k]=name;used.add(normalize(name));}else r.positions[k]="";
+  });
+  keys.forEach(k=>{
+   if(r.positions[k])return;
+   const next=crew.find(n=>!used.has(normalize(n)));
+   if(next){r.positions[k]=next;used.add(normalize(next));}
+  });
+  // Keep the additional zone keys aligned with the five visible core positions.
+  r.positions["Surf Coach Zone 1"]=r.positions["Pool Pusher (Zone 1)"];
+  r.positions["Surf Coach Zone 5"]=r.positions["Pool Catcher (Zone 5)"];
+ });
+ return result;
+}
+function scheduledCrewForHour(day,h){
+ const rows=weeklyScheduleRows().filter(r=>normalize(r.day)===normalize(day)&&! /^(off|day off|days off)$/i.test(r.shift));
+ let wanted=[];
+ if(h<11) wanted=rows.filter(r=>/^(am|am crew|morning)$/i.test(r.shift));
+ else if(h===12) wanted=rows.filter(r=>/^(pm|pm crew|afternoon)$/i.test(r.shift));
+ else if(h===14) wanted=rows.filter(r=>/^(am|am crew|morning)$/i.test(r.shift));
+ else if(h>=15) wanted=rows.filter(r=>/^(pm|pm crew|afternoon)$/i.test(r.shift));
+ else wanted=rows;
+ const names=[];wanted.forEach(r=>{if(r.employee&&!names.some(n=>normalize(n)===normalize(r.employee)))names.push(r.employee)});
+ return names;
 }
 function parseEmployees(){
  // The published roster is fixed: keep every name pill, dropdown, and crew filter
@@ -810,7 +845,10 @@ function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){co
     const pool=scheduledNames(day,field(coverage,["Pool (5)","Pool","Pool Staff"]));
     const tower=scheduledNames(day,field(coverage,["Tower (2)","Tower","Tower Staff"]));
     const board=scheduledNames(day,field(coverage,["Board Room (3)","Board Room","Board Room Staff"]));
-    [pool[0],pool[1],pool[2],pool[3],pool[4],tower[0],tower[1],board[0],board[1],board[2]].forEach((n,i)=>vals[i]=n||"");
+    const partyValues=[pool[0],pool[1],pool[2],pool[3],pool[4],tower[0],tower[1],board[0],board[1],board[2]];
+    const crew=scheduledCrewForHour(day,start),used=new Set(partyValues.filter(Boolean).map(normalize));
+    partyValues.forEach((n,i)=>{if(n)return;const replacement=crew.find(x=>!used.has(normalize(x)));if(replacement){partyValues[i]=replacement;used.add(normalize(replacement));}});
+    partyValues.forEach((n,i)=>vals[i]=n||"");
    } else {
     // Fallback: show the five assignments from each source sheet across the ten positions.
     const sources=(r.sourceRows||[r]).filter(x=>x&&x.positions);
@@ -863,6 +901,8 @@ function cardAssignments(row,day,time){
    const tower=scheduledNames(day,field(coverage,["Tower (2)","Tower","Tower Staff"]));
    const board=scheduledNames(day,field(coverage,["Board Room (3)","Board Room","Board Room Staff"]));
    const values=[pool[0],pool[1],pool[2],pool[3],pool[4],tower[0],tower[1],board[0],board[1],board[2]];
+   const crew=scheduledCrewForHour(day,start),used=new Set(values.filter(Boolean).map(normalize));
+   values.forEach((n,i)=>{if(n)return;const replacement=crew.find(x=>!used.has(normalize(x)));if(replacement){values[i]=replacement;used.add(normalize(replacement));}});
    return defs.map((d,i)=>({...d,name:values[i]||"—",number:i+1}));
   }
   return defs.map((d,i)=>({...d,name:"—",number:i+1}));
