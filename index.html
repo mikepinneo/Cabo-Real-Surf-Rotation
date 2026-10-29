@@ -540,6 +540,7 @@ function parseEmployees(){
 function currentDay(){return parts().weekday}function currentHour(){return Number(parts().hour)}
 function timeText(){return new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,hour:"2-digit",minute:"2-digit",hour12:true}).format(new Date())}
 function hourStart(s){const m=String(s||"").match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);if(!m)return -1;let h=+m[1];const ap=(m[3]||"").toUpperCase();if(ap==="PM"&&h<12)h+=12;if(ap==="AM"&&h===12)h=0;if(!ap&&h>=1&&h<=6)h+=12;return h}
+function shortHour(s){const h=hourStart(s);if(h<0)return String(s||"");const hour=h%12||12;return hour+(h<12?"a":"p")}
 function findRow(day,time){const candidates=allRows.filter(r=>normalize(r.day)===normalize(day));return candidates.find(r=>hourStart(r.time)===hourStart(time))||null}
 function connected(ok,msg){$("connectionDot").className="dot "+(ok?"ok":"bad");$("connectionText").textContent=msg}
 function renderPills(){const host=$("employeePills");host.innerHTML="";employees.forEach(name=>{const b=document.createElement("button");b.className="pill"+(selectedEmployee===name?" selected":"");b.textContent=name;b.setAttribute("aria-pressed",String(selectedEmployee===name));b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};host.appendChild(b)})}
@@ -570,9 +571,32 @@ function renderWeek(){
  $("weekSummary").textContent=name?`${name} · ${all.length} scheduled shift(s) · ${all.length*8} paid hours/week · ${off.length} day(s) off${off.length?": "+off.join(", "):""}`:"Choose an employee.";
  const host=$("weekTable");host.innerHTML="";
  if(!rows.length){host.innerHTML='<div class="empty-state">No scheduled shift found for this employee and filter.</div>';return}
- const table=document.createElement("table");table.innerHTML="<thead><tr><th>Day</th><th>Shift</th><th>Start</th><th>End</th><th>Paid hours</th><th>Lunch</th></tr></thead>";
+ const table=document.createElement("table");
+ table.innerHTML="<thead><tr><th>Day</th><th>Shift</th><th>Start</th><th>End</th><th>Assigned positions</th></tr></thead>";
  const body=document.createElement("tbody");
- rows.forEach(r=>{const tr=document.createElement("tr");[r.day,r.shift,r.start,r.end,"8","1-hour paid"].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});
+ const roleDefs=[
+  {key:"Pool Pusher (Zone 1)",label:"Surf Coach · Zone 1",kind:"surf"},
+  {key:"Pool Catcher (Zone 5)",label:"Surf Coach · Zone 5",kind:"surf"},
+  {key:"Control Tower",label:"Control Tower",kind:"tower"},
+  {key:"Board Room A",label:"Board Room A",kind:"board"},
+  {key:"Board Room B",label:"Board Room B",kind:"board"}
+ ];
+ rows.forEach(r=>{
+  const tr=document.createElement("tr");
+  [r.day,r.shift,r.start,r.end].forEach(v=>{const td=document.createElement("td");td.textContent=v||"—";tr.appendChild(td)});
+  const positionCell=document.createElement("td"),positionList=document.createElement("div");positionList.className="week-position-list";
+  const startHour=hourStart(r.start),endHour=hourStart(r.end);
+  const shiftRows=allRows.filter(ar=>normalize(ar.day)===normalize(r.day)&&hourStart(ar.time)>=startHour&&hourStart(ar.time)<(endHour>startHour?endHour:endHour+24));
+  const seen=new Set();
+  shiftRows.forEach(ar=>roleDefs.forEach(role=>{
+   const assigned=splitNames((ar.positions||{})[role.key]||"").some(n=>normalize(n)===normalize(name));
+   if(assigned&&!seen.has(role.label)){
+    seen.add(role.label);const chip=document.createElement("span");chip.className="week-position "+role.kind;chip.textContent=role.label;positionList.appendChild(chip);
+   }
+  }));
+  if(!seen.size){const chip=document.createElement("span");chip.className="week-position none";chip.textContent="No position listed in hourly rotation";positionList.appendChild(chip)}
+  positionCell.appendChild(positionList);tr.appendChild(positionCell);body.appendChild(tr);
+ });
  table.appendChild(body);host.appendChild(table)
 }
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
