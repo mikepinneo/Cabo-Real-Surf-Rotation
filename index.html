@@ -73,6 +73,20 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 
 .zone-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.zone{border:1px solid #7bc8d355;background:#092f39c9;border-radius:15px;padding:12px;min-height:82px}.zone h4{font-size:.78rem;letter-spacing:.04em;color:#a9e8f1;margin:0 0 8px}.staff-tags{display:flex;flex-wrap:wrap;gap:6px}.staff-tag{font-size:.86rem;background:#51c5d822;border:1px solid #74d7e455;padding:4px 8px;border-radius:9px;color:var(--text)}.staff-tag.highlight{background:var(--yellow);color:#21383d;border-color:var(--yellow)}.positions-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}.location-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:14px}.location-card h3{margin:0 0 9px;font-size:1rem}.empty{color:var(--muted);font-size:.88rem;font-style:italic}
 .notice{background:#352d13;border:1px solid #79641c;color:#ffe99b;border-radius:14px;padding:12px 14px;margin:12px 0}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;margin-top:14px}table{border-collapse:collapse;width:100%;min-width:620px;background:var(--panel)}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:.82rem;background:#102b30;position:sticky;top:0}tr:last-child td{border-bottom:0}td button{border:0;background:transparent;color:var(--cyan);font-weight:750;padding:0;text-align:left}
+.week-days{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.week-day-card{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:12px;min-width:0}
+.week-day-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px;font-weight:850}
+.week-day-shift{font-size:.68rem;font-weight:850;letter-spacing:.03em;padding:5px 7px;border-radius:8px;white-space:nowrap;background:#123238;color:var(--muted)}
+.week-day-shift.am{background:#574318;color:#ffe49a}.week-day-shift.pm{background:#292b63;color:#d8d9ff}
+.week-hour-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.week-hour-card{border-radius:10px;padding:9px;min-height:78px;overflow-wrap:anywhere}
+.week-hour-time{font-size:.67rem;font-weight:850;opacity:.85;margin-bottom:4px}
+.week-hour-role{font-size:.82rem;font-weight:850;line-height:1.2}
+.week-hour-detail{font-size:.7rem;opacity:.82;margin-top:4px}
+.week-hour-card.surf{background:#1459ad;color:#eaf4ff}.week-hour-card.tower{background:#b94716;color:#fff0e8}.week-hour-card.board{background:#168653;color:#eafff4}.week-hour-card.break{background:#17343b;color:#9bb8be;border:1px dashed #38575e}
+.week-off{color:var(--muted);font-weight:850;letter-spacing:.08em;padding:8px 0}
+.week-source-note{font-size:.75rem;color:var(--muted);margin-top:10px}
+@media(max-width:520px){.week-days{grid-template-columns:1fr}.week-hour-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .team-highlight-label{font-size:.76rem;font-weight:850;letter-spacing:.14em;color:var(--muted);margin:14px 0 10px}.team-caption{color:var(--muted);font-size:.9rem;margin:6px 0 12px}.team-caption strong{color:var(--text)}.team-pills{margin-bottom:12px}.team-grid{min-width:720px}.team-grid th,.team-grid td{padding:9px 10px;text-align:center;white-space:nowrap}.team-grid th:first-child,.team-grid td:first-child{text-align:left;position:sticky;left:0;background:#102b30;z-index:1}.team-grid th:first-child{z-index:2}.team-grid .team-name-btn{color:var(--text);font-weight:800}.team-grid tr.highlighted td{background:#686b3a;color:#fff}.team-grid tr.highlighted td:first-child{background:#686b3a}.team-grid tr.highlighted .team-name-btn{color:#fff}.shift-badge{display:inline-block;min-width:42px;padding:5px 8px;border-radius:9px;font-size:.78rem;font-weight:850;text-align:center}.shift-am{background:#574318;color:#ffe49a}.shift-pm{background:#292b63;color:#d8d9ff}.shift-off{color:#66858b}team-total{font-weight:850;color:var(--muted)}.hidden{display:none!important}.empty-state{border:1px dashed var(--line);border-radius:18px;padding:22px;color:var(--muted)}footer{max-width:1500px;margin:auto;padding:0 clamp(14px,4vw,42px) 28px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.85rem}
 @media(max-width:780px){.dashboard-grid{grid-template-columns:1fr}.assignment-cards,.next-cards{grid-template-columns:repeat(5,minmax(112px,1fr));overflow-x:auto;padding-bottom:4px}.assignment-cards{display:grid}.flow-panel{min-height:300px}.rotation-wheel{min-height:230px}.reference-map .aerial-image{aspect-ratio:1536/445;min-height:160px}header{padding-top:16px}.positions-grid{grid-template-columns:1fr 1fr}.site-map{max-height:none}.tab{font-size:.92rem;padding:12px 5px}.card{padding:14px}.map-card{padding:10px}}
 @media(max-width:460px){.panel-heading h2{font-size:.9rem}.wheel-node{width:40%}.wheel-node b{font-size:.6rem}.wheel-node strong{font-size:.65rem}.positions-grid{grid-template-columns:1fr}.zone-grid{grid-template-columns:1fr}.tabs{gap:6px}.tab{font-size:.82rem}.map-label{font-size:17px}.map-sub{font-size:14px}.map-person{font-size:15px}}
@@ -584,21 +598,73 @@ function weeklyRows(){return parseSheet("Weekly Schedule").map(r=>({
  notes:String(field(r,["Notes","Note"])||"").trim()
 })).filter(r=>r.employee&&r.day&&r.shift&&!/^(off|day off|days off)$/i.test(r.shift))}
 function renderWeek(){
- const name=$("weekEmployee").value,day=$("weekDay").value;
- const all=weeklyRows().filter(r=>normalize(r.employee)===normalize(name));
- const rows=all.filter(r=>!day||normalize(r.day)===normalize(day)).sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day));
- const uniqueDays=[...new Set(all.map(r=>r.day))];
- const off=DAYS.filter(d=>!uniqueDays.some(x=>normalize(x)===normalize(d)));
- $("weekSummary").textContent=name?`${name} · ${all.length} scheduled shift(s) · ${all.length*8} paid hours/week · ${off.length} day(s) off${off.length?": "+off.join(", "):""}`:"Choose an employee.";
+ const name=$("weekEmployee").value,dayFilter=$("weekDay").value;
  const host=$("weekTable");host.innerHTML="";
+ if(!rootData||!sheetMap["Weekly Schedule"]){
+  $("weekSummary").textContent=name?`${name} · schedule unavailable`:"Choose an employee.";
+  host.innerHTML='<div class="empty-state">The roster is not connected to Firebase, so the weekly schedule cannot load yet. Check the database URL and read permissions, then refresh.</div>';
+  return;
+ }
+ const all=weeklyRows().filter(r=>normalize(r.employee)===normalize(name));
+ const rows=all.filter(r=>!dayFilter||normalize(r.day)===normalize(dayFilter)).sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day));
+ const uniqueDays=[...new Set(all.map(r=>normalize(r.day)))];
+ const off=DAYS.filter(d=>!uniqueDays.includes(normalize(d)));
+ $("weekSummary").textContent=name?`${name} · ${all.length} scheduled shift(s) · ${all.length*8} paid hours/week · ${off.length} day(s) off${off.length?": "+off.join(", "):""}`:"Choose an employee.";
+ if(!name){host.innerHTML='<div class="empty-state">Choose a staff name to see their weekly schedule.</div>';return}
  if(!rows.length){host.innerHTML='<div class="empty-state">No scheduled shift found for this employee and filter.</div>';return}
- const table=document.createElement("table");table.innerHTML="<thead><tr><th>Day</th><th>Shift</th><th>Start</th><th>End</th><th>Paid hours</th><th>Lunch</th></tr></thead>";
- const body=document.createElement("tbody");
- rows.forEach(r=>{const tr=document.createElement("tr");[r.day,r.shift,r.start,r.end,"8","1-hour paid"].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});
- table.appendChild(body);host.appendChild(table)
+ const days=dayFilter?[dayFilter]:DAYS;
+ const wrap=document.createElement("div");wrap.className="week-days";
+ days.forEach(d=>{
+  const scheduled=rows.find(r=>normalize(r.day)===normalize(d));
+  const card=document.createElement("article");card.className="week-day-card";
+  const head=document.createElement("div");head.className="week-day-head";
+  const dayName=document.createElement("span");dayName.textContent=d;head.appendChild(dayName);
+  const badge=document.createElement("span");badge.className="week-day-shift";
+  if(scheduled){
+   const isAm=/^am/i.test(scheduled.shift);badge.classList.add(isAm?"am":"pm");
+   badge.textContent=`${isAm?"AM":"PM"} · ${scheduled.start|| (isAm?"7:00 AM":"11:00 AM")} – ${scheduled.end||(isAm?"3:00 PM":"7:00 PM")}`;
+  }else{badge.textContent="DAY OFF"}
+  head.appendChild(badge);card.appendChild(head);
+  if(!scheduled){const offEl=document.createElement("div");offEl.className="week-off";offEl.textContent="DAY OFF";card.appendChild(offEl);wrap.appendChild(card);return}
+  const startHour=hourStart(scheduled.start||( /^am/i.test(scheduled.shift)?"7:00 AM":"11:00 AM"));
+  const endHour=hourStart(scheduled.end||(/^am/i.test(scheduled.shift)?"3:00 PM":"7:00 PM"));
+  const list=document.createElement("div");list.className="week-hour-list";
+  const hours=allRows.filter(r=>normalize(r.day)===normalize(d)&&hourStart(r.time)>=startHour&&hourStart(r.time)<endHour).sort((a,b)=>hourStart(a.time)-hourStart(b.time));
+  hours.forEach(r=>{
+   let role="",detail="",kind="surf";
+   const h=hourStart(r.time);
+   if(r.partyAssignments?.length){
+    const party=r.partyAssignments.find(a=>normalize(a.name)===normalize(name));
+    if(party){
+     role=party.title==="SURF COACH"?"SURF COACH":party.title;
+     detail=party.subtitle||"Pool party coverage";
+     kind=/tower/i.test(role)?"tower":/board room/i.test(role)?"board":"surf";
+    }
+   }
+   if(!role){
+    const p=r.positions||{};
+    if(splitNames(p["Pool Pusher (Zone 1)"]).some(n=>normalize(n)===normalize(name))){role="SURF COACH";detail="Zone 1 · left side";kind="surf"}
+    else if(splitNames(p["Pool Catcher (Zone 5)"]).some(n=>normalize(n)===normalize(name))){role="SURF COACH";detail="Zone 5 · right side";kind="surf"}
+    else if(splitNames(p["Control Tower"]).some(n=>normalize(n)===normalize(name))){role="CONTROL TOWER";detail="Make the waves";kind="tower"}
+    else if(splitNames(p["Board Room A"]).some(n=>normalize(n)===normalize(name))){role="BOARD ROOM A";detail="Check in / check out";kind="board"}
+    else if(splitNames(p["Board Room B"]).some(n=>normalize(n)===normalize(name))){role="BOARD ROOM B";detail="Check in / check out";kind="board"}
+   }
+   if(!role)return;
+   const item=document.createElement("div");item.className="week-hour-card "+kind;
+   const time=document.createElement("div");time.className="week-hour-time";time.textContent=`${shortHour(r.time)}–${shortHour((h+1)%24===0?"12:00 AM":`${(h+1)%12||12}:00 ${h+1>=12&&h+1<24?"PM":"AM"}`)}`;
+   const roleEl=document.createElement("div");roleEl.className="week-hour-role";roleEl.textContent=role;
+   const detailEl=document.createElement("div");detailEl.className="week-hour-detail";detailEl.textContent=detail;
+   item.append(time,roleEl,detailEl);list.appendChild(item);
+  });
+  if(!list.children.length){const note=document.createElement("div");note.className="week-source-note";note.textContent="No hourly position assignments found for this shift.";card.appendChild(note)}
+  else card.appendChild(list);
+  wrap.appendChild(card);
+ });
+ host.appendChild(wrap);
+ const note=document.createElement("div");note.className="week-source-note";note.textContent="Shift days from Whole Team · hourly roles from the same weekly roster. Blue = Surf Coach · Orange = Control Tower · Green = Board Room.";
+ host.appendChild(note);
 }
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-let highlightedTeamEmployee="";
+
 function renderTeam(){
  const raw=weeklyRows();
  const ordered=[...STAFF_NAMES];
@@ -734,9 +800,9 @@ function renderDailyCrew(){
 
 function renderAll(){renderPills();renderDayButtons();renderHourButtons();renderDailyCrew();renderBoard();renderVisualCards();populateEmployees();renderWeek();renderTeam()}
 function switchTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));$("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");if(tab==="week")renderWeek();if(tab==="team")renderTeam()}
-async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;renderScheduleWeek();allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster · check Firebase access");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
+async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;renderScheduleWeek();allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster · check Firebase access");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData){employees=[...STAFF_NAMES];populateEmployees();renderWeek();$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}}
 function tick(){const p=parts();$("liveClock").textContent=timeText();$("dateLabel").textContent=`${p.weekday} · ${p.month} ${p.day} · Cabo time`;const open=currentHour()>=7&&currentHour()<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed"}
-$("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()});$("hourSelect").addEventListener("change",renderAll);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderAll()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
+$("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()});$("hourSelect").addEventListener("change",renderAll);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderAll()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();employees=[...STAFF_NAMES];populateEmployees();renderWeek();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
 </script>
 </body>
 </html>
