@@ -729,8 +729,16 @@ function renderDailyCrew(){
    });
   });
  }
+ // Enforce the operating rule: no more than five people in either shift crew.
+ // Some Firebase staffing rows may include names from multiple coverage groups.
+ // Cap each crew after deduplication and move overflow to Day Off.
  buckets.am=[...new Set(buckets.am)];
  buckets.pm=[...new Set(buckets.pm)].filter(n=>!buckets.am.includes(n));
+ const overflow=[...buckets.am.slice(5),...buckets.pm.slice(5)];
+ buckets.am=buckets.am.slice(0,5);
+ buckets.pm=buckets.pm.slice(0,5);
+ buckets.off=[...new Set([...buckets.off,...overflow])]
+   .filter(n=>!buckets.am.includes(n)&&!buckets.pm.includes(n));
  if(!buckets.off.length)buckets.off=employees.filter(n=>!buckets.am.includes(n)&&!buckets.pm.includes(n));
  renderCrewNames("dailyAmCrew",buckets.am);
  renderCrewNames("dailyPmCrew",buckets.pm);
