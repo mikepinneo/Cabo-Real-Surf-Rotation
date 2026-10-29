@@ -390,10 +390,10 @@ header .brand{margin-bottom:8px}
 .week-day-card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px;min-width:0}
 .week-day-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .week-day-head h3{font-size:1rem;margin:0;font-weight:850}
-.week-day-shift{display:inline-block;background:#292b63;color:#d8d9ff;border-radius:12px;padding:8px 12px;font-weight:850;font-size:.82rem}
+.week-day-shift{display:inline-block;background:#292b63;color:#d8d9ff;border-radius:12px;padding:8px 12px;font-weight:850;font-size:.82rem}.week-day-shift.shift-am{background:#e94d15;color:#fff}.week-day-shift.shift-pm{background:#292b63;color:#d8d9ff}
 .week-assignment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .week-assignment-card{border-radius:14px;overflow:hidden;min-width:0;color:#eaf5f8;background:#14794b}
-.week-assignment-card.blue{background:#195caf}.week-assignment-card.green{background:#168451}.week-assignment-card.orange{background:#e94d15}.week-assignment-card.lunch{background:#d1d5db;color:#25313a}
+.week-assignment-card.missing{background:#475569;color:#f1f5f9}.week-assignment-card.missing .week-assignment-time,.week-assignment-card.missing .week-assignment-subtitle{color:#e2e8f0}.week-assignment-card.blue{background:#195caf}.week-assignment-card.green{background:#168451}.week-assignment-card.orange{background:#e94d15}.week-assignment-card.lunch{background:#d1d5db;color:#25313a}.week-assignment-card.lunch .week-assignment-time,.week-assignment-card.lunch .week-assignment-subtitle{color:#4b5560}
 .week-assignment-time{padding:12px 14px 2px;font-size:.83rem;font-weight:800;color:#d5e9f3}
 .week-assignment-title{padding:0 14px;font-size:1rem;font-weight:950;line-height:1.2}
 .week-assignment-subtitle{padding:6px 14px 14px;font-size:.88rem;color:#d8e9ef}
@@ -643,30 +643,38 @@ function renderWeek(){
   const section=document.createElement("article");section.className="week-day-card";
   const head=document.createElement("div");head.className="week-day-head";
   const title=document.createElement("h3");title.textContent=r.day;head.appendChild(title);
-  const badge=document.createElement("span");badge.className="week-day-shift";badge.textContent=`${r.shift} · ${r.start} – ${r.end}`;head.appendChild(badge);section.appendChild(head);
+  const badge=document.createElement("span");badge.className="week-day-shift "+(/^AM/i.test(r.shift)?"shift-am":"shift-pm");badge.textContent=`${r.shift} · ${r.start} – ${r.end}`;head.appendChild(badge);section.appendChild(head);
   const grid=document.createElement("div");grid.className="week-assignment-grid";
   const startHour=hourStart(r.start),endHour=hourStart(r.end);let found=0;
   const dayRows=allRows.filter(ar=>normalize(ar.day)===normalize(r.day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));
-  dayRows.forEach(ar=>{
-   const h=hourStart(ar.time);if(h<startHour||h>=endHour)return;
-   // Show the employee's lunch as a light-grey card in the original My Week layout.
+  const fullHour=x=>{const hh=((x%24)+24)%24;return `${hh%12||12}:00 ${hh<12?"AM":"PM"}`};
+  // Render every hour in the shift: seven position cards plus the paid lunch card.
+  // Missing source assignments stay visible instead of silently shortening the shift.
+  for(let h=startHour;h<endHour;h++){
    if((/^AM/i.test(r.shift)&&h===12)||(/^PM/i.test(r.shift)&&h===14)){
     const card=document.createElement("article");card.className="week-assignment-card lunch";
-    const time=document.createElement("div");time.className="week-assignment-time";const fullHour=x=>{const hh=((x%24)+24)%24;return `${hh%12||12}:00 ${hh<12?"AM":"PM"}`};time.textContent=`${fullHour(h)}–${fullHour(h+1)}`;
+    const time=document.createElement("div");time.className="week-assignment-time";time.textContent=`${fullHour(h)}–${fullHour(h+1)}`;
     const label=document.createElement("div");label.className="week-assignment-title";label.textContent="LUNCH BREAK";
     const sub=document.createElement("div");sub.className="week-assignment-subtitle";sub.textContent="Paid lunch break";
-    card.append(time,label,sub);grid.appendChild(card);found++;return;
+    card.append(time,label,sub);grid.appendChild(card);found++;continue;
    }
-   roleDefs.forEach(role=>{
-    if(!getRoleNames(ar,role,r.day,h).some(n=>normalize(n)===normalize(name)))return;
-    const card=document.createElement("article");card.className="week-assignment-card "+role.kind;
-    const time=document.createElement("div");time.className="week-assignment-time";const fullHour=x=>{const hh=((x%24)+24)%24;return `${hh%12||12}:00 ${hh<12?"AM":"PM"}`};time.textContent=`${fullHour(h)}–${fullHour(h+1)}`;
-    const label=document.createElement("div");label.className="week-assignment-title";label.textContent=role.title;
-    const sub=document.createElement("div");sub.className="week-assignment-subtitle";sub.textContent=role.subtitle;
-    card.append(time,label,sub);grid.appendChild(card);found++;
-   });
-  });
-  if(!found){const empty=document.createElement("div");empty.className="week-no-positions";empty.textContent="No position assignments found for this shift.";grid.appendChild(empty)}
+   const ar=dayRows.find(x=>hourStart(x.time)===h);
+   const assigned=ar?roleDefs.map(role=>({role,names:getRoleNames(ar,role,r.day,h)})).filter(x=>x.names.some(n=>normalize(n)===normalize(name))):[];
+   const chosen=assigned[0];
+   const card=document.createElement("article");
+   const time=document.createElement("div");time.className="week-assignment-time";time.textContent=`${fullHour(h)}–${fullHour(h+1)}`;
+   const label=document.createElement("div");label.className="week-assignment-title";
+   const sub=document.createElement("div");sub.className="week-assignment-subtitle";
+   if(chosen){
+    card.className="week-assignment-card "+chosen.role.kind;
+    label.textContent=chosen.role.title;sub.textContent=chosen.role.subtitle;
+   }else{
+    card.className="week-assignment-card missing";
+    label.textContent="ASSIGNMENT MISSING";sub.textContent="Check hourly rotation data";
+   }
+   card.append(time,label,sub);grid.appendChild(card);found++;
+  }
+  if(!found){const empty=document.createElement("div");empty.className="week-no-positions";empty.textContent="No scheduled hours found for this shift.";grid.appendChild(empty)}
   section.appendChild(grid);host.appendChild(section);
  });
 }
