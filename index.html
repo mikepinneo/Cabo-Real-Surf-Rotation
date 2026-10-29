@@ -83,7 +83,7 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 .week-hour-time{font-size:.67rem;font-weight:850;opacity:.85;margin-bottom:4px}
 .week-hour-role{font-size:.82rem;font-weight:850;line-height:1.2}
 .week-hour-detail{font-size:.7rem;opacity:.82;margin-top:4px}
-.week-hour-card.surf{background:#1459ad;color:#eaf4ff}.week-hour-card.tower{background:#b94716;color:#fff0e8}.week-hour-card.board{background:#168653;color:#eafff4}.week-hour-card.break{background:#17343b;color:#9bb8be;border:1px dashed #38575e}
+.week-hour-card.surf{background:#1459ad;color:#eaf4ff}.week-hour-card.tower{background:#b94716;color:#fff0e8}.week-hour-card.board{background:#168653;color:#eafff4}.week-hour-card.break{background:#17343b;color:#9bb8be;border:1px dashed #38575e}.week-hour-card.lunch-break{background:#d1d5db;color:#27313b;border:1px solid #c0c6ce}
 .week-off{color:var(--muted);font-weight:850;letter-spacing:.08em;padding:8px 0}
 .week-source-note{font-size:.75rem;color:var(--muted);margin-top:10px}
 @media(max-width:520px){.week-days{grid-template-columns:1fr}.week-hour-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -648,6 +648,14 @@ function renderWeek(){
   hours.forEach(r=>{
    let role="",detail="",kind="surf";
    const h=hourStart(r.time);
+   const lunchHour=/^am/i.test(scheduled.shift)?12:14;
+   if(h===lunchHour){
+    const lunch=document.createElement("div");lunch.className="week-hour-card lunch-break";
+    const lunchTime=document.createElement("div");lunchTime.className="week-hour-time";
+    lunchTime.textContent=/^am/i.test(scheduled.shift)?"12:00 PM–1:00 PM":"2:00 PM–3:00 PM";
+    const lunchRole=document.createElement("div");lunchRole.className="week-hour-role";lunchRole.textContent="Lunch Break";
+    lunch.append(lunchTime,lunchRole);list.appendChild(lunch);
+   }
    if(r.partyAssignments?.length){
     const party=r.partyAssignments.find(a=>normalize(a.name)===normalize(name));
     if(party){
