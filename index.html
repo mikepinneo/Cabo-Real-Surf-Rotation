@@ -399,6 +399,20 @@ header .brand{margin-bottom:8px}
 .week-assignment-subtitle{padding:6px 14px 14px;font-size:.88rem;color:#d8e9ef}
 .week-no-positions{color:var(--muted);font-size:.9rem;padding:8px 2px}
 @media(max-width:520px){#weekTable{gap:12px}.week-day-card{padding:12px;border-radius:18px}.week-assignment-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.week-assignment-time{font-size:.75rem;padding:10px 10px 2px}.week-assignment-title{font-size:.88rem;padding:0 10px}.week-assignment-subtitle{font-size:.78rem;padding:6px 10px 12px}.week-day-head h3{font-size:.95rem}.week-day-shift{font-size:.73rem;padding:7px 9px}}
+
+/* Final user-requested styling refinements: match AM badge, tighten roster and rotation table. */
+.week-day-shift.shift-am{background:#574318;color:#ffe49a}
+.team-grid th:first-child,.team-grid td:first-child{width:19%;padding-left:5px;padding-right:1px}
+.team-grid th:nth-child(2),.team-grid td:nth-child(2){padding-left:0}
+.schedule-table table{min-width:0!important;width:100%;table-layout:fixed;font-size:.68rem}
+.schedule-table th,.schedule-table td{padding:3px 4px;overflow-wrap:anywhere;word-break:normal}
+@media(max-width:620px){
+ .team-grid th:first-child,.team-grid td:first-child{width:19%;padding-left:4px;padding-right:0}
+ .team-grid th:nth-child(2),.team-grid td:nth-child(2){padding-left:0}
+ .schedule-table table{min-width:0!important;width:100%;font-size:.56rem}
+ .schedule-table th,.schedule-table td{padding:2px 3px}
+}
+
 </style>
 </head>
 <body>
