@@ -11,6 +11,10 @@
 button,input,select{font:inherit}button{cursor:pointer}
 header{padding:20px clamp(14px,4vw,42px);background:#0d292f;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 .kicker{color:var(--muted);letter-spacing:.16em;font-weight:800;font-size:.78rem}.brand{font-size:clamp(2rem,5vw,3rem);font-weight:850;letter-spacing:-.04em;line-height:1.15;margin:5px 0 18px}.brand span{color:var(--cyan)}
+.schedule-week{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-8px 0 16px;padding:9px 12px;border:1px solid #2b5961;border-radius:12px;background:#102f35;color:#d9f6f8;font-size:.92rem;font-weight:800}
+.schedule-week .week-label{color:var(--cyan);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+.schedule-week .week-status{margin-left:auto;color:#9bb8be;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:520px){.schedule-week{font-size:.8rem;padding:8px 9px}.schedule-week .week-status{margin-left:0}}
 .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.tab{border:0;border-radius:18px;padding:13px 8px;background:var(--panel2);color:var(--muted);font-weight:800}.tab.active{background:var(--cyan);color:#062b32}
 .connection{display:flex;gap:9px;align-items:center;color:var(--muted);margin-top:16px}.dot{width:10px;height:10px;border-radius:50%;background:#85979a}.dot.ok{background:var(--green)}.dot.bad{background:var(--red)}
 main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.section-title{font-size:.88rem;color:var(--muted);letter-spacing:.12em;font-weight:850;text-transform:uppercase;margin:0 0 12px}
@@ -69,7 +73,7 @@ main{padding:22px clamp(14px,4vw,42px) 40px;max-width:1500px;margin:auto}.sectio
 
 .zone-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.zone{border:1px solid #7bc8d355;background:#092f39c9;border-radius:15px;padding:12px;min-height:82px}.zone h4{font-size:.78rem;letter-spacing:.04em;color:#a9e8f1;margin:0 0 8px}.staff-tags{display:flex;flex-wrap:wrap;gap:6px}.staff-tag{font-size:.86rem;background:#51c5d822;border:1px solid #74d7e455;padding:4px 8px;border-radius:9px;color:var(--text)}.staff-tag.highlight{background:var(--yellow);color:#21383d;border-color:var(--yellow)}.positions-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}.location-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:14px}.location-card h3{margin:0 0 9px;font-size:1rem}.empty{color:var(--muted);font-size:.88rem;font-style:italic}
 .notice{background:#352d13;border:1px solid #79641c;color:#ffe99b;border-radius:14px;padding:12px 14px;margin:12px 0}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;margin-top:14px}table{border-collapse:collapse;width:100%;min-width:620px;background:var(--panel)}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:.82rem;background:#102b30;position:sticky;top:0}tr:last-child td{border-bottom:0}td button{border:0;background:transparent;color:var(--cyan);font-weight:750;padding:0;text-align:left}
-.hidden{display:none!important}.empty-state{border:1px dashed var(--line);border-radius:18px;padding:22px;color:var(--muted)}footer{max-width:1500px;margin:auto;padding:0 clamp(14px,4vw,42px) 28px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.85rem}
+.team-highlight-label{font-size:.76rem;font-weight:850;letter-spacing:.14em;color:var(--muted);margin:14px 0 10px}.team-caption{color:var(--muted);font-size:.9rem;margin:6px 0 12px}.team-caption strong{color:var(--text)}.team-pills{margin-bottom:12px}.team-grid{min-width:720px}.team-grid th,.team-grid td{padding:9px 10px;text-align:center;white-space:nowrap}.team-grid th:first-child,.team-grid td:first-child{text-align:left;position:sticky;left:0;background:#102b30;z-index:1}.team-grid th:first-child{z-index:2}.team-grid .team-name-btn{color:var(--text);font-weight:800}.team-grid tr.highlighted td{background:#686b3a;color:#fff}.team-grid tr.highlighted td:first-child{background:#686b3a}.team-grid tr.highlighted .team-name-btn{color:#fff}.shift-badge{display:inline-block;min-width:42px;padding:5px 8px;border-radius:9px;font-size:.78rem;font-weight:850;text-align:center}.shift-am{background:#574318;color:#ffe49a}.shift-pm{background:#292b63;color:#d8d9ff}.shift-off{color:#66858b}team-total{font-weight:850;color:var(--muted)}.hidden{display:none!important}.empty-state{border:1px dashed var(--line);border-radius:18px;padding:22px;color:var(--muted)}footer{max-width:1500px;margin:auto;padding:0 clamp(14px,4vw,42px) 28px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.85rem}
 @media(max-width:780px){.dashboard-grid{grid-template-columns:1fr}.assignment-cards,.next-cards{grid-template-columns:repeat(5,minmax(112px,1fr));overflow-x:auto;padding-bottom:4px}.assignment-cards{display:grid}.flow-panel{min-height:300px}.rotation-wheel{min-height:230px}.reference-map .aerial-image{aspect-ratio:1536/445;min-height:160px}header{padding-top:16px}.positions-grid{grid-template-columns:1fr 1fr}.site-map{max-height:none}.tab{font-size:.92rem;padding:12px 5px}.card{padding:14px}.map-card{padding:10px}}
 @media(max-width:460px){.panel-heading h2{font-size:.9rem}.wheel-node{width:40%}.wheel-node b{font-size:.6rem}.wheel-node strong{font-size:.65rem}.positions-grid{grid-template-columns:1fr}.zone-grid{grid-template-columns:1fr}.tabs{gap:6px}.tab{font-size:.82rem}.map-label{font-size:17px}.map-sub{font-size:14px}.map-person{font-size:15px}}
 
@@ -351,6 +355,7 @@ header .brand{margin-bottom:8px}
 <header>
   <div class="kicker">CABO REAL SURF CLUB</div>
   <div class="brand">Staff <span>Rotation</span></div>
+  <div class="schedule-week" aria-live="polite"><span class="week-label">Schedule week</span><span id="scheduleWeekLabel">Schedule week not set — update the Schedule Info tab</span><span class="week-status" id="scheduleWeekStatus">Date needed</span></div>
   <nav class="tabs" aria-label="Main navigation">
     <button class="tab active" data-tab="live">Live Board</button><button class="tab" data-tab="week">My Week</button><button class="tab" data-tab="team">Whole Team</button>
   </nav>
@@ -436,8 +441,10 @@ header .brand{margin-bottom:8px}
 </section>
 <section id="teamView" class="hidden">
   <div class="section-title">Whole team · weekly coverage</div>
-  <div class="toolbar"><label for="teamSearch">Find employee</label><input id="teamSearch" type="search" placeholder="Type a name"><label for="teamDay">Day</label><select id="teamDay"><option value="">All days</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
-  <div id="teamSummary" class="muted"></div><div id="teamTable" class="table-wrap"></div>
+  <div class="team-highlight-label">HIGHLIGHT A PERSON</div>
+  <div id="teamEmployeePills" class="pills" aria-label="Highlight an employee"></div>
+  <div class="team-caption"><strong>Whole team</strong> · tap a name to highlight their row; tap a shift to open that day in My Week.</div>
+  <div id="teamSummary" class="muted"></div><div id="teamTable" class="table-wrap"></div><div class="team-caption" id="teamHoursNote">AM 7:00 AM–3:00 PM · PM 11:00 AM–7:00 PM · Each shift includes a 1-hour paid lunch.</div>
 </section>
 </main>
 <footer><span>Staff Rotation · Cabo Real Surf Club</span><span id="updatedLabel">Waiting for first data refresh</span></footer>
@@ -450,6 +457,9 @@ let rootData=null,sheetMap={},employees=[...STAFF_NAMES],selectedEmployee="",all
 const $=id=>document.getElementById(id),normalize=s=>String(s??"").trim().toLowerCase().replace(/\s+/g," ");
 function asArray(v){if(Array.isArray(v))return v;if(v&&typeof v==="object")return Object.keys(v).sort((a,b)=>Number(a)-Number(b)).map(k=>v[k]);return []}
 function parseSheet(name){const s=sheetMap[name];if(!s)return [];const headers=asArray(s.headers).map(v=>String(v??"").trim());let rows=asArray(s.values);if(!rows.length)rows=asArray(s.rows);return rows.map(r=>{if(r&&!Array.isArray(r)&&typeof r==="object")return r;const o={};headers.forEach((h,i)=>o[h]=asArray(r)[i]??"");return o}).filter(o=>Object.values(o).some(v=>String(v??"").trim()!==""))}
+function scheduleInfoValue(key){const row=parseSheet("Schedule Info").find(r=>normalize(field(r,["Setting","Field","Item"]))===normalize(key));return row?field(row,["Value"]):""}
+function parseScheduleDate(value){if(value instanceof Date&&!Number.isNaN(value.getTime()))return new Date(value.getFullYear(),value.getMonth(),value.getDate());const s=String(value??"").trim();if(!s)return null;let m=s.match(/^(\\d{4})-(\\d{1,2})-(\\d{1,2})/);if(m)return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));m=s.match(/^(\\d{1,2})[\\/.-](\\d{1,2})[\\/.-](\\d{4})$/);if(m)return new Date(Number(m[3]),Number(m[1])-1,Number(m[2]));const d=new Date(s);return Number.isNaN(d.getTime())?null:new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function renderScheduleWeek(){const start=parseScheduleDate(scheduleInfoValue("Week Start Date")),end=parseScheduleDate(scheduleInfoValue("Week End Date")),status=scheduleInfoValue("Schedule Status")||"CURRENT WEEK";const label=$("scheduleWeekLabel"),statusEl=$("scheduleWeekStatus");if(!label||!statusEl)return;if(start&&end&&end>=start){const fmt=(d,{month="long",day="numeric",year="numeric"}={})=>new Intl.DateTimeFormat("en-US",{month,day,year,timeZone:"UTC"}).format(new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())));label.textContent=start.getFullYear()===end.getFullYear()?(start.getMonth()===end.getMonth()?`${fmt(start,{month:"long",day:"numeric",year:"numeric"}).replace(", "+start.getFullYear(),"")} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"}).replace(", "+end.getFullYear(),"")}, ${end.getFullYear()}`:`${fmt(start,{month:"long",day:"numeric",year:"numeric"})} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"})}`):`${fmt(start)} – ${fmt(end)}`;statusEl.textContent=status}else{label.textContent="Dates not set — update the Schedule Info tab";statusEl.textContent="Date needed"}}
 function field(o,alts){const keys=Object.keys(o||{});for(const a of alts){const k=keys.find(x=>normalize(x)===normalize(a));if(k&&String(o[k]??"").trim())return o[k]}for(const a of alts){const k=keys.find(x=>normalize(x).includes(normalize(a)));if(k&&String(o[k]??"").trim())return o[k]}return ""}
 function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>x.trim()).filter(x=>x&&!/^(n\/a|na|none|off|vacant|tbd|—|-)$/i.test(x))}
 function rowToAssignment(r,source){const day=String(field(r,["Day","Weekday"])||"").trim(),time=String(field(r,["Hour","Time","Time Slot","Rotation"])||"").trim();const defs=[["Pool Pusher (Zone 1)",["Pool Pusher (Zone 1)","Pool Pusher","Pusher","Zone 1"]],["Pool Catcher (Zone 5)",["Pool Catcher (Zone 5)","Pool Catcher","Catcher","Zone 5"]],["Control Tower",["Control Tower","Tower"]],["Board Room A",["Board Room A","Board Room A Staff"]],["Board Room B",["Board Room B","Board Room B Staff"]]];const positions={};defs.forEach(([label,alts])=>positions[label]=String(field(r,alts)||"").trim());return {day,time,positions,source,raw:r}}
@@ -475,13 +485,17 @@ function getAllAssignments(){
  });
  return [...grouped.values()].sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||hourStart(a.time)-hourStart(b.time));
 }
-function parseEmployees(){return [...STAFF_NAMES]}function parts(){return Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false,month:"short",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]))}
+function parseEmployees(){
+ const rows=parseSheet("Employees");
+ const names=rows.map(r=>String(field(r,["Name","Employee","Staff Name"])||"").trim()).filter(Boolean);
+ return names.length?[...new Set(names)]:[...STAFF_NAMES];
+}function parts(){return Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false,month:"short",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]))}
 function currentDay(){return parts().weekday}function currentHour(){return Number(parts().hour)}
 function timeText(){return new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,hour:"2-digit",minute:"2-digit",hour12:true}).format(new Date())}
 function hourStart(s){const m=String(s||"").match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);if(!m)return -1;let h=+m[1];const ap=(m[3]||"").toUpperCase();if(ap==="PM"&&h<12)h+=12;if(ap==="AM"&&h===12)h=0;if(!ap&&h>=1&&h<=6)h+=12;return h}
 function findRow(day,time){const candidates=allRows.filter(r=>normalize(r.day)===normalize(day));return candidates.find(r=>hourStart(r.time)===hourStart(time))||null}
 function connected(ok,msg){$("connectionDot").className="dot "+(ok?"ok":"bad");$("connectionText").textContent=msg}
-function renderPills(){const host=$("employeePills");host.innerHTML="";STAFF_NAMES.forEach(name=>{const b=document.createElement("button");b.className="pill"+(selectedEmployee===name?" selected":"");b.textContent=name;b.setAttribute("aria-pressed",String(selectedEmployee===name));b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};host.appendChild(b)})}
+function renderPills(){const host=$("employeePills");host.innerHTML="";employees.forEach(name=>{const b=document.createElement("button");b.className="pill"+(selectedEmployee===name?" selected":"");b.textContent=name;b.setAttribute("aria-pressed",String(selectedEmployee===name));b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};host.appendChild(b)})}
 function staffTag(name){const b=document.createElement("button");b.className="staff-tag"+(selectedEmployee===name?" highlight":"");b.textContent=name;b.onclick=()=>{selectedEmployee=selectedEmployee===name?"":name;renderAll()};return b}
 function fill(id,values){const el=$(id);el.innerHTML="";const names=[...new Set(values.flatMap(splitNames))];if(!names.length){el.innerHTML='<span class="empty">No assignment recorded</span>';return}names.forEach(n=>el.appendChild(staffTag(n)))}
 function setMap(id,names){const el=$(id),vals=[...new Set(names.flatMap(splitNames))];el.textContent=vals.length?vals.join(" · "):"—";el.classList.toggle("highlight",!!selectedEmployee&&vals.includes(selectedEmployee));const flowIds={mapPusher:"flowPusher",mapCatcher:"flowCatcher",mapTower:"flowTower",mapBoardA:"flowBoardA",mapBoardB:"flowBoardB"};if(flowIds[id])$(flowIds[id]).textContent=vals.length?vals.join(" · "):"—";if(flowIds[id])$(flowIds[id]).parentElement.classList.toggle("active",!!selectedEmployee&&vals.includes(selectedEmployee))}
@@ -491,14 +505,102 @@ const h=currentHour(),open=h>=7&&h<19;$("operatingStatus").textContent=open?"Clu
 }
 function populateTimes(preserve=true){const sel=$("hourSelect"),old=preserve?sel.value:"";sel.innerHTML="";const times=[...new Set(allRows.filter(r=>normalize(r.day)===normalize($("daySelect").value)).map(r=>r.time))].sort((a,b)=>hourStart(a)-hourStart(b));times.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;sel.appendChild(o)});if(old&&times.includes(old))sel.value=old;else{const now=currentHour(),match=times.find(t=>hourStart(t)===now);if(match)sel.value=match;else if(times.length)sel.selectedIndex=0}}
 function populateEmployees(){const s=$("weekEmployee"),old=s.value;s.innerHTML="";employees.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;s.appendChild(o)});if(old&&employees.includes(old))s.value=old;else if(selectedEmployee&&employees.includes(selectedEmployee))s.value=selectedEmployee}
-function renderWeek(){const name=$("weekEmployee").value,day=$("weekDay").value;const rows=allRows.filter(r=>(!day||normalize(r.day)===normalize(day))&&Object.values(r.positions).some(v=>splitNames(v).includes(name)));$("weekSummary").textContent=name?`${name} · ${rows.length} hourly assignment(s) in the AM/PM rotation sheets.`:"Choose an employee.";const host=$("weekTable");host.innerHTML="";if(!rows.length){host.innerHTML='<div class="empty-state">No matching rotation assignments found for this employee and filter.</div>';return}const table=document.createElement("table");table.innerHTML="<thead><tr><th>Day</th><th>Time</th><th>Assignment</th></tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const assigned=Object.entries(r.positions).filter(([k,v])=>splitNames(v).includes(name)).map(([k])=>k).join(", ");const tr=document.createElement("tr");[r.day,r.time,assigned].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
+function weeklyRows(){return parseSheet("Weekly Schedule").map(r=>({
+ employee:String(field(r,["Employee","Name","Staff Name"])||"").trim(),
+ type:String(field(r,["Employment Type","Type"])||"").trim(),
+ day:String(field(r,["Day","Weekday"])||"").trim(),
+ shift:String(field(r,["Shift","Shift Type"])||"").trim(),
+ start:String(field(r,["Start","Start Time"])||"").trim(),
+ end:String(field(r,["End","End Time"])||"").trim(),
+ notes:String(field(r,["Notes","Note"])||"").trim()
+})).filter(r=>r.employee&&r.day&&r.shift)}
+function renderWeek(){
+ const name=$("weekEmployee").value,day=$("weekDay").value;
+ const all=weeklyRows().filter(r=>normalize(r.employee)===normalize(name));
+ const rows=all.filter(r=>!day||normalize(r.day)===normalize(day)).sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day));
+ const uniqueDays=[...new Set(all.map(r=>r.day))];
+ const off=DAYS.filter(d=>!uniqueDays.some(x=>normalize(x)===normalize(d)));
+ $("weekSummary").textContent=name?`${name} · ${all.length} scheduled shift(s) · ${all.length*8} paid hours/week · ${off.length} day(s) off${off.length?": "+off.join(", "):""}`:"Choose an employee.";
+ const host=$("weekTable");host.innerHTML="";
+ if(!rows.length){host.innerHTML='<div class="empty-state">No scheduled shift found for this employee and filter.</div>';return}
+ const table=document.createElement("table");table.innerHTML="<thead><tr><th>Day</th><th>Shift</th><th>Start</th><th>End</th><th>Paid hours</th><th>Lunch</th></tr></thead>";
+ const body=document.createElement("tbody");
+ rows.forEach(r=>{const tr=document.createElement("tr");[r.day,r.shift,r.start,r.end,"8","1-hour paid"].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});
+ table.appendChild(body);host.appendChild(table)
+}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function renderTeam(){const q=normalize($("teamSearch").value),day=$("teamDay").value;const rows=allRows.filter(r=>(!day||normalize(r.day)===normalize(day))&&(!q||Object.values(r.positions).some(v=>splitNames(v).some(n=>normalize(n).includes(q)))));$("teamSummary").textContent=`${rows.length} rotation row(s) · AM/PM hourly rotation sheets.`;const host=$("teamTable");host.innerHTML="";if(!rows.length){host.innerHTML='<div class="empty-state">No rows match these filters.</div>';return}const heads=["Day","Time","Surf Coach · Zone 1","Surf Coach · Zone 5","Control Tower","Board Room A","Board Room B"];const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(x=>`<th>${esc(x)}</th>`).join("")+"</tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const tr=document.createElement("tr");[r.day,r.time,...Object.values(r.positions)].forEach((v,i)=>{const td=document.createElement("td");if(i>=2)splitNames(v).forEach((n,j)=>{if(j)td.append(" ");const b=document.createElement("button");b.textContent=n;b.onclick=()=>{selectedEmployee=n;switchTab("live");renderAll()};td.appendChild(b)});else td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
-
+let highlightedTeamEmployee="";
+function renderTeam(){
+ const raw=weeklyRows();
+ const employeeSet=new Set([...STAFF_NAMES,...raw.map(r=>r.employee)].filter(Boolean));
+ const ordered=[...employeeSet].sort((a,b)=>{
+   if(normalize(a)==="kody")return -1;
+   if(normalize(b)==="kody")return 1;
+   return a.localeCompare(b,undefined,{sensitivity:"base"});
+ });
+ const byEmployee=new Map();
+ raw.forEach(r=>{
+   const key=normalize(r.employee);
+   if(!byEmployee.has(key))byEmployee.set(key,{name:r.employee,days:{}});
+   byEmployee.get(key).days[normalize(r.day)] = r;
+ });
+ const pillHost=$("teamEmployeePills");
+ pillHost.innerHTML="";
+ const clear=document.createElement("button");
+ clear.className="pill"+(!highlightedTeamEmployee?" selected":"");
+ clear.textContent="Clear";
+ clear.onclick=()=>{highlightedTeamEmployee="";renderTeam()};
+ pillHost.appendChild(clear);
+ ordered.forEach(name=>{
+   const b=document.createElement("button");
+   b.className="pill"+(normalize(highlightedTeamEmployee)===normalize(name)?" selected":"");
+   b.textContent=name+(normalize(name)==="makeni"||normalize(name)==="wikin"||normalize(name)==="lucho"||normalize(name)==="chino"?" ᴾᵀ":"");
+   b.onclick=()=>{highlightedTeamEmployee=normalize(highlightedTeamEmployee)===normalize(name)?"":name;renderTeam()};
+   pillHost.appendChild(b);
+ });
+ const rows=ordered.map(name=>{
+   const data=byEmployee.get(normalize(name));
+   const cells=DAYS.map(day=>data?.days[normalize(day)]||null);
+   const count=cells.filter(Boolean).length;
+   return {name,cells,count};
+ });
+ const totalShifts=raw.length;
+ $("teamSummary").textContent=`${totalShifts} scheduled shift(s) · ${ordered.length} employees · 8 paid hours per shift including 1-hour paid lunch.`;
+ const host=$("teamTable");host.innerHTML="";
+ if(!rows.some(r=>r.count)){host.innerHTML='<div class="empty-state">No weekly employee schedule found.</div>';return}
+ const table=document.createElement("table");table.className="team-grid";
+ table.innerHTML="<thead><tr>"+["NAME",...DAYS.map(d=>d.slice(0,3).toUpperCase()),"SHIFTS"].map(x=>`<th>${esc(x)}</th>`).join("")+"</tr></thead>";
+ const body=document.createElement("tbody");
+ rows.forEach(r=>{
+   const tr=document.createElement("tr");
+   if(normalize(highlightedTeamEmployee)===normalize(r.name))tr.className="highlighted";
+   const nameTd=document.createElement("td");
+   const nameBtn=document.createElement("button");nameBtn.className="team-name-btn";nameBtn.textContent=r.name;
+   nameBtn.onclick=()=>{$("weekEmployee").value=r.name;selectedEmployee=r.name;switchTab("week");renderWeek()};
+   nameTd.appendChild(nameBtn);tr.appendChild(nameTd);
+   r.cells.forEach((shift,i)=>{
+     const td=document.createElement("td");
+     if(!shift){const span=document.createElement("span");span.className="shift-badge shift-off";span.textContent="off";td.appendChild(span)}
+     else{
+       const span=document.createElement("button");
+       const label=/^am/i.test(shift.shift)?"AM":/^pm/i.test(shift.shift)?"PM":shift.shift;
+       span.className="shift-badge "+(label==="AM"?"shift-am":"shift-pm");
+       span.textContent=label;
+       span.title=`${r.name} · ${DAYS[i]} · ${shift.start}–${shift.end}`;
+       span.onclick=()=>{$("weekEmployee").value=r.name;$("weekDay").value=DAYS[i];selectedEmployee=r.name;switchTab("week");renderWeek()};
+       td.appendChild(span);
+     }
+     tr.appendChild(td);
+   });
+   const total=document.createElement("td");total.className="team-total";total.textContent=String(r.count);tr.appendChild(total);
+   body.appendChild(tr);
+ });
+ table.appendChild(body);host.appendChild(table);
+}
 function hourLabel(s){return String(s||"").replace(/\s*-\s*/," – ")}
 function nextRow(day,time){const rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));const i=rows.findIndex(r=>r.time===time||hourStart(r.time)===hourStart(time));return i>=0?rows[i+1]||null:null}
 function assignmentValues(row){const p=row?.positions||{};return [p["Pool Pusher (Zone 1)"],p["Pool Catcher (Zone 5)"],p["Control Tower"],p["Board Room A"],p["Board Room B"]].map(v=>splitNames(v).join(", ")||"—")}
-function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){const colors=["green","blue","orange","purple","pink"];const card=document.createElement("article");card.className="assignment-card "+(color||colors[index%colors.length]);card.innerHTML=`<div class="assignment-head"><span>${index+1}</span><div><b>${title}</b><small>${subtitle}</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div class="assignment-name"></div>`;card.querySelector(".assignment-name").textContent=name||"—";return card}function renderSchedule(){const host=$("hourlySchedule");if(!host)return;const day=$("daySelect").value,rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));if(!rows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}const heads=["TIME","SURF COACH · ZONE 1","SURF COACH · ZONE 5","CONTROL TOWER","BOARD ROOM A","BOARD ROOM B"];const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const tr=document.createElement("tr");if(r.time===$("hourSelect").value)tr.className="selected";const vals=[r.time,...assignmentValues(r)];vals.forEach((v,i)=>{const td=document.createElement("td");if(i===0){const b=document.createElement("button");b.textContent=v;b.onclick=()=>{$("hourSelect").value=r.time;renderBoard()};td.appendChild(b)}else td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
+function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){const colors=["green","blue","orange","purple","pink"];const card=document.createElement("article");card.className="assignment-card "+(color||colors[index%colors.length]);card.innerHTML=`<div class="assignment-head"><span>${index+1}</span><div><b>${title}</b><small>${subtitle}</small></div></div><div class="assignment-visual"><span class="person-icon" aria-hidden="true"></span></div><div class="assignment-name"></div>`;card.querySelector(".assignment-name").textContent=name||"—";return card}function renderSchedule(){const host=$("hourlySchedule");if(!host)return;const day=$("daySelect").value,rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));if(!rows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}const heads=["TIME","SURF COACH · ZONE 1","SURF COACH · ZONE 5","CONTROL TOWER","BOARD ROOM A","BOARD ROOM B"];const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";const body=document.createElement("tbody");rows.forEach(r=>{const tr=document.createElement("tr");if(r.time===$("hourSelect").value)tr.className="selected";const vals=[shortHour(r.time),...assignmentValues(r)];vals.forEach((v,i)=>{const td=document.createElement("td");if(i===0){const b=document.createElement("button");b.textContent=v;b.onclick=()=>{$("hourSelect").value=r.time;renderBoard()};td.appendChild(b)}else td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});table.appendChild(body);host.appendChild(table)}
 function coverageRowsFor(day,time){
  const start=hourStart(time);
  const matching=(allRows||[]).filter(r=>normalize(r.day)===normalize(day)&&hourStart(r.time)===start);
@@ -509,51 +611,41 @@ function coverageRowsFor(day,time){
 function cardAssignments(row,day,time){
  const start=hourStart(time),special=[11,13].includes(start);
  const defs=[
-  {title:"SURF COACH",subtitle:"Zone 1",keys:["Pool Pusher (Zone 1)","Pool Zone 1","Zone 1","Pool Pusher"],color:"blue"},
-  {title:"SURF COACH",subtitle:"Zone 2",keys:["Pool Zone 2","Zone 2","Pool 2"],color:"blue"},
-  {title:"SURF COACH",subtitle:"Zone 3",keys:["Pool Zone 3","Zone 3","Pool 3"],color:"blue"},
-  {title:"SURF COACH",subtitle:"Zone 4",keys:["Pool Zone 4","Zone 4","Pool 4"],color:"blue"},
-  {title:"SURF COACH",subtitle:"Zone 5",keys:["Pool Catcher (Zone 5)","Pool Zone 5","Zone 5","Pool Catcher"],color:"blue"},
-  {title:"CONTROL TOWER",subtitle:"Tower A",keys:["Tower A","Control Tower A","Control Tower","Tower"],color:"orange"},
-  {title:"CONTROL TOWER",subtitle:"Tower B",keys:["Tower B","Control Tower B"],color:"orange"},
-  {title:"BOARD ROOM A",subtitle:"",keys:["Board Room A","Board Room A Staff"],color:"green"},
-  {title:"BOARD ROOM B",subtitle:"",keys:["Board Room B","Board Room B Staff"],color:"green"},
-  {title:"BOARD ROOM C",subtitle:"",keys:["Board Room C","Board Room C Staff"],color:"green"}
+  {title:"SURF COACH",subtitle:"Zone 1",color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 2",color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 3",color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 4",color:"blue"},
+  {title:"SURF COACH",subtitle:"Zone 5",color:"blue"},
+  {title:"CONTROL TOWER",subtitle:"Tower A",color:"orange"},
+  {title:"CONTROL TOWER",subtitle:"Tower B",color:"orange"},
+  {title:"BOARD ROOM A",subtitle:"",color:"green"},
+  {title:"BOARD ROOM B",subtitle:"",color:"green"},
+  {title:"BOARD ROOM C",subtitle:"",color:"green"}
  ];
  if(special){
-  const rows=coverageRowsFor(day,time);
-  // If a dedicated pool-party/coverage sheet provides explicit position columns,
-  // use those assignments. Otherwise map the two duplicate source rows:
-  // first row -> five pool positions; second row -> two tower + three board-room positions.
-  const coverageSheets=Object.keys(sheetMap).filter(n=>/pool party coverage|daily coverage|positions|glide setup/i.test(n));
-  const dedicated=coverageSheets.flatMap(n=>parseSheet(n)).filter(r=>{
-   const d=field(r,["Day","Weekday","Day Name"]),t=field(r,["Hour","Time","Time Slot","Rotation"]);
-   return (!d||normalize(d)===normalize(day))&&(!t||hourStart(t)===start);
+  // The dedicated tab groups staff by area. Names are mapped in listed order to the five pool zones.
+  const coverage=parseSheet("Pool Party Coverage").find(r=>{
+   const d=field(r,["Day","Weekday","Day Name"]);
+   const t=field(r,["Pool Party Hour","Hour","Time","Time Slot"]);
+   return normalize(d)===normalize(day)&&hourStart(t)===start;
   });
-  const explicit=defs.map(d=>{
-   let value="";
-   for(const r of dedicated){value=field(r,d.keys);if(value)break}
-   return value;
-  });
-  if(explicit.some(Boolean))return defs.map((d,i)=>({...d,name:splitNames(explicit[i]).join(", ")||"—",number:i+1}));
-  const staffByRow=rows.map(r=>[
-   r.positions?.["Pool Pusher (Zone 1)"],r.positions?.["Pool Catcher (Zone 5)"],
-   r.positions?.["Control Tower"],r.positions?.["Board Room A"],r.positions?.["Board Room B"]
-  ].map(v=>splitNames(v)[0]||""));
-  const pool=staffByRow[0]||[];
-  const support=staffByRow[1]||[];
-  const values=[...pool.slice(0,5),...support.slice(0,5)];
-  return defs.map((d,i)=>({...d,name:values[i]||"—",number:i+1}));
+  if(coverage){
+   const pool=splitNames(field(coverage,["Pool (5)","Pool","Pool Staff"]));
+   const tower=splitNames(field(coverage,["Tower (2)","Tower","Tower Staff"]));
+   const board=splitNames(field(coverage,["Board Room (3)","Board Room","Board Room Staff"]));
+   const values=[pool[0],pool[1],pool[2],pool[3],pool[4],tower[0],tower[1],board[0],board[1],board[2]];
+   return defs.map((d,i)=>({...d,name:values[i]||"—",number:i+1}));
+  }
+  return defs.map((d,i)=>({...d,name:"—",number:i+1}));
  }
- const base=row?.positions||{};
- return defs.filter((d,i)=>[0,4,5,7,8].includes(i)).map((d,i)=>{
-  let val="";
-  if(d.subtitle==="Zone 1")val=base["Pool Pusher (Zone 1)"];
-  else if(d.subtitle==="Zone 5")val=base["Pool Catcher (Zone 5)"];
-  else if(d.subtitle==="Tower A")val=base["Control Tower"];
-  else if(d.subtitle==="")val=d.title==="BOARD ROOM A"?base["Board Room A"]:base["Board Room B"];
-  return {...d,name:splitNames(val).join(", ")||"—",number:i+1};
- });
+ const p=row?.positions||{};
+ return [
+  {...defs[0],name:splitNames(p["Pool Pusher (Zone 1)"]).join(", ")||"—",number:1},
+  {...defs[4],name:splitNames(p["Pool Catcher (Zone 5)"]).join(", ")||"—",number:2},
+  {...defs[5],name:splitNames(p["Control Tower"]).join(", ")||"—",number:3},
+  {...defs[7],name:splitNames(p["Board Room A"]).join(", ")||"—",number:4},
+  {...defs[8],name:splitNames(p["Board Room B"]).join(", ")||"—",number:5}
+ ];
 }
 function renderVisualCards(){
  const day=$("daySelect").value,time=$("hourSelect").value,row=findRow(day,time),p=row?.positions||{};
@@ -575,56 +667,52 @@ function renderDailyCrew(){
  const day=$("daySelect")?.value||currentDay();
  $("dailyCrewDay").textContent=day;
  const buckets={am:[],pm:[],off:[]};
- const canon=n=>employees.find(e=>normalize(e)===normalize(n))||null;
- const add=(bucket,value)=>splitNames(value).forEach(raw=>{const n=canon(raw);if(n&&!buckets[bucket].some(x=>normalize(x)===normalize(n)))buckets[bucket].push(n)});
- const staffingSheets=Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|weekly schedule|schedule summary/i.test(n));
- // Prefer explicit AM/PM crew columns. These are the authoritative team assignments;
- // hourly position/rotation cells must not be counted as crew membership.
+ const namesSet=new Set(employees.map(normalize));
+ const staffingSheets=Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|weekly schedule/i.test(n));
+ // Primary source: rows in Daily Staffing for the selected day and AM/PM shift.
  staffingSheets.forEach(sheetName=>{
   parseSheet(sheetName).forEach(row=>{
    const rowDay=field(row,["Day","Weekday","Day Name"]);
-   if(rowDay&&normalize(rowDay)!==normalize(day))return;
+   if(!rowDay||normalize(rowDay)!==normalize(day))return;
+   const shift=normalize(field(row,["Shift","Shift Type","Crew","Team"]));
+   if(!/^(am|pm|am crew|pm crew|morning|afternoon)$/.test(shift))return;
+   const found=[];
    Object.entries(row).forEach(([key,value])=>{
-    const nk=normalize(key);
-    if(/am crew|morning crew|am team|morning team/.test(nk))add("am",value);
-    else if(/pm crew|afternoon crew|pm team|afternoon team/.test(nk))add("pm",value);
-    else if(/day off|off today|days off|off duty/.test(nk))add("off",value);
+    if(/day|weekday|shift|start|end|time|date|break|lunch|crew type|team|status/i.test(normalize(key)))return;
+    splitNames(value).forEach(n=>{if(namesSet.has(normalize(n)))found.push(employees.find(e=>normalize(e)===normalize(n))||n)});
    });
+   if(shift.startsWith("am")||shift==="morning")buckets.am.push(...found);
+   else buckets.pm.push(...found);
   });
  });
- // If no explicit crew columns exist, read the shift row but only from staff-list
- // columns, never from position/rotation assignment columns.
+ // Fallback to explicit AM Crew / PM Crew columns if staffing rows use a different shape.
  if(!buckets.am.length&&!buckets.pm.length){
-  staffingSheets.forEach(sheetName=>{
+  Object.keys(sheetMap).filter(n=>/daily staffing|daily coverage|schedule summary|weekly schedule/i.test(n)).forEach(sheetName=>{
    parseSheet(sheetName).forEach(row=>{
     const rowDay=field(row,["Day","Weekday","Day Name"]);
-    if(!rowDay||normalize(rowDay)!==normalize(day))return;
-    const shift=normalize(field(row,["Shift","Shift Type","Crew","Team"]));
-    if(!/^(am|pm|am crew|pm crew|morning|afternoon)$/.test(shift))return;
-    const bucket=(shift.startsWith("am")||shift==="morning")?"am":"pm";
+    if(rowDay&&normalize(rowDay)!==normalize(day))return;
     Object.entries(row).forEach(([key,value])=>{
-     const nk=normalize(key);
-     if(/day|weekday|shift|start|end|time|date|break|lunch|status|position|zone|tower|board room|pusher|catcher|rotation|hour/i.test(nk))return;
-     if(/staff|employee|member|person|name|crew list|team list/i.test(nk))add(bucket,value);
+     const nk=normalize(key),found=crewNamesFromValue(value);
+     if(/am crew|morning crew|am team|morning team/.test(nk))buckets.am.push(...found);
+     else if(/pm crew|afternoon crew|pm team|afternoon team/.test(nk))buckets.pm.push(...found);
+     else if(/day off|off today|days off|off duty/.test(nk))buckets.off.push(...found);
     });
    });
   });
  }
- // A crew is exactly five people. Prevent duplicate names and never overlap AM/PM.
- buckets.am=buckets.am.slice(0,5);
- buckets.pm=buckets.pm.filter(n=>!buckets.am.some(a=>normalize(a)===normalize(n))).slice(0,5);
- // If explicit Day Off data is absent, calculate it from the selected day's crews.
- if(!buckets.off.length)buckets.off=employees.filter(n=>!buckets.am.some(a=>normalize(a)===normalize(n))&&!buckets.pm.some(p=>normalize(p)===normalize(n)));
- else buckets.off=buckets.off.filter(n=>!buckets.am.some(a=>normalize(a)===normalize(n))&&!buckets.pm.some(p=>normalize(p)===normalize(n)));
+ buckets.am=[...new Set(buckets.am)];
+ buckets.pm=[...new Set(buckets.pm)].filter(n=>!buckets.am.includes(n));
+ if(!buckets.off.length)buckets.off=employees.filter(n=>!buckets.am.includes(n)&&!buckets.pm.includes(n));
  renderCrewNames("dailyAmCrew",buckets.am);
  renderCrewNames("dailyPmCrew",buckets.pm);
  renderCrewNames("dailyDayOff",buckets.off);
 }
+
 function renderAll(){renderPills();renderDayButtons();renderHourButtons();renderDailyCrew();renderBoard();renderVisualCards();populateEmployees();renderWeek();renderTeam()}
 function switchTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));$("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");if(tab==="week")renderWeek();if(tab==="team")renderTeam()}
-async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
+async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;renderScheduleWeek();allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
 function tick(){const p=parts();$("liveClock").textContent=timeText();$("dateLabel").textContent=`${p.weekday} · ${p.month} ${p.day} · Cabo time`;const open=currentHour()>=7&&currentHour()<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed"}
-$("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()});$("hourSelect").addEventListener("change",renderAll);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderAll()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);$("teamSearch").addEventListener("input",renderTeam);$("teamDay").addEventListener("change",renderTeam);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
+$("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()});$("hourSelect").addEventListener("change",renderAll);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderAll()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
 </script>
 </body>
 </html>
