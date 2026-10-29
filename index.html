@@ -831,7 +831,9 @@ function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){co
  host.innerHTML="";
  const day=$("daySelect").value,rows=allRows.filter(r=>normalize(r.day)===normalize(day)).sort((a,b)=>hourStart(a.time)-hourStart(b.time));
  if(!rows.length){host.innerHTML='<div class="empty-state">No hourly rotation rows found for this day.</div>';return}
- const heads=["TIME","SURF COACH · ZONE 1","SURF COACH · ZONE 2","SURF COACH · ZONE 3","SURF COACH · ZONE 4","SURF COACH · ZONE 5","CONTROL TOWER A","CONTROL TOWER B","BOARD ROOM A","BOARD ROOM B","BOARD ROOM C"];
+ const heads=["TIME","SURF COACH · ZONE 1","SURF COACH · ZONE 5","CONTROL TOWER A","BOARD ROOM A","BOARD ROOM B","SURF COACH · ZONE 2","SURF COACH · ZONE 3","SURF COACH · ZONE 4","CONTROL TOWER B","BOARD ROOM C"];
+ // Keep source data in its canonical slot order, then render columns in the requested visual order.
+ const displayOrder=[0,4,5,7,8,1,2,3,6,9];
  const table=document.createElement("table");table.innerHTML="<thead><tr>"+heads.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr></thead>";
  const body=document.createElement("tbody");
  rows.forEach(r=>{
@@ -863,7 +865,7 @@ function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){co
    vals[7]=splitNames(p["Board Room A"]).join(", ");
    vals[8]=splitNames(p["Board Room B"]).join(", ");
   }
-  vals.forEach(v=>{const td=document.createElement("td");td.textContent=v||"";tr.appendChild(td)});
+  displayOrder.forEach(i=>{const td=document.createElement("td");td.textContent=vals[i]||"";tr.appendChild(td)});
   body.appendChild(tr);
  });
  table.appendChild(body);host.appendChild(table);
