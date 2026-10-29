@@ -351,7 +351,7 @@ header .brand{margin-bottom:8px}
 
 
 /* User-requested Whole Team refinements */
-.shift-off{display:inline;color:#78949a;background:transparent;border:0;min-width:0;padding:0;border-radius:0;font-size:.68rem;font-weight:600;text-transform:lowercase}
+.team-grid .shift-off{display:inline!important;color:#78949a!important;background:transparent!important;border:0!important;box-shadow:none!important;min-width:0;padding:0;border-radius:0;font-size:.68rem;font-weight:600;text-transform:lowercase}
 .team-grid{width:100%;min-width:0;table-layout:fixed}
 .team-grid th,.team-grid td{padding:6px 3px}
 .team-grid th:first-child,.team-grid td:first-child{width:27%;padding-left:7px;padding-right:4px}
@@ -363,7 +363,7 @@ header .brand{margin-bottom:8px}
  .team-grid th:last-child,.team-grid td:last-child{width:9%}
  .team-grid .team-name-btn{font-size:10px;letter-spacing:-.03em;white-space:normal;overflow-wrap:anywhere}
  .shift-badge{min-width:0;padding:4px 2px;font-size:10px}
- .shift-off{font-size:9px;padding:0}
+ .team-grid .shift-off{font-size:9px;padding:0}
  .table-wrap{overflow-x:auto}
  .schedule-week{gap:6px}
  .schedule-week .week-status{margin-left:0}
@@ -472,7 +472,7 @@ header .brand{margin-bottom:8px}
 const DATABASE_URL="https://cabo-real-surf-club-default-rtdb.firebaseio.com";
 const DATA_PATH="/surfOps.json",REFRESH_MS=30000,CABO_TZ="America/Mazatlan";
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-const STAFF_NAMES=["Ana","Bost","Chino","Diana","Felix","Fernando","Green","Kody","Linden","Makeni","Marley","Pomo","Tlaca","Toni","Wikin","Lucho"];
+const STAFF_NAMES=["Kody","Ana","Chino","Tlaca","Diana","Felix","Fernando","Linden","Lucho","Makeni","Marley","Pollo","Pomo","Toni","Wikin"];
 let rootData=null,sheetMap={},employees=[...STAFF_NAMES],selectedEmployee="",allRows=[];
 const $=id=>document.getElementById(id),normalize=s=>String(s??"").trim().toLowerCase().replace(/\s+/g," ");
 function asArray(v){if(Array.isArray(v))return v;if(v&&typeof v==="object")return Object.keys(v).sort((a,b)=>Number(a)-Number(b)).map(k=>v[k]);return []}
@@ -492,7 +492,7 @@ function parseScheduleDate(value){
  const d=new Date(s);return Number.isNaN(d.getTime())?null:new Date(d.getFullYear(),d.getMonth(),d.getDate())
 }
 function validScheduleDate(y,m,d){const date=new Date(y,m-1,d);return date.getFullYear()===y&&date.getMonth()===m-1&&date.getDate()===d?date:null}
-function renderScheduleWeek(){const start=parseScheduleDate(scheduleInfoValue("Week Start Date")),end=parseScheduleDate(scheduleInfoValue("Week End Date")),status=scheduleInfoValue("Schedule Status")||"CURRENT WEEK";const label=$("scheduleWeekLabel"),statusEl=$("scheduleWeekStatus");if(!label||!statusEl)return;if(start&&end&&end>=start){const fmt=(d,{month="long",day="numeric",year="numeric"}={})=>new Intl.DateTimeFormat("en-US",{month,day,year,timeZone:"UTC"}).format(new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())));label.textContent=start.getFullYear()===end.getFullYear()?(start.getMonth()===end.getMonth()?`${fmt(start,{month:"long",day:"numeric",year:"numeric"}).replace(", "+start.getFullYear(),"")} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"}).replace(", "+end.getFullYear(),"")}, ${end.getFullYear()}`:`${fmt(start,{month:"long",day:"numeric",year:"numeric"})} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"})}`):`${fmt(start)} – ${fmt(end)}`;statusEl.textContent=status}else{label.textContent="Dates not set — update the Schedule Info tab";statusEl.textContent="Date needed"}}
+function renderScheduleWeek(){let start=parseScheduleDate(scheduleInfoValue("Week Start Date")),end=parseScheduleDate(scheduleInfoValue("Week End Date"));let status=scheduleInfoValue("Schedule Status")||"SCHEDULE WEEK";const label=$("scheduleWeekLabel"),statusEl=$("scheduleWeekStatus");if(!label||!statusEl)return;if(!(start&&end&&end>=start)){const parts=Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]));const today=new Date(Date.UTC(+parts.year,+parts.month-1,+parts.day));const day=today.getUTCDay();start=new Date(today);start.setUTCDate(today.getUTCDate()-(day===0?6:day-1));end=new Date(start);end.setUTCDate(start.getUTCDate()+6);status="CURRENT WEEK · AUTO";}const fmt=(d,{month="long",day="numeric",year="numeric"}={})=>new Intl.DateTimeFormat("en-US",{month,day,year,timeZone:"UTC"}).format(new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())));label.textContent=start.getFullYear()===end.getFullYear()?(start.getMonth()===end.getMonth()?`${fmt(start,{month:"long",day:"numeric",year:"numeric"}).replace(", "+start.getFullYear(),"")} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"}).replace(", "+end.getFullYear(),"")}, ${end.getFullYear()}`:`${fmt(start)} – ${fmt(end)}`):`${fmt(start)} – ${fmt(end)}`;statusEl.textContent=status}
 function field(o,alts){const keys=Object.keys(o||{});for(const a of alts){const k=keys.find(x=>normalize(x)===normalize(a));if(k&&String(o[k]??"").trim())return o[k]}for(const a of alts){const k=keys.find(x=>normalize(x).includes(normalize(a)));if(k&&String(o[k]??"").trim())return o[k]}return ""}
 function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>x.trim()).filter(x=>x&&!/^(n\/a|na|none|off|vacant|tbd|—|-)$/i.test(x))}
 function rowToAssignment(r,source){const day=String(field(r,["Day","Weekday"])||"").trim(),time=String(field(r,["Hour","Time","Time Slot","Rotation"])||"").trim();const defs=[["Pool Pusher (Zone 1)",["Pool Pusher (Zone 1)","Pool Pusher","Pusher","Zone 1"]],["Pool Catcher (Zone 5)",["Pool Catcher (Zone 5)","Pool Catcher","Catcher","Zone 5"]],["Control Tower",["Control Tower","Tower"]],["Board Room A",["Board Room A","Board Room A Staff"]],["Board Room B",["Board Room B","Board Room B Staff"]]];const positions={};defs.forEach(([label,alts])=>positions[label]=String(field(r,alts)||"").trim());return {day,time,positions,source,raw:r}}
@@ -521,7 +521,7 @@ function getAllAssignments(){
 function parseEmployees(){
  const rows=parseSheet("Employees");
  const names=rows.map(r=>String(field(r,["Name","Employee","Staff Name"])||"").trim()).filter(Boolean);
- return names.length?[...new Set(names)]:[...STAFF_NAMES];
+ const valid=names.filter(n=>! /^(employee|green|bost)$/i.test(n.trim()));return valid.length?[...new Set(valid)]:[...STAFF_NAMES];
 }function parts(){return Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,weekday:"long",hour:"2-digit",minute:"2-digit",hour12:false,month:"short",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]))}
 function currentDay(){return parts().weekday}function currentHour(){return Number(parts().hour)}
 function timeText(){return new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,hour:"2-digit",minute:"2-digit",hour12:true}).format(new Date())}
@@ -546,7 +546,7 @@ function weeklyRows(){return parseSheet("Weekly Schedule").map(r=>({
  start:String(field(r,["Start","Start Time"])||"").trim(),
  end:String(field(r,["End","End Time"])||"").trim(),
  notes:String(field(r,["Notes","Note"])||"").trim()
-})).filter(r=>r.employee&&r.day&&r.shift)}
+})).filter(r=>r.employee&&r.day&&r.shift&&!/^(off|day off|days off)$/i.test(r.shift))}
 function renderWeek(){
  const name=$("weekEmployee").value,day=$("weekDay").value;
  const all=weeklyRows().filter(r=>normalize(r.employee)===normalize(name));
@@ -565,7 +565,7 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 let highlightedTeamEmployee="";
 function renderTeam(){
  const raw=weeklyRows();
- const employeeSet=new Set([...STAFF_NAMES,...raw.map(r=>r.employee)].filter(Boolean));
+ const employeeSet=new Set([...STAFF_NAMES,...raw.map(r=>r.employee)].filter(n=>n&&!/^(employee|green|bost)$/i.test(String(n).trim())));
  const ordered=[...employeeSet].sort((a,b)=>{
    if(normalize(a)==="kody")return -1;
    if(normalize(b)==="kody")return 1;
@@ -743,7 +743,7 @@ function renderDailyCrew(){
 
 function renderAll(){renderPills();renderDayButtons();renderHourButtons();renderDailyCrew();renderBoard();renderVisualCards();populateEmployees();renderWeek();renderTeam()}
 function switchTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));$("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");if(tab==="week")renderWeek();if(tab==="team")renderTeam()}
-async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;renderScheduleWeek();allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
+async function fetchData(){try{const res=await fetch(DATABASE_URL+DATA_PATH,{cache:"no-store"});if(!res.ok)throw Error("Firebase request failed ("+res.status+").");const data=await res.json();if(!data?.sheets)throw Error("No /surfOps/sheets data found.");rootData=data;sheetMap=data.sheets;renderScheduleWeek();allRows=getAllAssignments();employees=parseEmployees();const day=currentDay();$("daySelect").value=DAYS.includes(day)?day:"Monday";populateTimes(false);renderAll();connected(true,"Live connected · roster refreshed");$("updatedLabel").textContent="Updated "+timeText()+" Cabo time"}catch(e){console.error(e);connected(false,"Unable to connect to roster · check Firebase access");$("operatingStatus").textContent="Roster connection needs setup";$("statusDetail").textContent=e.message+" Check the Firebase URL and database read permissions.";if(!rootData)$("employeePills").innerHTML='<div class="empty-state">Could not load the roster. Confirm Firebase access and the database URL.</div>'}}
 function tick(){const p=parts();$("liveClock").textContent=timeText();$("dateLabel").textContent=`${p.weekday} · ${p.month} ${p.day} · Cabo time`;const open=currentHour()>=7&&currentHour()<19;$("operatingStatus").textContent=open?"Club operating hours":"Club currently closed"}
 $("daySelect").addEventListener("change",()=>{populateTimes(false);renderAll()});$("hourSelect").addEventListener("change",renderAll);$("nowButton").addEventListener("click",()=>{$("daySelect").value=currentDay();populateTimes(false);const m=[...$("hourSelect").options].find(o=>hourStart(o.value)===currentHour());if(m)$("hourSelect").value=m.value;renderAll()});$("weekEmployee").addEventListener("change",renderWeek);$("weekDay").addEventListener("change",renderWeek);document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));tick();setInterval(tick,15000);fetchData();setInterval(fetchData,REFRESH_MS);
 </script>
