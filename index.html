@@ -90,6 +90,8 @@ main{max-width:1180px;padding:10px 16px 26px}
 .pills{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 10px}
 .pills .pill{font-size:.74rem;padding:7px 10px;border:1px solid #284a54;background:#102b30;color:#e4f2f4}
 .pills .pill.selected{background:var(--yellow);border-color:var(--yellow);color:#24353b}
+.name-match-highlight{background:var(--yellow)!important;color:#24353b!important;border-color:var(--yellow)!important;border-radius:6px;box-shadow:0 0 0 2px #ffd84f55;font-weight:950!important}
+#hourlySchedule td.name-match-highlight{border-radius:0;box-shadow:inset 0 0 0 2px #b99600}
 .day-buttons{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:8px 0 6px}
 .day-btn,.hour-btn{border:1px solid #284a54;background:#0e2930;color:#d6e7eb;border-radius:8px;padding:9px 2px;font-weight:800;font-size:.75rem;min-width:0}
 .day-btn.active,.hour-btn.active{background:var(--cyan);color:#062b32;border-color:var(--cyan)}
@@ -966,11 +968,37 @@ function renderDailyCrew(){
  renderCrewNames("dailyDayOff",buckets.off);
 }
 
+function applyNameHighlights(){
+ // The top employee pill is a page-wide highlight filter. Highlight every
+ // rendered occurrence of that staff member, regardless of which section it is in.
+ document.querySelectorAll(".name-match-highlight").forEach(el=>el.classList.remove("name-match-highlight"));
+ if(!selectedEmployee)return;
+ const target=normalize(selectedEmployee);
+ const selectors=[
+  ".assignment-name", ".staff-tag", ".crew-name", ".map-live",
+  "#hourlySchedule td:not(:first-child)", "#weekSummary", ".team-name-btn",
+  ".team-grid td:not(:first-child)"
+ ];
+ document.querySelectorAll(selectors.join(",")).forEach(el=>{
+  const text=String(el.textContent||"").trim();
+  if(!text||text==="—")return;
+  const names=splitNames(text);
+  // Exact match or a comma/list-separated assignment containing this employee.
+  if(normalize(text)===target||names.some(n=>normalize(n)===target))el.classList.add("name-match-highlight");
+ });
+ // Highlight the matching employee row in Whole Team as well, without changing
+ // that section's own row-selection behavior.
+ document.querySelectorAll(".team-grid tbody tr").forEach(tr=>{
+  const first=tr.querySelector("td:first-child");
+  if(first&&normalize(first.textContent)===target)first.classList.add("name-match-highlight");
+ });
+}
 function renderAll(){
  // Render the schedule first so an unrelated dashboard widget cannot hide it.
  try{renderSchedule()}catch(e){console.error("Hourly schedule render failed:",e);const host=$("hourlySchedule");if(host)host.innerHTML='<div class="empty-state">The roster loaded, but the hourly schedule could not be displayed: '+esc(e.message||String(e))+'</div>'}
  const tasks=[renderPills,renderDayButtons,renderHourButtons,renderDailyCrew,renderBoard,renderVisualCards,populateEmployees,renderWeek,renderTeam];
- tasks.forEach(fn=>{try{fn()}catch(e){console.error("Dashboard section failed:",fn.name,e)}})
+ tasks.forEach(fn=>{try{fn()}catch(e){console.error("Dashboard section failed:",fn.name,e)}});
+ applyNameHighlights();
 }
 function switchTab(tab){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));$("liveView").classList.toggle("hidden",tab!=="live");$("weekView").classList.toggle("hidden",tab!=="week");$("teamView").classList.toggle("hidden",tab!=="team");if(tab==="week")renderWeek();if(tab==="team")renderTeam()}
 async function fetchData(){
