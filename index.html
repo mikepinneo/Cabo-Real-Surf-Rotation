@@ -560,11 +560,22 @@ function rowToAssignment(r,source){
  };
  return {day,time,positions,source,raw:r};
 }
+function isEmployeeOff(day,name){
+ const key=normalize(name);
+ if(!key)return false;
+ const rows=weeklyScheduleRows().filter(r=>normalize(r.day)===normalize(day)&&normalize(r.employee)===key);
+ return rows.some(r=>/^(off|day off|days off)$/.test(normalize(r.shift)));
+}
+function scheduledNames(day,value){
+ return splitNames(value).filter(name=>!isEmployeeOff(day,name));
+}
 function getAllAssignments(){
  const raw=Object.keys(sheetMap)
   .filter(n=>["am hourly rotation","pm hourly rotation"].includes(normalize(n)))
   .flatMap(n=>parseSheet(n).map(r=>rowToAssignment(r,normalize(n).startsWith("am")?"AM":"PM")))
   .filter(r=>r.day&&r.time);
+ // Enforce the Weekly Schedule day-off status before any liveboard view uses assignments.
+ raw.forEach(r=>Object.keys(r.positions||{}).forEach(k=>{r.positions[k]=scheduledNames(r.day,r.positions[k]).join(", ")}));
  // AM and PM source sheets can both contain a row for an overlap hour.
  // Keep one selectable row per day/hour and retain all source rows for party coverage.
  const grouped=new Map();
@@ -796,9 +807,9 @@ function makeAssignmentCard(index,title,subtitle,name,small=false,color=null){co
   if(partyHour){
    const coverage=parseSheet("Pool Party Coverage").find(x=>normalize(field(x,["Day","Weekday","Day Name"]))===normalize(day)&&hourStart(field(x,["Pool Party Hour","Hour","Time","Time Slot"]))===start);
    if(coverage){
-    const pool=splitNames(field(coverage,["Pool (5)","Pool","Pool Staff"]));
-    const tower=splitNames(field(coverage,["Tower (2)","Tower","Tower Staff"]));
-    const board=splitNames(field(coverage,["Board Room (3)","Board Room","Board Room Staff"]));
+    const pool=scheduledNames(day,field(coverage,["Pool (5)","Pool","Pool Staff"]));
+    const tower=scheduledNames(day,field(coverage,["Tower (2)","Tower","Tower Staff"]));
+    const board=scheduledNames(day,field(coverage,["Board Room (3)","Board Room","Board Room Staff"]));
     [pool[0],pool[1],pool[2],pool[3],pool[4],tower[0],tower[1],board[0],board[1],board[2]].forEach((n,i)=>vals[i]=n||"");
    } else {
     // Fallback: show the five assignments from each source sheet across the ten positions.
@@ -848,9 +859,9 @@ function cardAssignments(row,day,time){
    return normalize(d)===normalize(day)&&hourStart(t)===start;
   });
   if(coverage){
-   const pool=splitNames(field(coverage,["Pool (5)","Pool","Pool Staff"]));
-   const tower=splitNames(field(coverage,["Tower (2)","Tower","Tower Staff"]));
-   const board=splitNames(field(coverage,["Board Room (3)","Board Room","Board Room Staff"]));
+   const pool=scheduledNames(day,field(coverage,["Pool (5)","Pool","Pool Staff"]));
+   const tower=scheduledNames(day,field(coverage,["Tower (2)","Tower","Tower Staff"]));
+   const board=scheduledNames(day,field(coverage,["Board Room (3)","Board Room","Board Room Staff"]));
    const values=[pool[0],pool[1],pool[2],pool[3],pool[4],tower[0],tower[1],board[0],board[1],board[2]];
    return defs.map((d,i)=>({...d,name:values[i]||"—",number:i+1}));
   }
