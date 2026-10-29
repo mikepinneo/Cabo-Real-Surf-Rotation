@@ -349,6 +349,26 @@ header .brand{margin-bottom:8px}
  .full-schedule-panel .schedule-table table{min-width:540px}
 }
 
+
+/* User-requested Whole Team refinements */
+.shift-off{display:inline;color:#78949a;background:transparent;border:0;min-width:0;padding:0;border-radius:0;font-size:.68rem;font-weight:600;text-transform:lowercase}
+.team-grid{width:100%;min-width:0;table-layout:fixed}
+.team-grid th,.team-grid td{padding:6px 3px}
+.team-grid th:first-child,.team-grid td:first-child{width:27%;padding-left:7px;padding-right:4px}
+.team-grid th:last-child,.team-grid td:last-child{width:9%}
+@media(max-width:620px){
+ .team-grid{min-width:0;width:100%;table-layout:fixed}
+ .team-grid th,.team-grid td{padding:5px 1px;font-size:10px;letter-spacing:-.02em}
+ .team-grid th:first-child,.team-grid td:first-child{width:27%;padding-left:5px;padding-right:2px}
+ .team-grid th:last-child,.team-grid td:last-child{width:9%}
+ .team-grid .team-name-btn{font-size:10px;letter-spacing:-.03em;white-space:normal;overflow-wrap:anywhere}
+ .shift-badge{min-width:0;padding:4px 2px;font-size:10px}
+ .shift-off{font-size:9px;padding:0}
+ .table-wrap{overflow-x:auto}
+ .schedule-week{gap:6px}
+ .schedule-week .week-status{margin-left:0}
+}
+
 </style>
 </head>
 <body>
@@ -458,7 +478,20 @@ const $=id=>document.getElementById(id),normalize=s=>String(s??"").trim().toLowe
 function asArray(v){if(Array.isArray(v))return v;if(v&&typeof v==="object")return Object.keys(v).sort((a,b)=>Number(a)-Number(b)).map(k=>v[k]);return []}
 function parseSheet(name){const s=sheetMap[name];if(!s)return [];const headers=asArray(s.headers).map(v=>String(v??"").trim());let rows=asArray(s.values);if(!rows.length)rows=asArray(s.rows);return rows.map(r=>{if(r&&!Array.isArray(r)&&typeof r==="object")return r;const o={};headers.forEach((h,i)=>o[h]=asArray(r)[i]??"");return o}).filter(o=>Object.values(o).some(v=>String(v??"").trim()!==""))}
 function scheduleInfoValue(key){const row=parseSheet("Schedule Info").find(r=>normalize(field(r,["Setting","Field","Item"]))===normalize(key));return row?field(row,["Value"]):""}
-function parseScheduleDate(value){if(value instanceof Date&&!Number.isNaN(value.getTime()))return new Date(value.getFullYear(),value.getMonth(),value.getDate());const s=String(value??"").trim();if(!s)return null;let m=s.match(/^(\\d{4})-(\\d{1,2})-(\\d{1,2})/);if(m)return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));m=s.match(/^(\\d{1,2})[\\/.-](\\d{1,2})[\\/.-](\\d{4})$/);if(m)return new Date(Number(m[3]),Number(m[1])-1,Number(m[2]));const d=new Date(s);return Number.isNaN(d.getTime())?null:new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function parseScheduleDate(value){
+ if(value instanceof Date&&!Number.isNaN(value.getTime()))return new Date(value.getFullYear(),value.getMonth(),value.getDate());
+ if(typeof value==="number"&&Number.isFinite(value)){
+  if(value>20000&&value<100000){const d=new Date(Date.UTC(1899,11,30)+value*86400000);return new Date(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())}
+  return null;
+ }
+ const s=String(value??"").trim();if(!s)return null;
+ let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:$|T|\s)/);
+ if(m)return validScheduleDate(Number(m[1]),Number(m[2]),Number(m[3]));
+ m=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+ if(m)return validScheduleDate(Number(m[3]),Number(m[1]),Number(m[2]));
+ const d=new Date(s);return Number.isNaN(d.getTime())?null:new Date(d.getFullYear(),d.getMonth(),d.getDate())
+}
+function validScheduleDate(y,m,d){const date=new Date(y,m-1,d);return date.getFullYear()===y&&date.getMonth()===m-1&&date.getDate()===d?date:null}
 function renderScheduleWeek(){const start=parseScheduleDate(scheduleInfoValue("Week Start Date")),end=parseScheduleDate(scheduleInfoValue("Week End Date")),status=scheduleInfoValue("Schedule Status")||"CURRENT WEEK";const label=$("scheduleWeekLabel"),statusEl=$("scheduleWeekStatus");if(!label||!statusEl)return;if(start&&end&&end>=start){const fmt=(d,{month="long",day="numeric",year="numeric"}={})=>new Intl.DateTimeFormat("en-US",{month,day,year,timeZone:"UTC"}).format(new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())));label.textContent=start.getFullYear()===end.getFullYear()?(start.getMonth()===end.getMonth()?`${fmt(start,{month:"long",day:"numeric",year:"numeric"}).replace(", "+start.getFullYear(),"")} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"}).replace(", "+end.getFullYear(),"")}, ${end.getFullYear()}`:`${fmt(start,{month:"long",day:"numeric",year:"numeric"})} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"})}`):`${fmt(start)} – ${fmt(end)}`;statusEl.textContent=status}else{label.textContent="Dates not set — update the Schedule Info tab";statusEl.textContent="Date needed"}}
 function field(o,alts){const keys=Object.keys(o||{});for(const a of alts){const k=keys.find(x=>normalize(x)===normalize(a));if(k&&String(o[k]??"").trim())return o[k]}for(const a of alts){const k=keys.find(x=>normalize(x).includes(normalize(a)));if(k&&String(o[k]??"").trim())return o[k]}return ""}
 function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>x.trim()).filter(x=>x&&!/^(n\/a|na|none|off|vacant|tbd|—|-)$/i.test(x))}
@@ -554,7 +587,7 @@ function renderTeam(){
  ordered.forEach(name=>{
    const b=document.createElement("button");
    b.className="pill"+(normalize(highlightedTeamEmployee)===normalize(name)?" selected":"");
-   b.textContent=name+(normalize(name)==="makeni"||normalize(name)==="wikin"||normalize(name)==="lucho"||normalize(name)==="chino"?" ᴾᵀ":"");
+   b.textContent=name;
    b.onclick=()=>{highlightedTeamEmployee=normalize(highlightedTeamEmployee)===normalize(name)?"":name;renderTeam()};
    pillHost.appendChild(b);
  });
