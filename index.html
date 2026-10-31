@@ -415,6 +415,28 @@ header .brand{margin-bottom:8px}
  .schedule-table th,.schedule-table td{padding:2px 3px}
 }
 
+
+
+.team-month-week-filter{display:flex;align-items:center;gap:9px;margin:8px 0 10px;color:var(--muted);font-size:.78rem;font-weight:800}
+.team-month-week-filter select{max-width:100%;min-width:190px;background:#102b30;border:1px solid #284a54;color:var(--text);border-radius:8px;padding:8px 10px;font:inherit;font-weight:750}
+@media(max-width:620px){.team-month-week-filter{gap:6px;font-size:.68rem}.team-month-week-filter select{min-width:0;flex:1;padding:7px 8px}}
+
+/* Whole Team week/month view switch and compact month grid */
+.team-view-toggle{display:flex;gap:6px;margin:10px 0 8px}
+.team-view-btn{border:1px solid #284a54;background:#102b30;color:#9bb8be;border-radius:8px;padding:8px 16px;font-size:.75rem;font-weight:900;letter-spacing:.06em}
+.team-view-btn.active{background:var(--cyan);border-color:var(--cyan);color:#062b32}
+#teamTable.month-view{overflow-x:auto;-webkit-overflow-scrolling:touch}
+#teamTable.month-view .team-grid{width:max-content;min-width:100%;table-layout:auto}
+#teamTable.month-view .team-grid th,#teamTable.month-view .team-grid td{min-width:42px;padding:5px 4px;text-align:center}
+#teamTable.month-view .team-grid th:first-child,#teamTable.month-view .team-grid td:first-child{position:sticky;left:0;z-index:2;min-width:92px;width:92px;text-align:left;background:#102b30}
+#teamTable.month-view .team-grid th:first-child{z-index:3}
+#teamTable.month-view .team-grid th:last-child,#teamTable.month-view .team-grid td:last-child{position:sticky;right:0;z-index:2;background:#102b30;min-width:48px}
+.month-shift{border:0;border-radius:6px;padding:5px 4px;min-width:32px;font-size:.68rem;font-weight:900;cursor:pointer}
+.month-shift.am{background:#574318;color:#ffe49a}.month-shift.pm{background:#292b63;color:#d8d9ff}
+.month-shift.off{background:transparent;color:#78949a;font-size:.64rem;font-weight:650}
+.month-shift.tbd{background:#263b42;color:#a8bec4;font-size:.62rem}
+@media(max-width:620px){.team-view-btn{padding:7px 13px;font-size:.68rem}#teamTable.month-view .team-grid{font-size:9px}#teamTable.month-view .team-grid th,#teamTable.month-view .team-grid td{min-width:36px;padding:4px 2px}#teamTable.month-view .team-grid th:first-child,#teamTable.month-view .team-grid td:first-child{min-width:78px;width:78px;padding-left:5px}#teamTable.month-view .month-shift{min-width:27px;padding:4px 2px;font-size:9px}}
+
 </style>
 </head>
 <body>
@@ -509,7 +531,9 @@ header .brand{margin-bottom:8px}
   <div class="section-title">Whole team · weekly coverage</div>
   <div class="team-highlight-label">HIGHLIGHT A PERSON</div>
   <div id="teamEmployeePills" class="pills" aria-label="Highlight an employee"></div>
-  <div class="team-caption"><strong>Whole team</strong> · tap a name to highlight their row; tap a shift to open that day in My Week.</div>
+  <div class="team-caption"><strong>Whole team</strong> · switch between the current week and the monthly schedule. In MONTH, use the week dropdown to show one week at a time. Tap a name to highlight their row.</div>
+  <div class="team-view-toggle" role="group" aria-label="Schedule view"><button type="button" class="team-view-btn active" data-team-view="week">WEEK</button><button type="button" class="team-view-btn" data-team-view="month">MONTH</button></div>
+  <div id="teamMonthWeekFilter" class="team-month-week-filter hidden"><label for="teamWeekSelect">Show week</label><select id="teamWeekSelect" aria-label="Select a week in the monthly schedule"></select></div>
   <div id="teamSummary" class="muted"></div><div id="teamTable" class="table-wrap"></div><div class="team-caption" id="teamHoursNote">AM 7:00 AM–3:00 PM · PM 11:00 AM–7:00 PM · Each shift includes a 1-hour paid lunch.</div>
 </section>
 </main>
@@ -518,7 +542,7 @@ header .brand{margin-bottom:8px}
 const DATABASE_URL="https://cabo-real-surf-club-default-rtdb.firebaseio.com";
 const DATA_PATH="/surfOps.json",REFRESH_MS=30000,CABO_TZ="America/Mazatlan";
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-const STAFF_NAMES=["Kody","Ana","Chino","Diana","Felix","Fernando","Green","Linden","Lucho","Makeni","Marley","Pollo","Pomo","Tlaca","Toni","Wikin"];
+const STAFF_NAMES=["Kody","Ana","Bernardo","Diana","Felix","Fernando","Green","Linden","Lucho","Makeni","Marley","Pollo","Pomo","Tlaca","Toni","Wikin"];
 let rootData=null,sheetMap={},employees=[...STAFF_NAMES],selectedEmployee="",allRows=[];
 const $=id=>document.getElementById(id),normalize=s=>String(s??"").trim().toLowerCase().replace(/\s+/g," ");
 function asArray(v){if(Array.isArray(v))return v;if(v&&typeof v==="object")return Object.keys(v).sort((a,b)=>Number(a)-Number(b)).map(k=>v[k]);return []}
@@ -540,7 +564,7 @@ function parseScheduleDate(value){
 function validScheduleDate(y,m,d){const date=new Date(y,m-1,d);return date.getFullYear()===y&&date.getMonth()===m-1&&date.getDate()===d?date:null}
 function renderScheduleWeek(){let start=parseScheduleDate(scheduleInfoValue("Week Start Date")),end=parseScheduleDate(scheduleInfoValue("Week End Date"));let status=scheduleInfoValue("Schedule Status")||"SCHEDULE WEEK";const label=$("scheduleWeekLabel"),statusEl=$("scheduleWeekStatus");if(!label||!statusEl)return;if(!(start&&end&&end>=start)){const parts=Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:CABO_TZ,year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date()).map(p=>[p.type,p.value]));const today=new Date(Date.UTC(+parts.year,+parts.month-1,+parts.day));const day=today.getUTCDay();start=new Date(today);start.setUTCDate(today.getUTCDate()-(day===0?6:day-1));end=new Date(start);end.setUTCDate(start.getUTCDate()+6);status="CURRENT WEEK · AUTO";}const fmt=(d,{month="long",day="numeric",year="numeric"}={})=>new Intl.DateTimeFormat("en-US",{month,day,year,timeZone:"UTC"}).format(new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())));label.textContent=start.getFullYear()===end.getFullYear()?(start.getMonth()===end.getMonth()?`${fmt(start,{month:"long",day:"numeric",year:"numeric"}).replace(", "+start.getFullYear(),"")} – ${fmt(end,{month:"long",day:"numeric",year:"numeric"}).replace(", "+end.getFullYear(),"")}, ${end.getFullYear()}`:`${fmt(start)} – ${fmt(end)}`):`${fmt(start)} – ${fmt(end)}`;statusEl.textContent=status}
 function field(o,alts){const keys=Object.keys(o||{});for(const a of alts){const k=keys.find(x=>normalize(x)===normalize(a));if(k&&String(o[k]??"").trim())return o[k]}for(const a of alts){const k=keys.find(x=>normalize(x).includes(normalize(a)));if(k&&String(o[k]??"").trim())return o[k]}return ""}
-function canonicalStaffName(value){const name=String(value??"").trim();const canonical=normalize(name)==="bost"?"Pollo":name;return STAFF_NAMES.find(n=>normalize(n)===normalize(canonical))||""}
+function canonicalStaffName(value){const name=String(value??"").trim();const key=normalize(name);const canonical=key==="bost"?"Pollo":key==="chino"?"Bernardo":name;return STAFF_NAMES.find(n=>normalize(n)===normalize(canonical))||""}
 function splitNames(v){return String(v??"").split(/[,;\n&]+/).map(x=>canonicalStaffName(x)).filter(Boolean)}
 function rowToAssignment(r,source){
  const day=String(field(r,["Day","Weekday"])||"").trim(),time=String(field(r,["Hour","Time","Time Slot","Rotation"])||"").trim();
@@ -768,67 +792,76 @@ function renderWeek(){
  });
 }
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-let highlightedTeamEmployee="";
+let highlightedTeamEmployee="",teamViewMode="week",selectedMonthWeek="all";
+function teamViewButtons(){document.querySelectorAll("[data-team-view]").forEach(btn=>{btn.classList.toggle("active",btn.dataset.teamView===teamViewMode);btn.setAttribute("aria-pressed",String(btn.dataset.teamView===teamViewMode));btn.onclick=()=>{teamViewMode=btn.dataset.teamView;renderTeam()}})}
+function monthlyScheduleData(){
+ const rows=parseSheet("Monthly Employee Schedule");
+ if(!rows.length)return {dates:[],rows:[]};
+ const dates=[];
+ Object.keys(rows[0]||{}).forEach(key=>{if(["employee","name","staff name","type","employment type"].includes(normalize(key)))return;const d=parseScheduleDate(key);if(d)dates.push({key,date:d})});
+ dates.sort((a,b)=>a.date-b.date);
+ const uniqueDates=dates.filter((x,i)=>!i||x.date.getTime()!==dates[i-1].date.getTime());
+ const data=rows.map(r=>({name:canonicalStaffName(field(r,["Employee","Name","Staff Name"])),type:String(field(r,["Type","Employment Type"])||"").trim(),values:uniqueDates.map(d=>String(r[d.key]??"").trim().toUpperCase())})).filter(r=>r.name);
+ return {dates:uniqueDates,rows:data};
+}
 function renderTeam(){
- const raw=weeklyRows();
- const ordered=[...STAFF_NAMES];
- const byEmployee=new Map();
- raw.forEach(r=>{
-   const key=normalize(r.employee);
-   if(!byEmployee.has(key))byEmployee.set(key,{name:r.employee,days:{}});
-   byEmployee.get(key).days[normalize(r.day)] = r;
- });
- const pillHost=$("teamEmployeePills");
- pillHost.innerHTML="";
- const clear=document.createElement("button");
- clear.className="pill"+(!highlightedTeamEmployee?" selected":"");
- clear.textContent="Clear";
- clear.onclick=()=>{highlightedTeamEmployee="";renderTeam()};
- pillHost.appendChild(clear);
- ordered.forEach(name=>{
-   const b=document.createElement("button");
-   b.className="pill"+(normalize(highlightedTeamEmployee)===normalize(name)?" selected":"");
-   b.textContent=name;
-   b.onclick=()=>{highlightedTeamEmployee=normalize(highlightedTeamEmployee)===normalize(name)?"":name;renderTeam()};
-   pillHost.appendChild(b);
- });
- const rows=ordered.map(name=>{
-   const data=byEmployee.get(normalize(name));
-   const cells=DAYS.map(day=>data?.days[normalize(day)]||null);
-   const count=cells.filter(Boolean).length;
-   return {name,cells,count};
- });
- const totalShifts=raw.length;
- $("teamSummary").textContent=`${totalShifts} scheduled shift(s) · ${ordered.length} employees · 8 paid hours per shift including 1-hour paid lunch.`;
+ teamViewButtons();
+ const pillHost=$("teamEmployeePills");pillHost.innerHTML="";
+ const clear=document.createElement("button");clear.className="pill"+(!highlightedTeamEmployee?" selected":"");clear.textContent="Clear";clear.onclick=()=>{highlightedTeamEmployee="";renderTeam()};pillHost.appendChild(clear);
+ STAFF_NAMES.forEach(name=>{const b=document.createElement("button");b.className="pill"+(normalize(highlightedTeamEmployee)===normalize(name)?" selected":"");b.textContent=name;b.onclick=()=>{highlightedTeamEmployee=normalize(highlightedTeamEmployee)===normalize(name)?"":name;renderTeam()};pillHost.appendChild(b)});
  const host=$("teamTable");host.innerHTML="";
+ if(teamViewMode==="month"){
+  host.classList.add("month-view");
+  const monthly=monthlyScheduleData(),allDates=monthly.dates;
+  const filterWrap=$("teamMonthWeekFilter"),weekSelect=$("teamWeekSelect");
+  if(filterWrap)filterWrap.classList.remove("hidden");
+  if(!allDates.length){$("teamSummary").textContent="Monthly schedule data is not available in the connected roster.";host.innerHTML='<div class="empty-state">No Monthly Employee Schedule tab found in Firebase. Add or sync that worksheet to show the month.</div>';return}
+  const mondayOf=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x};
+  const dateKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const weekLabel=(a,b)=>{const fmt=d=>new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(d);return `${fmt(a)} – ${fmt(b)}`};
+  const weeks=new Map();
+  allDates.forEach(item=>{const start=mondayOf(item.date),key=dateKey(start);if(!weeks.has(key)){const end=new Date(start);end.setDate(end.getDate()+6);weeks.set(key,{start,end,label:weekLabel(start,end)});}});
+  const weekOptions=[...weeks.entries()];
+  if(weekSelect){
+   const previous=selectedMonthWeek||"all";
+   weekSelect.innerHTML="";
+   const allOpt=document.createElement("option");allOpt.value="all";allOpt.textContent="All November";weekSelect.appendChild(allOpt);
+   weekOptions.forEach(([key,w])=>{const opt=document.createElement("option");opt.value=key;opt.textContent=w.label;weekSelect.appendChild(opt)});
+   weekSelect.value=weekOptions.some(([key])=>key===previous)?previous:"all";
+   selectedMonthWeek=weekSelect.value;
+   weekSelect.onchange=()=>{selectedMonthWeek=weekSelect.value;renderTeam()};
+  }
+  const dates=selectedMonthWeek==="all"?allDates:allDates.filter(item=>dateKey(mondayOf(item.date))===selectedMonthWeek);
+  const monthLabel=new Intl.DateTimeFormat("en-US",{month:"long",year:"numeric"}).format(allDates[0].date);
+  const rows=STAFF_NAMES.map(name=>{const found=monthly.rows.find(r=>normalize(r.name)===normalize(name));const allVals=found?.values||allDates.map(()=>"");const vals=dates.map(d=>{const idx=allDates.findIndex(x=>x.date.getTime()===d.date.getTime());return allVals[idx]||""});return {name,values:vals,count:vals.filter(v=>v==="AM"||v==="PM").length}});
+  const scheduled=rows.reduce((n,r)=>n+r.count,0),tbd=rows.reduce((n,r)=>n+r.values.filter(v=>!v||!["AM","PM","OFF"].includes(v)).length,0);
+  const selectionLabel=selectedMonthWeek==="all"?"All November":(weeks.get(selectedMonthWeek)?.label||"Selected week");
+  const completeWeek=selectedMonthWeek!=="all"&&dates.length===7;
+  $("teamSummary").textContent=`${monthLabel} · ${selectionLabel} · ${rows.length} employees · ${scheduled} scheduled shift(s)${completeWeek?` · ${scheduled===70?"70-shift target met":"Check 70-shift target"}`:""} · ${tbd} TBD day(s). Blank cells are not days off.`;
+  const table=document.createElement("table");table.className="team-grid";
+  const headers=["NAME",...dates.map(x=>`${["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][x.date.getDay()]} ${x.date.getDate()}`),"SHIFTS"];
+  table.innerHTML="<thead><tr>"+headers.map(x=>`<th>${esc(x)}</th>`).join("")+"</tr></thead>";
+  const body=document.createElement("tbody");
+  rows.forEach(r=>{
+   const tr=document.createElement("tr");if(normalize(highlightedTeamEmployee)===normalize(r.name))tr.className="highlighted";
+   const nameTd=document.createElement("td"),nameBtn=document.createElement("button");nameBtn.className="team-name-btn";nameBtn.textContent=r.name;nameBtn.onclick=()=>{highlightedTeamEmployee=normalize(highlightedTeamEmployee)===normalize(r.name)?"":r.name;renderTeam()};nameTd.appendChild(nameBtn);tr.appendChild(nameTd);
+   r.values.forEach((value,i)=>{const td=document.createElement("td"),btn=document.createElement("button");btn.type="button";btn.className="month-shift "+(value==="AM"?"am":value==="PM"?"pm":value==="OFF"?"off":"tbd");btn.textContent=value==="AM"||value==="PM"||value==="OFF"?value.toLowerCase():"TBD";btn.title=`${r.name} · ${dates[i].date.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})} · ${value||"TBD"}`;btn.onclick=()=>{highlightedTeamEmployee=normalize(highlightedTeamEmployee)===normalize(r.name)?"":r.name;renderTeam()};td.appendChild(btn);tr.appendChild(td)});
+   const total=document.createElement("td");total.className="team-total";total.textContent=String(r.count);tr.appendChild(total);body.appendChild(tr);
+  });
+  table.appendChild(body);host.appendChild(table);return;
+ }
+ host.classList.remove("month-view");
+ const filterWrap=$("teamMonthWeekFilter");if(filterWrap)filterWrap.classList.add("hidden");
+ const raw=weeklyRows(),ordered=[...STAFF_NAMES],byEmployee=new Map();
+ raw.forEach(r=>{const key=normalize(r.employee);if(!byEmployee.has(key))byEmployee.set(key,{name:r.employee,days:{}});byEmployee.get(key).days[normalize(r.day)]=r});
+ const rows=ordered.map(name=>{const data=byEmployee.get(normalize(name));const cells=DAYS.map(day=>data?.days[normalize(day)]||null);return {name,cells,count:cells.filter(Boolean).length}});
+ $("teamSummary").textContent=`${raw.length} scheduled shift(s) · ${ordered.length} employees · 8 paid hours per shift including 1-hour paid lunch.`;
  if(!rows.some(r=>r.count)){host.innerHTML='<div class="empty-state">No weekly employee schedule found.</div>';return}
- const table=document.createElement("table");table.className="team-grid";
- table.innerHTML="<thead><tr>"+["NAME",...DAYS.map(d=>d.slice(0,3).toUpperCase()),"SHIFTS"].map(x=>`<th>${esc(x)}</th>`).join("")+"</tr></thead>";
+ const table=document.createElement("table");table.className="team-grid";table.innerHTML="<thead><tr>"+["NAME",...DAYS.map(d=>d.slice(0,3).toUpperCase()),"SHIFTS"].map(x=>`<th>${esc(x)}</th>`).join("")+"</tr></thead>";
  const body=document.createElement("tbody");
- rows.forEach(r=>{
-   const tr=document.createElement("tr");
-   if(normalize(highlightedTeamEmployee)===normalize(r.name))tr.className="highlighted";
-   const nameTd=document.createElement("td");
-   const nameBtn=document.createElement("button");nameBtn.className="team-name-btn";nameBtn.textContent=r.name;
-   nameBtn.onclick=()=>{$("weekEmployee").value=r.name;selectedEmployee=r.name;switchTab("week");renderWeek()};
-   nameTd.appendChild(nameBtn);tr.appendChild(nameTd);
-   r.cells.forEach((shift,i)=>{
-     const td=document.createElement("td");
-     if(!shift){const span=document.createElement("span");span.className="shift-badge shift-off";span.textContent="off";td.appendChild(span)}
-     else{
-       const span=document.createElement("button");
-       const label=/^am/i.test(shift.shift)?"AM":/^pm/i.test(shift.shift)?"PM":shift.shift;
-       span.className="shift-badge "+(label==="AM"?"shift-am":"shift-pm");
-       span.textContent=label;
-       span.title=`${r.name} · ${DAYS[i]} · ${shift.start}–${shift.end}`;
-       span.onclick=()=>{$("weekEmployee").value=r.name;$("weekDay").value=DAYS[i];selectedEmployee=r.name;switchTab("week");renderWeek()};
-       td.appendChild(span);
-     }
-     tr.appendChild(td);
-   });
-   const total=document.createElement("td");total.className="team-total";total.textContent=String(r.count);tr.appendChild(total);
-   body.appendChild(tr);
- });
+ rows.forEach(r=>{const tr=document.createElement("tr");if(normalize(highlightedTeamEmployee)===normalize(r.name))tr.className="highlighted";const nameTd=document.createElement("td"),nameBtn=document.createElement("button");nameBtn.className="team-name-btn";nameBtn.textContent=r.name;nameBtn.onclick=()=>{$("weekEmployee").value=r.name;selectedEmployee=r.name;switchTab("week");renderWeek()};nameTd.appendChild(nameBtn);tr.appendChild(nameTd);
+  r.cells.forEach((shift,i)=>{const td=document.createElement("td");if(!shift){const span=document.createElement("span");span.className="shift-badge shift-off";span.textContent="off";td.appendChild(span)}else{const span=document.createElement("button"),label=/^am/i.test(shift.shift)?"AM":/^pm/i.test(shift.shift)?"PM":shift.shift;span.className="shift-badge "+(label==="AM"?"shift-am":"shift-pm");span.textContent=label;span.title=`${r.name} · ${DAYS[i]} · ${shift.start}–${shift.end}`;span.onclick=()=>{$("weekEmployee").value=r.name;$("weekDay").value=DAYS[i];selectedEmployee=r.name;switchTab("week");renderWeek()};td.appendChild(span)}tr.appendChild(td)});
+  const total=document.createElement("td");total.className="team-total";total.textContent=String(r.count);tr.appendChild(total);body.appendChild(tr)});
  table.appendChild(body);host.appendChild(table);
 }
 function hourLabel(s){return String(s||"").replace(/\s*-\s*/," – ")}
